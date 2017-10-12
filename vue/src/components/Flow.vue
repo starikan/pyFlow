@@ -12,24 +12,34 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 var data = {};
 
+function flowController(self) {
+    let $flow = $('#flow').flowchart({
+        data: self.currFlowData,
+        onOperatorSelect: (operatorId) => {
+            self.selectBlock(operatorId)
+            return true;
+        },
+        onOperatorUnselect: () => {
+            self.unSelectBlock()
+            return true;
+        },
+    });
+
+}
+
 export default {
     name: 'flow',
     mounted() {
-        self = this
-        $(document).ready(function() {
-            $('#flow').flowchart({
-                data: self.currFlowData
-            });
-        });
+        $(document).ready(() => flowController(this));
     },
     computed: {
         // ...mapState(['']),
         ...mapGetters(['currFlowData'])
     },
-    // methods: {
-    //     ...mapMutations(['']),
-    //     ...mapActions([''])
-    // }
+    methods: {
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock']),
+        // ...mapActions([''])
+    }
 }
 </script>
 

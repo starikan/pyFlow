@@ -7,15 +7,29 @@ const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state: {
     count: 0,
-    currFLow: "test_flow",
+    currFlow: "test_flow",
+    selectedBlock: "operator",
     flows: {
       test_flow: {
         operators: {
-          operator: {
+          operator1: {
             top: 20,
             left: 20,
             properties: {
-              title: "Operator",
+              title: "Operator 1",
+              inputs: {},
+              outputs: {
+                output_1: {
+                  label: "Output 1"
+                }
+              }
+            }
+          },
+          operator2: {
+            top: 80,
+            left: 300,
+            properties: {
+              title: "Operator 2",
               inputs: {
                 input_1: {
                   label: "Input 1"
@@ -24,26 +38,41 @@ const store = new Vuex.Store({
                   label: "Input 2"
                 }
               },
-              outputs: {
-                output_1: {
-                  label: "Output 1"
-                },
-                output_2: {
-                  label: "Output 2"
-                },
-                output_3: {
-                  label: "Output 3"
-                }
-              }
+              outputs: {}
             }
+          }
+        },
+        links: {
+          link_1: {
+            fromOperator: "operator1",
+            fromConnector: "output_1",
+            toOperator: "operator2",
+            toConnector: "input_2"
           }
         }
       }
     }
   },
   mutations: {
-    increment(state) {
-      state.count++;
+    setBlockPosition(state, position) {
+      let currFlow = state.currFlow;
+      let currFlowData = state.getters.currFlowData;
+      let selectedBlock = state.selectedBlock;
+
+      let currTop = currFlowData.operators[selectedBlock].top;
+      let currLeft = currFlowData.operators[selectedBlock].left;
+
+      let newTop = position.top ? position.top : currTop;
+      let newLeft = position.left ? position.left : currLeft;
+
+      state.flows[currFlow][selectedBlock].top = newTop;
+      state.flows[currFlow][selectedBlock].left = newLeft;
+    },
+    selectBlock: (state, blockId) => {
+      state.selectedBlock = blockId ? blockId : state.selectedBlock;
+    },
+    unSelectBlock: state => {
+      state.selectedBlock = null;
     }
   },
   actions: {
@@ -54,8 +83,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    countPlus10: state => state.count + 10,
-    currFlowData: state => state.flows[state.currFLow]
+    currFlowData: state => state.flows[state.currFlow]
   }
 });
 
