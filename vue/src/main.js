@@ -1,18 +1,12 @@
-// import $ from "jquery";
-window.$ = window.jQuery = global.$ = global.jQuery = $ = require("jquery");
+import $ from "jquery";
+window.$ = window.jQuery = global.$ = global.jQuery = $;
 
-import "jquery-ui";
+import "jquery-ui/ui/widgets/draggable.js";
 import "jquery.flowchart/jquery.flowchart.js";
 import "jquery.flowchart/jquery.flowchart.css";
 
-// require("jquery-ui");
-// require("jquery.flowchart/jquery.flowchart.js");
-// require("jquery.flowchart/jquery.flowchart.css");
-
-require("semantic-ui-css/semantic.css");
-require("semantic-ui-css/semantic.js");
-
-// import * from "jquery.flowchart";
+import "semantic-ui-css/semantic.css";
+import "semantic-ui-css/semantic.js";
 
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
