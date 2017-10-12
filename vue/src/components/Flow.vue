@@ -15,12 +15,20 @@ var data = {};
 function flowController(self) {
     let $flow = $('#flow').flowchart({
         data: self.currFlowData,
-        onOperatorSelect: (operatorId) => {
-            self.selectBlock(operatorId)
+        onOperatorSelect: (blockId) => {
+            self.selectBlock(blockId)
             return true;
         },
         onOperatorUnselect: () => {
             self.unSelectBlock()
+            return true;
+        },
+        onOperatorMouseOver: (blockId) => {
+            self.activeBlock(blockId)
+            return true;
+        },
+        onOperatorMouseOut: () => {
+            self.unActiveBlock()
             return true;
         },
     });
@@ -37,7 +45,7 @@ export default {
         ...mapGetters(['currFlowData'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock']),
         // ...mapActions([''])
     }
 }

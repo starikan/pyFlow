@@ -8,7 +8,8 @@ const store = new Vuex.Store({
   state: {
     count: 0,
     currFlow: "test_flow",
-    selectedBlock: "operator",
+    selectedBlock: null,
+    activeBlock: null,
     flows: {
       test_flow: {
         operators: {
@@ -73,6 +74,12 @@ const store = new Vuex.Store({
     },
     unSelectBlock: state => {
       state.selectedBlock = null;
+    },
+    activeBlock: (state, blockId) => {
+      state.activeBlock = blockId ? blockId : state.activeBlock;
+    },
+    unActiveBlock: state => {
+      state.activeBlock = null;
     }
   },
   actions: {
