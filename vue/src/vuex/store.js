@@ -7,7 +7,7 @@ const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state: {
     count: 0,
-    currFlow: "test_flow",
+    currFlowId: "test_flow",
     selectedBlock: null,
     activeBlock: null,
     flows: {
@@ -55,19 +55,17 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setBlockPosition(state, position) {
-      let currFlow = state.currFlow;
-      let currFlowData = state.getters.currFlowData;
-      let selectedBlock = state.selectedBlock;
+    setBlockPosition(state, { blockId, position }) {
+      let currFlow = store.getters.currFlow;
 
-      let currTop = currFlowData.operators[selectedBlock].top;
-      let currLeft = currFlowData.operators[selectedBlock].left;
+      let currTop = currFlow.operators[blockId].top;
+      let currLeft = currFlow.operators[blockId].left;
 
       let newTop = position.top ? position.top : currTop;
       let newLeft = position.left ? position.left : currLeft;
 
-      state.flows[currFlow][selectedBlock].top = newTop;
-      state.flows[currFlow][selectedBlock].left = newLeft;
+      state.flows[state.currFlowId].operators[blockId].top = newTop;
+      state.flows[state.currFlowId].operators[blockId].left = newLeft;
     },
     selectBlock: (state, blockId) => {
       state.selectedBlock = blockId ? blockId : state.selectedBlock;
@@ -90,7 +88,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    currFlowData: state => state.flows[state.currFlow]
+    currFlow: state => state.flows[state.currFlowId]
   }
 });
 
