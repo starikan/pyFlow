@@ -1,6 +1,5 @@
 <template>
     <div>
-        <button class="ui button disable">BTN</button>
         <div id="flow"></div>
     </div>
 </template>
@@ -11,50 +10,22 @@
 
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-var data = {
-    operators: {
-        operator: {
-            top: 20,
-            left: 20,
-            properties: {
-                title: 'Operator',
-                inputs: {
-                    input_1: {
-                        label: 'Input 1',
-                    },
-                    input_2: {
-                        label: 'Input 2',
-                    }
-                },
-                outputs: {
-                    output_1: {
-                        label: 'Output 1',
-                    },
-                    output_2: {
-                        label: 'Output 2',
-                    },
-                    output_3: {
-                        label: 'Output 3',
-                    }
-                }
-            }
-        }
-    }
-};
+var data = {};
 
 export default {
     name: 'flow',
     mounted() {
+        self = this
         $(document).ready(function() {
             $('#flow').flowchart({
-                data: data
+                data: self.currFlowData
             });
         });
-    }
-    // computed: {
-    //     ...mapState(['']),
-    //     ...mapGetters([''])
-    // },
+    },
+    computed: {
+        // ...mapState(['']),
+        ...mapGetters(['currFlowData'])
+    },
     // methods: {
     //     ...mapMutations(['']),
     //     ...mapActions([''])
