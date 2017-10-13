@@ -60,6 +60,7 @@ export default {
 #flow {
     width: 100%;
     height: 100%;
-    background-color: #99FFFF
+    background-color: #99FFFF;
+    position: absolute;
 }
 </style>

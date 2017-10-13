@@ -2,9 +2,17 @@
   <div id="app">
 
     <flow></flow>
-    <left-panel></left-panel>
-    <!-- <info-panel></info-panel> -->
     <!-- <zoom-image></zoom-image> -->
+    <div class="ui grid">
+      <div class="four columns row">
+        <div class="left floated column">
+          <left-panel></left-panel>
+        </div>
+        <div class="right floated column">
+          <!-- <info-panel></info-panel> -->
+        </div>
+      </div>
+    </div>
 
     <!-- <router-view></router-view> -->
   </div>
