@@ -1,4 +1,4 @@
-let initData = {
+export let initFlows = {
   test_flow: {
     operators: {
       operator1: {
@@ -42,4 +42,7 @@ let initData = {
   }
 };
 
-export default initData;
+export let blocks = {
+  uploadFile: {},
+  RGB2Grey: {}
+};

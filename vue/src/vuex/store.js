@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import initData from "./init_data";
+import { initFlows, blocks } from "./init_data";
 
 Vue.use(Vuex);
 
@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     currFlowId: "test_flow",
     selectedBlock: null,
     activeBlock: null,
-    flows: initData
+    flows: initFlows,
+    blocks: blocks
   },
   mutations: {
     setBlockPosition(state, { blockId, position }) {
