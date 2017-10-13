@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import _ from "lodash";
+import shortid from "shortid";
 
 import { initFlows, blocks } from "./init_data";
 
@@ -11,10 +13,27 @@ const store = new Vuex.Store({
     currFlowId: "test_flow",
     selectedBlock: null,
     activeBlock: null,
+    flowCenter: {},
     flows: initFlows,
     blocks: blocks
   },
   mutations: {
+    setFlowCenter(state, { top, left }) {
+      state.flowCenter = {
+        top: top,
+        left: left
+      };
+    },
+    addBlock(state, blockName) {
+      let newBlock = _.cloneDeep(state.blocks[blockName].block);
+      newBlock.top = state.flowCenter.top;
+      newBlock.left = state.flowCenter.left;
+      let id = `${blockName}_${shortid.generate()}`;
+
+      let flowsClone = _.cloneDeep(state.flows);
+      flowsClone[state.currFlowId].operators[id] = newBlock;
+      state.flows = flowsClone;
+    },
     setBlockPosition(state, { blockId, position }) {
       let currFlow = store.getters.currFlow;
 
@@ -48,7 +67,8 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    currFlow: state => state.flows[state.currFlowId]
+    currFlow: state => state.flows[state.currFlowId],
+    currFlowBlocks: (state, getters) => Object.keys(getters.currFlow.operators)
   }
 });
 

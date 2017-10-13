@@ -2,8 +2,8 @@
     <div id="leftpanel">
         <div class="ui container">
             <p>OpenCV</p>
-            <button class="ui button">Upload Image</button>
-            <button class="ui button">RGB2Grey</button>
+            <button class="ui button" @click="addBlock('uploadFile')">Upload Image</button>
+            <button class="ui button" @click="addBlock('RGB2Grey')">RGB2Grey</button>
             <hr>
             <button class="ui button">Save Flow</button>
             <select class="ui fluid dropdown">
@@ -28,7 +28,7 @@ export default {
         // ...mapGetters(['countPlus10',])
     },
     methods: {
-        // ...mapMutations(['increment']),
+        ...mapMutations(['addBlock']),
         // ...mapActions({ incrementAsync: 'increment' })
     }
 }

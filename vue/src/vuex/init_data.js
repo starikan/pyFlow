@@ -43,6 +43,20 @@ export let initFlows = {
 };
 
 export let blocks = {
-  uploadFile: {},
+  uploadFile: {
+    name: "uploadFile",
+    groups: ["OpenCV"],
+    block: {
+      properties: {
+        title: "Загрузить файл",
+        inputs: {},
+        outputs: {
+          file: {
+            label: "NumPy 3d Array"
+          }
+        }
+      }
+    }
+  },
   RGB2Grey: {}
 };

@@ -7,9 +7,10 @@
 
 <script>
 
+import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-var data = {};
+let instance;
 
 function flowController(self) {
     let $flow = $('#flow').flowchart({
@@ -35,20 +36,38 @@ function flowController(self) {
         }
     });
 
+    self.$flow = $flow
+    console.log(self)
 }
 
 export default {
     name: 'flow',
     mounted() {
+        instance = this;
         $(document).ready(() => flowController(this));
+        this.setFlowCenter({ top: window.innerHeight / 2, left: window.innerWidth / 2 })
     },
     computed: {
         // ...mapState(['']),
-        ...mapGetters(['currFlow'])
+        ...mapGetters(['currFlow', 'currFlowBlocks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowCenter']),
         // ...mapActions([''])
+    },
+    watch: {
+        // Add and Remove blocks on Flow
+        currFlowBlocks(newVal, oldVal) {
+            let added = _.difference(newVal, oldVal)
+            let removed = _.difference(oldVal, newVal)
+
+            if (added.length) {
+                _.forEach(added, id => {
+                    let data = _.cloneDeep(this.currFlow.operators[id])
+                    instance.$flow.flowchart('createOperator', id, data);
+                })
+            }
+        }
     }
 }
 </script>
