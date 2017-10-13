@@ -18,6 +18,9 @@ const store = new Vuex.Store({
     blocks: blocks
   },
   mutations: {
+    sanitizeLinks(state) {},
+    addLink(state) {},
+    removeLink(state) {},
     setFlowCenter(state, { top, left }) {
       state.flowCenter = {
         top: top,
