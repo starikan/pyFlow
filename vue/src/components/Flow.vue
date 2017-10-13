@@ -67,6 +67,12 @@ export default {
                     instance.$flow.flowchart('createOperator', id, data);
                 })
             }
+
+            if (removed.length) {
+                _.forEach(removed, id => {
+                    instance.$flow.flowchart('deleteOperator', id);
+                })
+            }
         }
     }
 }

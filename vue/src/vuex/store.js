@@ -34,6 +34,12 @@ const store = new Vuex.Store({
       flowsClone[state.currFlowId].operators[id] = newBlock;
       state.flows = flowsClone;
     },
+    deleteBlock(state, blockId) {
+      let flowsClone = _.cloneDeep(state.flows);
+      blockId = blockId ? blockId : state.selectedBlock;
+      delete flowsClone[state.currFlowId].operators[blockId];
+      state.flows = flowsClone;
+    },
     setBlockPosition(state, { blockId, position }) {
       let currFlow = store.getters.currFlow;
 

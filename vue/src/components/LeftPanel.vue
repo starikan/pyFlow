@@ -5,6 +5,7 @@
             <button class="ui button" @click="addBlock('uploadFile')">Upload Image</button>
             <button class="ui button" @click="addBlock('RGB2Grey')">RGB2Grey</button>
             <hr>
+            <button class="ui button" @click="deleteBlock()">Delete Block</button>
             <button class="ui button">Save Flow</button>
             <select class="ui fluid dropdown">
                 <option value="">Select Flow</option>
@@ -28,7 +29,7 @@ export default {
         // ...mapGetters(['countPlus10',])
     },
     methods: {
-        ...mapMutations(['addBlock']),
+        ...mapMutations(['addBlock', 'deleteBlock']),
         // ...mapActions({ incrementAsync: 'increment' })
     }
 }

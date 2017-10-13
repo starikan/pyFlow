@@ -52,11 +52,29 @@ export let blocks = {
         inputs: {},
         outputs: {
           file: {
-            label: "NumPy 3d Array"
+            label: "BRG File"
           }
         }
       }
     }
   },
-  RGB2Grey: {}
+  RGB2Grey: {
+    name: "RGB2Grey",
+    groups: ["OpenCV"],
+    block: {
+      properties: {
+        title: "RGB -> Grey",
+        inputs: {
+          in_file: {
+            label: "RGB File"
+          }
+        },
+        outputs: {
+          out_file: {
+            label: "Grey"
+          }
+        }
+      }
+    }
+  }
 };
