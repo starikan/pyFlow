@@ -10,8 +10,6 @@
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
-let instance;
-
 function flowController(self) {
     let $flow = $('#flow').flowchart({
         data: self.currFlow,
@@ -36,23 +34,38 @@ function flowController(self) {
         }
     });
 
+    $flow.panzoom();
+    $flow.panzoom().on('panzoomend', function(e, panzoom, matrix, changed) {
+        if (changed) {
+            console.log(matrix[5], matrix[4])
+            self.setFlowSizes({
+                top: matrix[5],
+                left: matrix[4]
+            })
+        }
+    })
+
     self.$flow = $flow
-    console.log(self)
+    // console.log(self)
 }
 
 export default {
     name: 'flow',
     mounted() {
-        instance = this;
         $(document).ready(() => flowController(this));
-        this.setFlowCenter({ top: window.innerHeight / 2, left: window.innerWidth / 2 })
+
+        this.setFlowSizes({
+            // TODO: сюда из localStorage положение предыдущее top и left
+            width: window.innerWidth,
+            height: window.innerHeight,
+        })
     },
     computed: {
         // ...mapState(['']),
         ...mapGetters(['currFlow', 'currFlowBlocks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowCenter']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes']),
         // ...mapActions([''])
     },
     watch: {
@@ -64,13 +77,13 @@ export default {
             if (added.length) {
                 _.forEach(added, id => {
                     let data = _.cloneDeep(this.currFlow.operators[id])
-                    instance.$flow.flowchart('createOperator', id, data);
+                    this.$flow.flowchart('createOperator', id, data);
                 })
             }
 
             if (removed.length) {
                 _.forEach(removed, id => {
-                    instance.$flow.flowchart('deleteOperator', id);
+                    this.$flow.flowchart('deleteOperator', id);
                 })
             }
         }

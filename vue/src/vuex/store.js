@@ -13,7 +13,7 @@ const store = new Vuex.Store({
     currFlowId: "test_flow",
     selectedBlock: null,
     activeBlock: null,
-    flowCenter: {},
+    flowSizes: {},
     flows: initFlows,
     blocks: blocks
   },
@@ -21,16 +21,19 @@ const store = new Vuex.Store({
     sanitizeLinks(state) {},
     addLink(state) {},
     removeLink(state) {},
-    setFlowCenter(state, { top, left }) {
-      state.flowCenter = {
-        top: top,
-        left: left
+    setFlowSizes(state, { top, left, width, height, zoom }) {
+      state.flowSizes = {
+        top: top ? top : state.flowSizes.top,
+        left: left ? left : state.flowSizes.left,
+        width: width ? width : state.flowSizes.width,
+        height: height ? height : state.flowSizes.height,
+        zoom: zoom ? zoom : state.flowSizes.zoom
       };
     },
     addBlock(state, blockName) {
       let newBlock = _.cloneDeep(state.blocks[blockName].block);
-      newBlock.top = state.flowCenter.top;
-      newBlock.left = state.flowCenter.left;
+      newBlock.top = state.flowSizes.height / 2 - state.flowSizes.top;
+      newBlock.left = state.flowSizes.width / 2 - state.flowSizes.left;
       let id = `${blockName}_${shortid.generate()}`;
 
       let flowsClone = _.cloneDeep(state.flows);
