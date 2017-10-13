@@ -1,5 +1,17 @@
 <template>
-    <div>
+    <div id="leftpanel">
+        <div class="ui container">
+            <p>OpenCV</p>
+            <button class="ui button">Upload Image</button>
+            <button class="ui button">RGB2Grey</button>
+            <hr>
+            <button class="ui button">Save Flow</button>
+            <select class="ui fluid dropdown">
+                <option value="">Select Flow</option>
+                <option value="1">Select Flow 1</option>
+                <option value="2">Select Flow 2</option>
+            </select>
+        </div>
     </div>
 </template>
 
@@ -26,5 +38,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+#leftpanel {
+    height: 100%;
+    width: 150px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #FFFF99
+}
 </style>
