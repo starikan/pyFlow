@@ -31,13 +31,13 @@ const store = new Vuex.Store({
     },
     unSelectBlock: state => {
       state.selectedBlock = null;
-    },
-    activeBlock: (state, blockId) => {
-      state.activeBlock = blockId ? blockId : state.activeBlock;
-    },
-    unActiveBlock: state => {
-      state.activeBlock = null;
     }
+    // activeBlock: (state, blockId) => {
+    //   state.activeBlock = blockId ? blockId : state.activeBlock;
+    // },
+    // unActiveBlock: state => {
+    //   state.activeBlock = null;
+    // }
   },
   actions: {
     increment({ commit }) {

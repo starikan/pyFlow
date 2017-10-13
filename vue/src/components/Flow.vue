@@ -23,14 +23,14 @@ function flowController(self) {
             self.unSelectBlock()
             return true;
         },
-        onOperatorMouseOver: (blockId) => {
-            self.activeBlock(blockId)
-            return true;
-        },
-        onOperatorMouseOut: () => {
-            self.unActiveBlock()
-            return true;
-        },
+        // onOperatorMouseOver: (blockId) => {
+        //     self.activeBlock(blockId)
+        //     return true;
+        // },
+        // onOperatorMouseOut: () => {
+        //     self.unActiveBlock()
+        //     return true;
+        // },
         onOperatorMoved: (blockId, position) => {
             self.setBlockPosition({ blockId, position })
         }
