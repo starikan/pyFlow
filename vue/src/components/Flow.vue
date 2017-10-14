@@ -35,9 +35,9 @@ function flowController(self) {
     });
 
     $flow.panzoom();
+    $flow.panzoom('pan', self.flowSizes.left, self.flowSizes.top);
     $flow.panzoom().on('panzoomend', function(e, panzoom, matrix, changed) {
         if (changed) {
-            console.log(matrix[5], matrix[4])
             self.setFlowSizes({
                 top: matrix[5],
                 left: matrix[4]
@@ -46,7 +46,6 @@ function flowController(self) {
     })
 
     self.$flow = $flow
-    // console.log(self)
 }
 
 export default {
@@ -54,14 +53,20 @@ export default {
     mounted() {
         $(document).ready(() => flowController(this));
 
+        let top = parseFloat(localStorage.getItem('flow_top'));
+        let left = parseFloat(localStorage.getItem('flow_left'));
+        let zoom = parseFloat(localStorage.getItem('flow_zoom'));
+
         this.setFlowSizes({
-            // TODO: сюда из localStorage положение предыдущее top и left
+            top: top,
+            left: left,
+            zoom: zoom,
             width: window.innerWidth,
             height: window.innerHeight,
         })
     },
     computed: {
-        // ...mapState(['']),
+        ...mapState(['flowSizes']),
         ...mapGetters(['currFlow', 'currFlowBlocks'])
     },
     methods: {

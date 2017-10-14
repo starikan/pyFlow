@@ -22,6 +22,10 @@ const store = new Vuex.Store({
     addLink(state) {},
     removeLink(state) {},
     setFlowSizes(state, { top, left, width, height, zoom }) {
+      localStorage["flow_top"] = top ? top : 0;
+      localStorage["flow_left"] = left ? left : 0;
+      localStorage["flow_zoom"] = zoom ? zoom : 1;
+
       state.flowSizes = {
         top: top ? top : state.flowSizes.top,
         left: left ? left : state.flowSizes.left,
