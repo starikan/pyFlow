@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import _ from "lodash";
 import shortid from "shortid";
+import lstore from "store";
 
 import { initFlows, blocks } from "./init_data";
 
@@ -60,10 +61,6 @@ const store = new Vuex.Store({
       state.selectedLink = null;
     },
     setFlowSizes(state, { top, left, width, height, zoom }) {
-      localStorage["flow_top"] = top ? top : 0;
-      localStorage["flow_left"] = left ? left : 0;
-      localStorage["flow_zoom"] = zoom ? zoom : 1;
-
       state.flowSizes = {
         top: top ? top : state.flowSizes.top,
         left: left ? left : state.flowSizes.left,
@@ -71,6 +68,8 @@ const store = new Vuex.Store({
         height: height ? height : state.flowSizes.height,
         zoom: zoom ? zoom : state.flowSizes.zoom
       };
+
+      lstore.set("flowSizes", state.flowSizes);
     },
     addBlock(state, blockName) {
       let newBlock = _.cloneDeep(state.blocks[blockName].block);
@@ -105,13 +104,23 @@ const store = new Vuex.Store({
     },
     unSelectBlock: state => {
       state.selectedBlock = null;
-    }
+    },
     // activeBlock: (state, blockId) => {
     //   state.activeBlock = blockId ? blockId : state.activeBlock;
     // },
     // unActiveBlock: state => {
     //   state.activeBlock = null;
     // }
+    saveFlow(state) {
+      lstore.set("flows", state.flows);
+      lstore.set("currFlowId", state.currFlowId);
+    },
+    setFlows(state, flows) {
+      state.flows = flows;
+    },
+    setCurrFlowId(state, currFlowId) {
+      state.currFlowId = currFlowId;
+    }
   },
   actions: {
     increment({ commit }) {

@@ -7,7 +7,7 @@
             <hr>
             <button class="ui button" @click="deleteBlock()">Delete Block</button>
             <button class="ui button" @click="deleteLink({linkId: selectedLink})">Delete Link</button>
-            <button class="ui button">Save Flow</button>
+            <button class="ui button" @click="saveFlow()">Save Flow</button>
             <select class="ui fluid dropdown">
                 <option value="">Select Flow</option>
                 <option value="1">Select Flow 1</option>
@@ -30,7 +30,7 @@ export default {
         // ...mapGetters(['countPlus10',])
     },
     methods: {
-        ...mapMutations(['addBlock', 'deleteBlock', 'deleteLink']),
+        ...mapMutations(['addBlock', 'deleteBlock', 'deleteLink', "saveFlow"]),
         // ...mapActions({ incrementAsync: 'increment' })
     }
 }

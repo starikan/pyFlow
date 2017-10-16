@@ -10,6 +10,7 @@
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import shortid from "shortid";
+import lstore from "store";
 
 function flowController(self) {
     let $flow = $('#flow').flowchart({
@@ -81,24 +82,24 @@ export default {
     mounted() {
         $(document).ready(() => flowController(this));
 
-        let top = parseFloat(localStorage.getItem('flow_top'));
-        let left = parseFloat(localStorage.getItem('flow_left'));
-        let zoom = parseFloat(localStorage.getItem('flow_zoom'));
+        let flowSizes = lstore.get("flowSizes");
+        flowSizes.width = window.innerWidth;
+        flowSizes.height = window.innerHeight;
+        this.setFlowSizes(flowSizes)
 
-        this.setFlowSizes({
-            top: top,
-            left: left,
-            zoom: zoom,
-            width: window.innerWidth,
-            height: window.innerHeight,
-        })
+        let flows = lstore.get("flows");
+        let currFlowId = lstore.get("currFlowId");
+        this.setFlows(flows)
+        this.setCurrFlowId(currFlowId)
+
     },
     computed: {
         ...mapState(['flowSizes', "$flowData"]),
         ...mapGetters(['currFlow', 'currFlowBlocks', 'currFlowLinks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'addLink', 'deleteLink', 'selectLink', 'unSelectLink', 'update$flowData']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'addLink', 'deleteLink', 'selectLink', 'unSelectLink', 'update$flowData', 'setFlows',
+            'setCurrFlowId']),
         // ...mapActions([''])
     },
     watch: {
@@ -109,8 +110,11 @@ export default {
 
             if (added.length) {
                 _.forEach(added, id => {
-                    let data = _.cloneDeep(this.currFlow.operators[id])
-                    this.$flow.flowchart('createOperator', id, data);
+                    try {
+                        let data = _.cloneDeep(this.currFlow.operators[id])
+                        this.$flow.flowchart('createOperator', id, data);
+                    }
+                    catch (err) { }
                 })
             }
 
