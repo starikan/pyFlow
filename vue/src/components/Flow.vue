@@ -9,6 +9,7 @@
 
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import shortid from "shortid";
 
 function flowController(self) {
     let $flow = $('#flow').flowchart({
@@ -31,6 +32,27 @@ function flowController(self) {
         // },
         onOperatorMoved: (blockId, position) => {
             self.setBlockPosition({ blockId, position })
+        },
+        onOperatorDelete() {
+            self.sanitizeLinks({ $flowData: this.getData().links })
+            return true
+        },
+        onLinkCreate(linkId, linkData) {
+            let allLinksIds = Object.keys(self.currFlow.links)
+
+            if (allLinksIds.includes(linkId)) {
+                return true;
+            }
+            else {
+                let linkId = `link_${shortid.generate()}`;
+                self.addLink({ linkId, linkData })
+                this.createLink(linkId, linkData)
+                self.sanitizeLinks({ $flowData: this.getData().links })
+            }
+        },
+        onLinkDelete(linkId) {
+            self.sanitizeLinks({ $flowData: this.getData().links, linkId })
+            return true;
         }
     });
 
@@ -70,7 +92,7 @@ export default {
         ...mapGetters(['currFlow', 'currFlowBlocks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'sanitizeLinks', 'addLink', 'removeLink']),
         // ...mapActions([''])
     },
     watch: {

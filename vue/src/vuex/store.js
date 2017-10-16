@@ -18,8 +18,38 @@ const store = new Vuex.Store({
     blocks: blocks
   },
   mutations: {
-    sanitizeLinks(state) {},
-    addLink(state) {},
+    sanitizeLinks(state, { $flowData, linkId = false }) {
+      let flowsClone = _.cloneDeep(state.flows);
+      if (linkId) {
+        delete flowsClone[state.currFlowId].links[linkId];
+      } else {
+        flowsClone[state.currFlowId].links = $flowData;
+      }
+      state.flows = flowsClone;
+    },
+    addLink(state, { linkId, linkData }) {
+      let flowsClone = _.cloneDeep(state.flows);
+
+      let fields = [
+        "fromOperator",
+        "fromConnector",
+        "fromSubConnector",
+        "toOperator",
+        "toConnector",
+        "toSubConnector",
+        "color"
+      ];
+
+      let newData = {};
+      _.forEach(linkData, (val, key) => {
+        if (fields.includes(key)) {
+          newData[key] = val;
+        }
+      });
+
+      flowsClone[state.currFlowId].links[linkId] = newData;
+      state.flows = flowsClone;
+    },
     removeLink(state) {},
     setFlowSizes(state, { top, left, width, height, zoom }) {
       localStorage["flow_top"] = top ? top : 0;
