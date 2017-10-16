@@ -34,7 +34,8 @@ function flowController(self) {
             self.setBlockPosition({ blockId, position })
         },
         onOperatorDelete() {
-            self.sanitizeLinks({ $flowData: this.getData().links })
+            // TODO удалить все линки
+            // self.sanitizeLinks({ $flowData: this.getData().links })
             return true
         },
         onLinkCreate(linkId, linkData) {
@@ -47,12 +48,22 @@ function flowController(self) {
                 let linkId = `link_${shortid.generate()}`;
                 self.addLink({ linkId, linkData })
                 this.createLink(linkId, linkData)
-                self.sanitizeLinks({ $flowData: this.getData().links })
             }
         },
         onLinkDelete(linkId) {
-            self.sanitizeLinks({ $flowData: this.getData().links, linkId })
+            self.deleteLink({ linkId })
             return true;
+        },
+        onLinkSelect(linkId) {
+            self.selectLink(linkId)
+            return true;
+        },
+        onLinkUnselect() {
+            self.unSelectLink()
+            return true;
+        },
+        onAfterChange(evt) {
+            self.update$flowData({ event: evt, data: this.getData() })
         }
     });
 
@@ -88,11 +99,11 @@ export default {
         })
     },
     computed: {
-        ...mapState(['flowSizes']),
-        ...mapGetters(['currFlow', 'currFlowBlocks'])
+        ...mapState(['flowSizes', "$flowData"]),
+        ...mapGetters(['currFlow', 'currFlowBlocks', 'currFlowLinks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'sanitizeLinks', 'addLink', 'removeLink']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'sanitizeLinks', 'addLink', 'deleteLink', 'selectLink', 'unSelectLink', 'update$flowData']),
         // ...mapActions([''])
     },
     watch: {
@@ -111,6 +122,18 @@ export default {
             if (removed.length) {
                 _.forEach(removed, id => {
                     this.$flow.flowchart('deleteOperator', id);
+                })
+            }
+        },
+        currFlowLinks(newVal, oldVal) {
+            let removed = _.difference(oldVal, newVal)
+
+            if (removed.length) {
+                _.forEach(removed, id => {
+                    try {
+                        this.$flow.flowchart('deleteLink', id);
+                    }
+                    catch (err) { }
                 })
             }
         }

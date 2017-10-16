@@ -10,22 +10,19 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state: {
+    $flowData: {},
     currFlowId: "test_flow",
     selectedBlock: null,
     activeBlock: null,
+    selectedLink: null,
+    activeLink: null,
     flowSizes: {},
     flows: initFlows,
     blocks: blocks
   },
   mutations: {
-    sanitizeLinks(state, { $flowData, linkId = false }) {
-      let flowsClone = _.cloneDeep(state.flows);
-      if (linkId) {
-        delete flowsClone[state.currFlowId].links[linkId];
-      } else {
-        flowsClone[state.currFlowId].links = $flowData;
-      }
-      state.flows = flowsClone;
+    update$flowData(state, { data, evt }) {
+      state.$flowData = data;
     },
     addLink(state, { linkId, linkData }) {
       let flowsClone = _.cloneDeep(state.flows);
@@ -50,7 +47,18 @@ const store = new Vuex.Store({
       flowsClone[state.currFlowId].links[linkId] = newData;
       state.flows = flowsClone;
     },
-    removeLink(state) {},
+    deleteLink(state, { linkId = false }) {
+      let flowsClone = _.cloneDeep(state.flows);
+      linkId = linkId ? linkId : state.selectedLink;
+      delete flowsClone[state.currFlowId].links[linkId];
+      state.flows = flowsClone;
+    },
+    selectLink(state, linkId) {
+      state.selectedLink = linkId;
+    },
+    unSelectLink(state) {
+      state.selectedLink = null;
+    },
     setFlowSizes(state, { top, left, width, height, zoom }) {
       localStorage["flow_top"] = top ? top : 0;
       localStorage["flow_left"] = left ? left : 0;
@@ -114,7 +122,8 @@ const store = new Vuex.Store({
   },
   getters: {
     currFlow: state => state.flows[state.currFlowId],
-    currFlowBlocks: (state, getters) => Object.keys(getters.currFlow.operators)
+    currFlowBlocks: (state, getters) => Object.keys(getters.currFlow.operators),
+    currFlowLinks: (state, getters) => Object.keys(getters.currFlow.links)
   }
 });
 

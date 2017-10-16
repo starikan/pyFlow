@@ -6,6 +6,7 @@
             <button class="ui button" @click="addBlock('RGB2Grey')">RGB2Grey</button>
             <hr>
             <button class="ui button" @click="deleteBlock()">Delete Block</button>
+            <button class="ui button" @click="deleteLink({linkId: selectedLink})">Delete Link</button>
             <button class="ui button">Save Flow</button>
             <select class="ui fluid dropdown">
                 <option value="">Select Flow</option>
@@ -25,11 +26,11 @@ import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'left-panel',
     computed: {
-        // ...mapState(['count',]),
+        ...mapState(['selectedLink']),
         // ...mapGetters(['countPlus10',])
     },
     methods: {
-        ...mapMutations(['addBlock', 'deleteBlock']),
+        ...mapMutations(['addBlock', 'deleteBlock', 'deleteLink']),
         // ...mapActions({ incrementAsync: 'increment' })
     }
 }
