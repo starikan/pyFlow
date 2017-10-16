@@ -33,11 +33,6 @@ function flowController(self) {
         onOperatorMoved: (blockId, position) => {
             self.setBlockPosition({ blockId, position })
         },
-        onOperatorDelete() {
-            // TODO удалить все линки
-            // self.sanitizeLinks({ $flowData: this.getData().links })
-            return true
-        },
         onLinkCreate(linkId, linkData) {
             let allLinksIds = Object.keys(self.currFlow.links)
 
@@ -103,7 +98,7 @@ export default {
         ...mapGetters(['currFlow', 'currFlowBlocks', 'currFlowLinks'])
     },
     methods: {
-        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'sanitizeLinks', 'addLink', 'deleteLink', 'selectLink', 'unSelectLink', 'update$flowData']),
+        ...mapMutations(['setBlockPosition', 'selectBlock', 'unSelectBlock', 'activeBlock', 'unActiveBlock', 'setFlowSizes', 'addLink', 'deleteLink', 'selectLink', 'unSelectLink', 'update$flowData']),
         // ...mapActions([''])
     },
     watch: {
@@ -130,6 +125,8 @@ export default {
 
             if (removed.length) {
                 _.forEach(removed, id => {
+                    // without try error when link automaticaly delete from flow
+                    // i.e. onelink to input
                     try {
                         this.$flow.flowchart('deleteLink', id);
                     }
