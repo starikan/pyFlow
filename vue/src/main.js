@@ -1,11 +1,6 @@
 import $ from "jquery";
 window.$ = window.jQuery = global.$ = global.jQuery = $;
 
-import "jquery-ui/ui/widgets/draggable.js";
-require("./vendors/jquery.panzoom/jquery.panzoom.js");
-import "./vendors/jquery.flowchart/jquery.flowchart.js";
-import "./vendors/jquery.flowchart/jquery.flowchart.css";
-
 import "semantic-ui-css/semantic.css";
 import "semantic-ui-css/semantic.js";
 

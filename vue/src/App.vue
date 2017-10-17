@@ -13,7 +13,7 @@
 
 <script>
 
-import Flow from "./components/Flow";
+import Flow from "./components/FlowChart/Flow";
 import LeftPanel from "./components/LeftPanel";
 import InfoPanel from "./components/InfoPanel";
 
