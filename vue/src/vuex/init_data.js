@@ -1,6 +1,6 @@
 export let initFlows = {
   test_flow: {
-    operators: {},
+    blocks: {},
     links: {}
   }
 };
@@ -81,6 +81,7 @@ export let blocks = {
         type: Number,
         default: 1
       }
-    }
+    },
+    server: {}
   }
 };

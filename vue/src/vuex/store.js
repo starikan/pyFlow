@@ -18,14 +18,67 @@ const store = new Vuex.Store({
       isShow: false
     },
     flow: {
-      flowCurrId: null,
-      flows: initFlows,
+      flowCurrId: "testFlow",
+      // flows: initFlows,
+      flows: {
+        testFlow: {
+          blocks: {
+            first_block: {
+              title: "Заголовок",
+              buttons: [],
+              inputs: [
+                {
+                  type: "circle",
+                  color: "red",
+                  name: "Image",
+                  checkFunction: () => {},
+                  id: "input_image"
+                },
+                {
+                  type: "triangle",
+                  color: "red",
+                  name: "Sigma",
+                  checkFunction: () => {},
+                  id: "input_sigma"
+                },
+                {
+                  type: "square",
+                  color: "white",
+                  name: "Mean",
+                  checkFunction: () => {},
+                  id: "input_mean"
+                }
+              ],
+              outputs: [
+                {
+                  type: "circle",
+                  color: "red",
+                  name: "Image Very long name",
+                  checkFunction: () => {},
+                  id: "input_image"
+                },
+                {
+                  type: "triangle",
+                  color: "red",
+                  name: "Sigma",
+                  checkFunction: () => {},
+                  id: "input_sigma"
+                }
+              ],
+              imgUrl: ""
+            }
+          },
+          links: {}
+        }
+      },
       blocks: blocks
     }
   },
   mutations: {},
   actions: {},
-  getters: {}
+  getters: {
+    flowCurr: state => state.flow.flows[state.flow.flowCurrId]
+  }
 });
 
 export default store;
