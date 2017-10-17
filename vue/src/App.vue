@@ -3,8 +3,8 @@
 
     <flow></flow>
     <!-- <zoom-image></zoom-image> -->
-    <left-panel></left-panel>
-    <info-panel v-if="selectedBlock"></info-panel>
+    <left-panel v-if="leftPanel.isShow"></left-panel>
+    <info-panel v-if="infoPanel.isShow"></info-panel>
   </div>
 
   <!-- <router-view></router-view> -->
@@ -23,7 +23,7 @@ export default {
   name: 'app',
   components: { Flow, LeftPanel, InfoPanel },
   computed: {
-    ...mapState(['selectedBlock'])
+    ...mapState(['infoPanel', "leftPanel"])
   },
 }
 </script>

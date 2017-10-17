@@ -11,9 +11,17 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state: {
-    flowCurrId: null,
-    flows: initFlows,
-    blocks: blocks
+    leftPanel: {
+      isShow: false
+    },
+    infoPanel: {
+      isShow: false
+    },
+    flow: {
+      flowCurrId: null,
+      flows: initFlows,
+      blocks: blocks
+    }
   },
   mutations: {},
   actions: {},

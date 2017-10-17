@@ -1,5 +1,17 @@
 <template>
     <div id="flow">
+        <div class="flow-block">
+            <div class="flow-block-title">
+                <div class="flow-block-title-title"></div>
+                <div class="flow-block-title-buttons"></div>
+            </div>
+            <div class="flow-block-main">
+                <div class="flow-block-main-inputs"></div>
+                <div class="flow-block-main-outputs"></div>
+            </div>
+            <div class="flow-block-image"></div>
+            <div class="flow-block-extend"></div>
+        </div>
     </div>
 </template>
 
@@ -28,7 +40,7 @@ export default {
 #flow {
     width: 100%;
     height: 100%;
-    background-color: #99FFFF;
+    background-image: url("/static/background.jpg");
     position: absolute;
 }
 </style>
