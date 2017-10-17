@@ -1,44 +1,7 @@
 export let initFlows = {
   test_flow: {
-    operators: {
-      operator1: {
-        top: 20,
-        left: 20,
-        properties: {
-          title: "Operator 1",
-          inputs: {},
-          outputs: {
-            output_1: {
-              label: "Output 1"
-            }
-          }
-        }
-      },
-      operator2: {
-        top: 80,
-        left: 300,
-        properties: {
-          title: "Operator 2",
-          inputs: {
-            input_1: {
-              label: "Input 1"
-            },
-            input_2: {
-              label: "Input 2"
-            }
-          },
-          outputs: {}
-        }
-      }
-    },
-    links: {
-      link_1: {
-        fromOperator: "operator1",
-        fromConnector: "output_1",
-        toOperator: "operator2",
-        toConnector: "input_2"
-      }
-    }
+    operators: {},
+    links: {}
   }
 };
 
@@ -56,7 +19,9 @@ export let blocks = {
           }
         }
       }
-    }
+    },
+    layout: "",
+    params: {}
   },
   RGB2Grey: {
     name: "RGB2Grey",
@@ -74,6 +39,47 @@ export let blocks = {
             label: "Grey"
           }
         }
+      }
+    }
+  },
+  gaussBlur: {
+    name: "gaussBlur",
+    groups: ["OpenCV"],
+    imgUrl:
+      "https://www.sunhome.ru/i/wallpapers/200/planeta-zemlya-kartinka.960x540.jpg",
+    imgBase64: "",
+    block: {
+      properties: {
+        title: "Размытие Гаусса",
+        inputs: {
+          file: {
+            label: "Grey File"
+          },
+          sigma: {
+            label: "Sigma"
+          },
+          mean: {
+            label: "Mean"
+          }
+        },
+        outputs: {
+          file: {
+            label: "File"
+          }
+        }
+      }
+    },
+    layout: "",
+    params: {
+      sigma: {
+        input: {},
+        type: Number,
+        default: 0.1
+      },
+      mean: {
+        input: {},
+        type: Number,
+        default: 1
       }
     }
   }
