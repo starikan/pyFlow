@@ -1,50 +1,52 @@
 <template>
     <div id="flow">
-        <div class="flow-block ui segment" v-for="(block, key) in flowCurr.blocks">
+        <div class="fb" v-for="(block, key) in flowCurr.blocks">
 
-            <!-- TITLE -->
-            <div class="flow-block-title ui two columns grid">
-                <div class="stretched row">
-                    <div class="column">
-                        <div class="flow-block-title-title">{{block.title}}</div>
-                    </div>
-                    <div class="column">
-                        <div class="flow-block-title-buttons"></div>
-                    </div>
-                </div>
-            </div>
+            <table class="fb-title">
+                <tbody>
+                    <tr>
+                        <td>{{block.title}}</td>
+                        <td>
+                            <div class="flow-block-title-buttons"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <!-- Inputs/Outputs -->
-            <div class="flow-block-main ui two columns divided grid">
-                <div class="row">
-                    <!-- Inputs -->
-                    <div class="flow-block-main-inputs column">
-                        <div class="ui sixteen columns grid">
-                            <div class="row" v-for="input in block.inputs">
-                                <div class="flow-block-main-inputs-dot column">
-                                    <i class="bullseye icon"></i>
-                                </div>
-                                <div class="flow-block-main-inputs-data column">
-                                    {{input.name}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Outputs -->
-                    <div class="flow-block-main-outputs column">
-                        <div class="ui sixteen columns grid">
-                            <div class="row" v-for="output in block.outputs">
-                                <div class="fourteen wide column">
-                                    {{output.name}}
-                                </div>
-                                <div class="flow-block-main-inputs-dot column">
-                                    <i class="bullseye icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <table class="fb-main">
+                <tbody>
+                    <tr>
+                        <td>
+                            <table class="fb-inputs">
+                                <tbody>
+                                    <tr v-for="input in block.inputs">
+                                        <td>
+                                            <i class="bullseye icon"></i>
+                                        </td>
+                                        <td>
+                                            {{input.name}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>
+                            <table class="fb-outputs">
+                                <tbody>
+                                    <tr v-for="output in block.outputs">
+                                        <td>
+                                            {{output.name}}
+                                        </td>
+                                        <td>
+                                            <i class="bullseye icon"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <div class="flow-block-image"></div>
             <div class="flow-block-extend"></div>
@@ -65,7 +67,7 @@ export default {
             $('#flow').on('mousedown touchstart', function(e) {
                 e.stopImmediatePropagation();
             });
-            $(".flow-block").panzoom();
+            $(".fb").panzoom();
             $("#flow").panzoom();
 
         });
@@ -97,52 +99,37 @@ export default {
     font-family: 'Open Sans Condensed', sans-serif;
 }
 
-.flow-block {
+.fb {
     position: absolute;
     top: 50px;
     left: 50px;
     border-color: black;
-
+    background-color: black;
     /* width: 250px; */
     /* height: 100px; */
 }
 
-.flow-block-title {
+.fb-title {
     font-size: 28px;
-    /* padding: 5px; */
+    padding: 5px;
+    width: 100%;
     background-color: magenta;
 }
 
-.flow-block-title-title {}
-
-.flow-block-title-buttons {}
-
-.flow-block-main {}
-
-.flow-block-main-inputs .row {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+.fb-main {
+    /* font-size: 28px; */
+    padding: 5px;
+    width: 100%;
+    background-color: green;
 }
 
-.flow-block-main-inputs-dot {
-    /* padding: 5px !important; */
+.fb-main td {
+    vertical-align: top;
 }
 
-.flow-block-main-inputs-data {
-    /* padding: 5px !important; */
+.fb-inputs {}
+
+.fb-outputs {
+    text-align: right;
 }
-
-.flow-block-main {
-    /* background-color: red; */
-}
-
-.flow-block-main-inputs {}
-
-.flow-block-main-outputs {}
-
-.flow-block-image {
-    background-color: blue;
-}
-
-.flow-block-extend {}
 </style>
