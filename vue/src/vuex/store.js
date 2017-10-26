@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     infoPanel: {
       isShow: false
     },
+    flowPositions: {},
     flow: {
       flowCurrId: "testFlow",
       // flows: initFlows,
