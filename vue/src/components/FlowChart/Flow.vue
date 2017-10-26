@@ -1,7 +1,5 @@
 <template>
-    <div id="flow"
-         @mousemove="flow_mousemove"
-         @mouseup.stop="flow_mouseup">
+    <div id="flow">
 
         <div class="fb"
              v-for="(block, key) in flowCurr.blocks"
@@ -19,7 +17,7 @@
 
                 <tbody>
                     <tr>
-                        <td>{{block.title}} {{positions[key]}}</td>
+                        <td>{{block.title}}</td>
                         <td>
                             <div class="flow-block-title-buttons"></div>
                         </td>
@@ -65,12 +63,17 @@
             </table>
 
             <div class="flow-block-image"></div>
-            <div class="flow-block-extend"></div>
+            <div class="flow-block-extend">
+                <p>{{positions[key]}}</p>
+                <p>{{positions_style[key]}}</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+// http://jsfiddle.net/yMv7y/3678/
+
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -89,20 +92,18 @@ export default {
     };
   },
   name: "flow",
-  mounted() {
-    // document.addEventListener("mouseup", function(evt) {
-    //     evt.stopPropagation()
-    //     this.mousedownBlockTitle = null;
-    //     console.log("mouseup", this.mousedownBlockTitle)
-    // })
-  },
+  mounted() {},
   computed: {
     positions_style: function() {
-      let positions = {};
-      _.forEach(this.positions, (val, key) => {
-        positions[key] = `transform: matrix(${val})`;
-      });
-      return positions;
+      return {
+        first_block: `transform: matrix(${this.positions["first_block"]})`
+      };
+      //   let positions = {};
+      //   _.forEach(this.positions, (val, key) => {
+      //     positions[key] = `transform: matrix(${val})`;
+      //   });
+      //   console.log(positions);
+      //   return positions;
     },
     ...mapState(["flow"]),
     ...mapGetters(["flowCurr"])
@@ -112,14 +113,12 @@ export default {
     flow_mousemove: () => {},
     flow_mouseup: () => {},
     fb_click: () => {},
-    fb_mouseover: () => {},
-    fb_mouseout: () => {},
     title_mousedown: function(block_id) {
       this.draggedBlock = block_id;
-      console.log("fb_title_mousedown", block_id, this.draggedBlock);
+      //   console.log("fb_title_mousedown", block_id, this.draggedBlock);
     },
     title_mouseup: function() {
-      console.log("fb_title_mouseup");
+      //   console.log("fb_title_mouseup");
       this.draggedBlock = null;
     },
     block_dragstart: function(evt) {
@@ -127,15 +126,21 @@ export default {
       if (block_id) {
         this.dragData.startX = evt.x;
         this.dragData.startY = evt.y;
-        console.log(evt);
+        // console.log(evt);
       }
     },
     block_drag: function(evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
-        this.positions[block_id][4] = evt.x - this.dragData.startX;
-        this.positions[block_id][5] = evt.y - this.dragData.startY;
-        console.log(evt);
+        let positions = this.positions;
+        positions[block_id][4] = evt.x - this.dragData.startX;
+        positions[block_id][5] = evt.y - this.dragData.startY;
+        this.positions = positions;
+        console.log(
+          this.positions[block_id],
+          this.positions_style[block_id]
+          //   evt
+        );
       }
     }
     // ...mapMutations([]),
@@ -158,7 +163,7 @@ export default {
 .fb {
   position: absolute;
   border-color: black;
-  background-color: black;
+  background-color: white;
 }
 
 .fb-title {
