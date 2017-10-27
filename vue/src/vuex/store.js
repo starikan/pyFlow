@@ -42,7 +42,6 @@ const store = new Vuex.Store({
             state.blocksPositions = blocksPositions;
         },
         updateAllPositions: (state, { flow_id, fullDump }) => {
-            console.log(fullDump);
             if (fullDump && _.isObject(fullDump) && !_.isEmpty(fullDump)) {
                 state.blocksPositions = fullDump;
             }
@@ -53,7 +52,6 @@ const store = new Vuex.Store({
             lstore.set("blocksPositions", _.cloneDeep(state.blocksPositions)),
         getPositions: ({ commit, state }) => {
             let blocksPositions = lstore.get("blocksPositions");
-            console.log(blocksPositions);
             commit("updateAllPositions", {
                 fullDump: blocksPositions
             });

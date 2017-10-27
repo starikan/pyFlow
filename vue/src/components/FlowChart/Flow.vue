@@ -1,69 +1,69 @@
 <template>
-    <div id="flow">
-        <div class="fb"
-             v-for="(block, key) in flowCurr.blocks"
-             :key="key"
-             @click.stop="fb_click(key)"
-             @dragstart.stop="block_dragstart(key, $event)"
-             @drag.stop="block_drag(key, $event)"
-             @dragend.stop="block_dragend(key, $event)"
-             :draggable="draggedBlock == key"
-             :style="blocks_pos_style[key]">
+  <div id="flow">
+    <div class="fb"
+         v-for="(block, block_id) in flowCurr.blocks"
+         :key="block_id"
+         @click.stop="fb_click(block_id)"
+         @dragstart.stop="block_dragstart(block_id, $event)"
+         @drag.stop="block_drag($event)"
+         @dragend.stop="block_dragend($event)"
+         :draggable="draggedBlock == block_id"
+         :style="blocks_pos_style[block_id]">
 
-            <table class="fb-title"
-                   @mousedown="title_mousedown(key)">
+      <table class="fb-title"
+             @mousedown="title_mousedown(block_id)">
 
+        <tbody>
+          <tr>
+            <td>{{block.title}}</td>
+            <td>
+              <div class="flow-block-title-buttons"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="fb-main">
+        <tbody>
+          <tr>
+            <td>
+              <table class="fb-inputs">
                 <tbody>
-                    <tr>
-                        <td>{{block.title}}</td>
-                        <td>
-                            <div class="flow-block-title-buttons"></div>
-                        </td>
-                    </tr>
+                  <tr v-for="input in block.inputs"
+                      :key="input.id">
+                    <td>
+                      <i class="bullseye icon"></i>
+                    </td>
+                    <td>
+                      {{input.name}}
+                    </td>
+                  </tr>
                 </tbody>
-            </table>
-
-            <table class="fb-main">
+              </table>
+            </td>
+            <td>
+              <table class="fb-outputs">
                 <tbody>
-                    <tr>
-                        <td>
-                            <table class="fb-inputs">
-                                <tbody>
-                                    <tr v-for="input in block.inputs"
-                                        :key="input.id">
-                                        <td>
-                                            <i class="bullseye icon"></i>
-                                        </td>
-                                        <td>
-                                            {{input.name}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                        <td>
-                            <table class="fb-outputs">
-                                <tbody>
-                                    <tr v-for="output in block.outputs"
-                                        :key="output.id">
-                                        <td>
-                                            {{output.name}}
-                                        </td>
-                                        <td>
-                                            <i class="bullseye icon"></i>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
+                  <tr v-for="output in block.outputs"
+                      :key="output.id">
+                    <td>
+                      {{output.name}}
+                    </td>
+                    <td>
+                      <i class="bullseye icon"></i>
+                    </td>
+                  </tr>
                 </tbody>
-            </table>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-            <div class="flow-block-image"></div>
-            <div class="flow-block-extend"></div>
-        </div>
+      <div class="flow-block-image"></div>
+      <div class="flow-block-extend"></div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -103,13 +103,12 @@ export default {
       this.draggedBlock = block_id;
     },
     block_dragstart: function(block_id, evt) {
-      //   let block_id = this.draggedBlock;
       if (this.draggedBlock == block_id) {
         this.dragData.startX = evt.offsetX;
         this.dragData.startY = evt.offsetY;
       }
     },
-    block_drag: function(key, evt) {
+    block_drag: function(evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
         this.updatePosition({
@@ -119,7 +118,7 @@ export default {
         });
       }
     },
-    block_dragend: function(key, evt) {
+    block_dragend: function(evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
         this.updatePosition({
