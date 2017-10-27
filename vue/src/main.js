@@ -1,9 +1,6 @@
 import $ from "jquery";
 window.$ = window.jQuery = global.$ = global.jQuery = $;
 
-// import "jquery-ui/ui/widgets/draggable.js";
-require("./vendors/jquery.panzoom/jquery.panzoom.js");
-
 import "semantic-ui-css/semantic.css";
 import "semantic-ui-css/semantic.js";
 
@@ -19,9 +16,9 @@ import store from "./vuex/store";
 
 /* eslint-disable no-new */
 new Vue({
-  el: "#app",
-  // router,
-  store,
-  template: "<App/>",
-  components: { App }
+    el: "#app",
+    // router,
+    store,
+    template: "<App/>",
+    components: { App }
 });

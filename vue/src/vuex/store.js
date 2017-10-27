@@ -19,102 +19,11 @@ const store = new Vuex.Store({
         },
         blocksPositions: {},
         flowCurrId: "testFlow",
-        // flows: initFlows,
-        flows: {
-            testFlow: {
-                blocks: {
-                    first_block: {
-                        title: "Заголовок",
-                        buttons: [],
-                        inputs: [{
-                                type: "circle",
-                                color: "red",
-                                name: "Image",
-                                checkFunction: () => {},
-                                id: "input_image"
-                            },
-                            {
-                                type: "triangle",
-                                color: "red",
-                                name: "Sigma",
-                                checkFunction: () => {},
-                                id: "input_sigma"
-                            },
-                            {
-                                type: "square",
-                                color: "white",
-                                name: "Mean",
-                                checkFunction: () => {},
-                                id: "input_mean"
-                            }
-                        ],
-                        outputs: [{
-                                type: "circle",
-                                color: "red",
-                                name: "Image Very long name",
-                                checkFunction: () => {},
-                                id: "input_image"
-                            },
-                            {
-                                type: "triangle",
-                                color: "red",
-                                name: "Sigma",
-                                checkFunction: () => {},
-                                id: "input_sigma"
-                            }
-                        ],
-                        imgUrl: ""
-                    },
-                    second_block: {
-                        title: "Заголовок 2",
-                        buttons: [],
-                        inputs: [{
-                                type: "circle",
-                                color: "red",
-                                name: "Image",
-                                checkFunction: () => {},
-                                id: "input_image"
-                            },
-                            {
-                                type: "triangle",
-                                color: "red",
-                                name: "Sigma",
-                                checkFunction: () => {},
-                                id: "input_sigma"
-                            },
-                            {
-                                type: "square",
-                                color: "white",
-                                name: "Mean",
-                                checkFunction: () => {},
-                                id: "input_mean"
-                            }
-                        ],
-                        outputs: [{
-                                type: "circle",
-                                color: "red",
-                                name: "Image Very long name",
-                                checkFunction: () => {},
-                                id: "input_image"
-                            },
-                            {
-                                type: "triangle",
-                                color: "red",
-                                name: "Sigma",
-                                checkFunction: () => {},
-                                id: "input_sigma"
-                            }
-                        ],
-                        imgUrl: ""
-                    }
-                },
-                links: {}
-            }
-        },
+        flows: initFlows,
         blocks: blocks
     },
     mutations: {
-        updatePosition: (state, { block_id, panX, panY, zoom }) => {
+        updatePosition: (state, { block_id, panX, panY, zoom, fullDump }) => {
             if (!block_id) return;
             let flowCurrId = state.flowCurrId;
             let blocksPositions = _.cloneDeep(state.blocksPositions);
@@ -132,9 +41,24 @@ const store = new Vuex.Store({
 
             state.blocksPositions = blocksPositions;
         },
-        savePositions: state => {}
+        updateAllPositions: (state, { flow_id, fullDump }) => {
+            console.log(fullDump);
+            if (fullDump && _.isObject(fullDump) && !_.isEmpty(fullDump)) {
+                state.blocksPositions = fullDump;
+            }
+        }
     },
-    actions: {},
+    actions: {
+        savePositions: ({ state }) =>
+            lstore.set("blocksPositions", _.cloneDeep(state.blocksPositions)),
+        getPositions: ({ commit, state }) => {
+            let blocksPositions = lstore.get("blocksPositions");
+            console.log(blocksPositions);
+            commit("updateAllPositions", {
+                fullDump: blocksPositions
+            });
+        }
+    },
     getters: {
         flowCurr: state => state.flows[state.flowCurrId],
         blocksPositions: state => state.blocksPositions[state.flowCurrId]

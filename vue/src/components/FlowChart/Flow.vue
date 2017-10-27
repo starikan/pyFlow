@@ -82,7 +82,9 @@ export default {
     };
   },
   name: "flow",
-  mounted() {},
+  mounted() {
+    this.getPositions();
+  },
   computed: {
     blocks_pos_style: function() {
       return _.mapValues(
@@ -125,13 +127,15 @@ export default {
           panX: evt.x - this.dragData.startX,
           panY: evt.y - this.dragData.startY
         });
+        this.draggedBlock = null;
+        this.dragData.startX = 0;
+        this.dragData.startY = 0;
+
+        this.savePositions();
       }
-      this.draggedBlock = null;
-      this.dragData.startX = 0;
-      this.dragData.startY = 0;
     },
-    ...mapMutations(["updatePosition"])
-    // ...mapActions([])
+    ...mapMutations(["updatePosition"]),
+    ...mapActions(["savePositions", "getPositions"])
   },
   watch: {}
 };
