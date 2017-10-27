@@ -1,6 +1,5 @@
 <template>
   <div id="flow">
-    <binput></binput>
     <div class="fb"
          v-for="(block, block_id) in flowCurr.blocks"
          :key="block_id"
@@ -30,34 +29,19 @@
             <td>
               <table class="fb-inputs">
                 <tbody>
-                  <!-- <binput v-for="input in block.inputs"
-                            :key="input.id">
-                    </binput> -->
-                  <!-- <tr v-for="input in block.inputs"
-                                          :key="input.id">
-                                        <td>
-                                          <i class="bullseye icon"></i>
-                                        </td>
-                                        <td>
-                                          {{input.name}}
-                                        </td>
-                                      </tr> -->
+                  <block-input v-for="input in block.inputs"
+                               :key="input.id"
+                               :input="input">
+                  </block-input>
                 </tbody>
               </table>
             </td>
             <td>
               <table class="fb-outputs">
                 <tbody>
-                  <tr v-for="output in block.outputs"
-                      :key="output.id">
-                    <td>
-                      {{output.name}}
-                    </td>
-                    <td>
-                      <i class="bullseye icon"
-                         @mousedown="linkStart(block_id, output.id, $event)"></i>
-                    </td>
-                  </tr>
+                  <block-output v-for="output in block.outputs"
+                                :key="output.id"
+                                :output="output"></block-output>
                 </tbody>
               </table>
             </td>
@@ -90,6 +74,7 @@ import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 import BlockInput from "./BlockInput";
+import BlockOutput from "./BlockOutput";
 
 export default {
   data: function() {
@@ -102,7 +87,7 @@ export default {
       }
     };
   },
-  components: { binput: BlockInput },
+  components: { BlockInput, BlockOutput },
   name: "flow",
   mounted() {
     this.getPositions();
@@ -167,11 +152,6 @@ export default {
 
         this.savePositions();
       }
-    },
-    linkStart: function(block_id, output_id, evt) {
-      // console.log(evt);
-      let startX = evt.pageX;
-      let startY = evt.pageY;
     },
     ...mapMutations(["updatePosition"]),
     ...mapActions(["savePositions", "getPositions"])

@@ -13,7 +13,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: "block-input",
-  props: ["input"]
+  name: "block-output",
+  props: ["output"]
 };
 </script>
