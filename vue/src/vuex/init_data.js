@@ -31,14 +31,14 @@ export let initFlows = {
                         color: "red",
                         name: "Image Very long name",
                         checkFunction: () => {},
-                        id: "input_image"
+                        id: "output_image"
                     },
                     {
                         type: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},
-                        id: "input_sigma"
+                        id: "output_sigma"
                     }
                 ],
                 imgUrl: ""
@@ -73,20 +73,28 @@ export let initFlows = {
                         color: "red",
                         name: "Image Very long name",
                         checkFunction: () => {},
-                        id: "input_image"
+                        id: "output_image"
                     },
                     {
                         type: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},
-                        id: "input_sigma"
+                        id: "output_sigma"
                     }
                 ],
                 imgUrl: ""
             }
         },
-        links: {}
+        links: {
+            id1: {
+                fromBlock: "first_block",
+                toBlock: "second_block",
+                output: "output_image",
+                input: "input_image",
+                style: {}
+            }
+        }
     }
 };
 

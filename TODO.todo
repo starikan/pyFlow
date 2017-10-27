@@ -1,7 +1,9 @@
-https://github.com/sdrdis/jquery.flowchart
-http://sebastien.drouyer.com/jquery.flowchart-demo/
+Смена слоев видимости блоков, чтобы при клике на низлежащий блок он перемещался на верх при перекрытии
 
 Сделать зум
     https://github.com/timmywil/jquery.panzoom
 Миникарту
 Смену flows
+
+Разбить на компоненты
+Тесты

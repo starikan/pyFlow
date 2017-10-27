@@ -59,6 +59,7 @@ const store = new Vuex.Store({
     },
     getters: {
         flowCurr: state => state.flows[state.flowCurrId],
+        linksCurr: state => state.flows[state.flowCurrId].links,
         blocksPositions: state => state.blocksPositions[state.flowCurrId]
     }
 });
