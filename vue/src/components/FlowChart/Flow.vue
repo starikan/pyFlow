@@ -41,7 +41,8 @@
                 <tbody>
                   <block-output v-for="output in block.outputs"
                                 :key="output.id"
-                                :output="output"></block-output>
+                                :output="output"
+                                :block-id="block_id"></block-output>
                 </tbody>
               </table>
             </td>
@@ -107,7 +108,7 @@ export default {
         let toBlock = link.toBlock;
         let output = link.output;
         let input = link.input;
-        console.log(this, link, id);
+        console.log(link, id);
       });
       return data;
     },

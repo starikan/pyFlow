@@ -18,11 +18,19 @@ const store = new Vuex.Store({
             isShow: false
         },
         blocksPositions: {},
+        linksPositions: {},
+        ioCoords: {},
         flowCurrId: "testFlow",
         flows: initFlows,
         blocks: blocks
     },
     mutations: {
+        updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
+            let ioCoords = _.cloneDeep(state.ioCoords);
+            _.set(ioCoords, [block_id, ioType, ioId], coords);
+            state.ioCoords = ioCoords;
+        },
+        updateLinks: (state, {}) => {},
         updatePosition: (state, { block_id, panX, panY, zoom, fullDump }) => {
             if (!block_id) return;
             let flowCurrId = state.flowCurrId;
