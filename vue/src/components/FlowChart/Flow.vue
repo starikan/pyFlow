@@ -1,6 +1,5 @@
 <template>
     <div id="flow">
-
         <div class="fb"
              v-for="(block, key) in flowCurr.blocks"
              :key="key"
@@ -9,7 +8,7 @@
              @drag.stop="block_drag(key, $event)"
              @dragend.stop="block_dragend(key, $event)"
              :draggable="draggedBlock == key"
-             :style="positions_style[key]">
+             :style="blocks_pos_style[key]">
 
             <table class="fb-title"
                    @mousedown="title_mousedown(key)">
@@ -62,10 +61,7 @@
             </table>
 
             <div class="flow-block-image"></div>
-            <div class="flow-block-extend">
-                <p>{{positions[key]}}</p>
-                <p>{{positions_style[key]}}</p>
-            </div>
+            <div class="flow-block-extend"></div>
         </div>
     </div>
 </template>
@@ -82,28 +78,20 @@ export default {
       dragData: {
         startX: 0,
         startY: 0
-      },
-      positions: {}
+      }
     };
   },
   name: "flow",
-  mounted() {
-    _.forEach(this.flowCurr.blocks, (val, key) => {
-      if (!(key in this.positions)) {
-        this.$set(this.positions, key, [1, 0, 0, 1, 0, 0]);
-      }
-    });
-  },
+  mounted() {},
   computed: {
-    positions_style: function() {
-      let positions = {};
-      _.forEach(this.positions, (val, key) => {
-        positions[key] = `transform: matrix(${val})`;
-      });
-      return positions;
+    blocks_pos_style: function() {
+      return _.mapValues(
+        this.blocksPositions,
+        val => `transform: matrix(${val})`
+      );
     },
     ...mapState(["flow"]),
-    ...mapGetters(["flowCurr"])
+    ...mapGetters(["flowCurr", "blocksPositions"])
   },
   methods: {
     fb_click: function(block_id) {
@@ -122,22 +110,27 @@ export default {
     block_drag: function(key, evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
-        this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
-        this.$set(this.positions[block_id], 5, evt.y - this.dragData.startY);
+        this.updatePosition({
+          block_id: block_id,
+          panX: evt.x - this.dragData.startX,
+          panY: evt.y - this.dragData.startY
+        });
       }
-      return false;
     },
     block_dragend: function(key, evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
-        this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
-        this.$set(this.positions[block_id], 5, evt.y - this.dragData.startY);
+        this.updatePosition({
+          block_id: block_id,
+          panX: evt.x - this.dragData.startX,
+          panY: evt.y - this.dragData.startY
+        });
       }
       this.draggedBlock = null;
       this.dragData.startX = 0;
       this.dragData.startY = 0;
-    }
-    // ...mapMutations([]),
+    },
+    ...mapMutations(["updatePosition"])
     // ...mapActions([])
   },
   watch: {}
