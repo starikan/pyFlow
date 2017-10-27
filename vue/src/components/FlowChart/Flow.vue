@@ -7,13 +7,12 @@
              @click.stop="fb_click"
              @dragstart.stop="block_dragstart"
              @drag.stop="block_drag"
-             @dragend.stop="title_mouseup"
+             @dragend.stop="block_dragend"
              :draggable="draggedBlock == key"
              :style="positions_style[key]">
 
             <table class="fb-title"
-                   @mousedown="title_mousedown(key)"
-                   @mouseup.stop="title_mouseup">
+                   @mousedown="title_mousedown(key)">
 
                 <tbody>
                     <tr>
@@ -95,15 +94,11 @@ export default {
   mounted() {},
   computed: {
     positions_style: function() {
-      return {
-        first_block: `transform: matrix(${this.positions["first_block"]})`
-      };
-      //   let positions = {};
-      //   _.forEach(this.positions, (val, key) => {
-      //     positions[key] = `transform: matrix(${val})`;
-      //   });
-      //   console.log(positions);
-      //   return positions;
+      let positions = {};
+      _.forEach(this.positions, (val, key) => {
+        positions[key] = `transform: matrix(${val})`;
+      });
+      return positions;
     },
     ...mapState(["flow"]),
     ...mapGetters(["flowCurr"])
@@ -115,33 +110,31 @@ export default {
     fb_click: () => {},
     title_mousedown: function(block_id) {
       this.draggedBlock = block_id;
-      //   console.log("fb_title_mousedown", block_id, this.draggedBlock);
-    },
-    title_mouseup: function() {
-      //   console.log("fb_title_mouseup");
-      this.draggedBlock = null;
     },
     block_dragstart: function(evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
-        this.dragData.startX = evt.x;
-        this.dragData.startY = evt.y;
-        // console.log(evt);
+        this.dragData.startX = evt.offsetX;
+        this.dragData.startY = evt.offsetY;
       }
     },
     block_drag: function(evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
-        let positions = this.positions;
-        positions[block_id][4] = evt.x - this.dragData.startX;
-        positions[block_id][5] = evt.y - this.dragData.startY;
-        this.positions = positions;
-        console.log(
-          this.positions[block_id],
-          this.positions_style[block_id]
-          //   evt
-        );
+        this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
+        this.$set(this.positions[block_id], 5, evt.y - this.dragData.startY);
       }
+      return false;
+    },
+    block_dragend: function(evt) {
+      let block_id = this.draggedBlock;
+      if (block_id) {
+        this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
+        this.$set(this.positions[block_id], 5, evt.y - this.dragData.startY);
+      }
+      this.draggedBlock = null;
+      this.dragData.startX = 0;
+      this.dragData.startY = 0;
     }
     // ...mapMutations([]),
     // ...mapActions([])
