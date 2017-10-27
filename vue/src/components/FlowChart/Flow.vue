@@ -4,10 +4,10 @@
         <div class="fb"
              v-for="(block, key) in flowCurr.blocks"
              :key="key"
-             @click.stop="fb_click"
-             @dragstart.stop="block_dragstart"
-             @drag.stop="block_drag"
-             @dragend.stop="block_dragend"
+             @click.stop="fb_click(key)"
+             @dragstart.stop="block_dragstart(key, $event)"
+             @drag.stop="block_drag(key, $event)"
+             @dragend.stop="block_dragend(key, $event)"
              :draggable="draggedBlock == key"
              :style="positions_style[key]">
 
@@ -71,8 +71,6 @@
 </template>
 
 <script>
-// http://jsfiddle.net/yMv7y/3678/
-
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -85,13 +83,17 @@ export default {
         startX: 0,
         startY: 0
       },
-      positions: {
-        first_block: [1, 0, 0, 1, 0, 0]
-      }
+      positions: {}
     };
   },
   name: "flow",
-  mounted() {},
+  mounted() {
+    _.forEach(this.flowCurr.blocks, (val, key) => {
+      if (!(key in this.positions)) {
+        this.$set(this.positions, key, [1, 0, 0, 1, 0, 0]);
+      }
+    });
+  },
   computed: {
     positions_style: function() {
       let positions = {};
@@ -104,21 +106,20 @@ export default {
     ...mapGetters(["flowCurr"])
   },
   methods: {
-    flow_click: () => {},
-    flow_mousemove: () => {},
-    flow_mouseup: () => {},
-    fb_click: () => {},
+    fb_click: function(block_id) {
+      this.selectedBlock = block_id;
+    },
     title_mousedown: function(block_id) {
       this.draggedBlock = block_id;
     },
-    block_dragstart: function(evt) {
-      let block_id = this.draggedBlock;
-      if (block_id) {
+    block_dragstart: function(block_id, evt) {
+      //   let block_id = this.draggedBlock;
+      if (this.draggedBlock == block_id) {
         this.dragData.startX = evt.offsetX;
         this.dragData.startY = evt.offsetY;
       }
     },
-    block_drag: function(evt) {
+    block_drag: function(key, evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
         this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
@@ -126,7 +127,7 @@ export default {
       }
       return false;
     },
-    block_dragend: function(evt) {
+    block_dragend: function(key, evt) {
       let block_id = this.draggedBlock;
       if (block_id) {
         this.$set(this.positions[block_id], 4, evt.x - this.dragData.startX);
