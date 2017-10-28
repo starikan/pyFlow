@@ -18,6 +18,11 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   name: "block-output",
   props: ["output", "blockId"],
+  data: function() {
+    return {
+      renderDone: false
+    };
+  },
   methods: {
     linkStart: function(evt) {
       console.log(evt);
@@ -26,19 +31,27 @@ export default {
     },
     ...mapMutations(["updateIOCoords"])
   },
-  mounted() {},
+  mounted() {
+    this.renderDone = true;
+  },
   computed: {
     pageX: function() {
-      return (
-        this.$refs["icon"].getBoundingClientRect().x +
-        this.blocksPositions[this.blockId][4]
-      );
+      if (this.renderDone) {
+        let childX = this.$refs["icon"].getBoundingClientRect().x;
+        let parentX = this.blocksPositions[this.blockId][4];
+        return childX + parentX;
+      } else {
+        return 0;
+      }
     },
     pageY: function() {
-      return (
-        this.$refs["icon"].getBoundingClientRect().y +
-        this.blocksPositions[this.blockId][5]
-      );
+      if (this.renderDone) {
+        let childX = this.$refs["icon"].getBoundingClientRect().y;
+        let parentX = this.blocksPositions[this.blockId][5];
+        return childX + parentX;
+      } else {
+        return 0;
+      }
     },
     coords: function() {
       return {
@@ -49,14 +62,14 @@ export default {
     ...mapGetters(["blocksPositions"])
   },
   watch: {
-    // coords: function(newCoords) {
-    //   this.updateIOCoords({
-    //     block_id: this.blockId,
-    //     ioType: "output",
-    //     oiId: this.output.id,
-    //     coords: newCoords
-    //   });
-    // }
+    coords: function(newCoords) {
+      this.updateIOCoords({
+        block_id: this.blockId,
+        ioType: "output",
+        ioId: this.output.id,
+        coords: newCoords
+      });
+    }
   }
 };
 </script>
