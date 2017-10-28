@@ -31,7 +31,8 @@
                 <tbody>
                   <block-input v-for="input in block.inputs"
                                :key="input.id"
-                               :input="input">
+                               :input="input"
+                               :block-id="block_id">
                   </block-input>
                 </tbody>
               </table>

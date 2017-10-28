@@ -63,6 +63,7 @@ export default {
   },
   watch: {
     coords: function(newCoords) {
+      // TODO: срабатывает 2 раза за каждое движение. Сократить в 2 раза
       this.updateIOCoords({
         block_id: this.blockId,
         ioType: "output",
