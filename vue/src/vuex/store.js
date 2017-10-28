@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     },
     mutations: {
         updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
-            let ioCoords = _.cloneDeep(state.ioCoords);
+            let ioCoords = Object.assign({}, state.ioCoords);
             _.set(ioCoords, [block_id, ioType, ioId], coords);
             state.ioCoords = ioCoords;
         },
@@ -34,7 +34,7 @@ const store = new Vuex.Store({
         updatePosition: (state, { block_id, panX, panY, zoom, fullDump }) => {
             if (!block_id) return;
             let flowCurrId = state.flowCurrId;
-            let blocksPositions = _.cloneDeep(state.blocksPositions);
+            let blocksPositions = Object.assign({}, state.blocksPositions);
 
             if (!_.get(blocksPositions, [flowCurrId, block_id])) {
                 _.set(blocksPositions, [flowCurrId, block_id], [1, 0, 0, 1, 0, 0]);
@@ -57,7 +57,7 @@ const store = new Vuex.Store({
     },
     actions: {
         savePositions: ({ state }) =>
-            lstore.set("blocksPositions", _.cloneDeep(state.blocksPositions)),
+            lstore.set("blocksPositions", Object.assign({}, state.blocksPositions)),
         getPositions: ({ commit, state }) => {
             let blocksPositions = lstore.get("blocksPositions");
             commit("updateAllPositions", {
