@@ -54,20 +54,10 @@
       <div class="flow-block-image"></div>
       <div class="flow-block-extend"></div>
     </div>
-    <div class="links">
-      <div class="link"
-           v-for="(link, link_id) in linksCurr"
-           :key="link_id">
-        {{linesData}}
-        <svg>
-          <line x1="0"
-                y1="0"
-                x2="200"
-                y2="200"
-                style="stroke:rgb(255,0,0);stroke-width:2" />
-        </svg>
-      </div>
-    </div>
+    <links v-for="(link, link_id) in linksCurr"
+           :key="link_id"
+           :link="link"></links>
+
   </div>
 </template>
 
@@ -77,6 +67,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 import BlockInput from "./BlockInput";
 import BlockOutput from "./BlockOutput";
+import Links from "./Links";
 
 export default {
   data: function() {
@@ -89,7 +80,7 @@ export default {
       }
     };
   },
-  components: { BlockInput, BlockOutput },
+  components: { BlockInput, BlockOutput, Links },
   name: "flow",
   mounted() {
     this.getPositions();
