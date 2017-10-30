@@ -27,7 +27,6 @@ export default {
   computed: {
     input: function() {
       let blockId = this.link.toBlock;
-      console.log(blockId);
       let coords = _.get(this.ioCoords, [blockId, "input", this.link.input], {
         x: 0,
         y: 0

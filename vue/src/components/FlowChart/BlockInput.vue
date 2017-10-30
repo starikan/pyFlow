@@ -18,19 +18,14 @@ export default {
   name: "block-input",
   props: ["input", "blockId"],
   data: function() {
-    return {
-      renderDone: false
-    };
+    return {};
   },
   methods: {
     ...mapMutations(["updateIOCoords"])
   },
-  mounted() {
-    this.renderDone = true;
-  },
   computed: {
     pageX: function() {
-      if (this.renderDone) {
+      if (this.blocksPositions && this.$refs["icon"]) {
         let childX = this.$refs["icon"].getBoundingClientRect().x;
         let parentX = this.blocksPositions[this.blockId][4];
         return childX + parentX;
@@ -39,7 +34,7 @@ export default {
       }
     },
     pageY: function() {
-      if (this.renderDone) {
+      if (this.blocksPositions && this.$refs["icon"]) {
         let childX = this.$refs["icon"].getBoundingClientRect().y;
         let parentX = this.blocksPositions[this.blockId][5];
         return childX + parentX;
