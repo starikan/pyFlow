@@ -125,6 +125,7 @@ export default {
     background-image: url("/static/background.jpg");
     position: absolute;
     font-family: "Open Sans Condensed", sans-serif;
+    user-select: none;
 }
 .fb {
     position: absolute;
@@ -136,6 +137,7 @@ export default {
     font-size: 28px;
     padding: 5px;
     width: 100%;
+    cursor: move;
 }
 
 .fb-main {
