@@ -1,11 +1,11 @@
 <template lang="pug">
     tr
-        td(v-if="type=='output'") {{data.name}}
+        td(v-if="data.type=='output'") {{data.name}}
         td: i.bullseye.icon(
             @mousedown="linkStart($event)"
             ref="icon"
         )
-        td(v-if="type=='input'") {{data.name}}
+        td(v-if="data.type=='input'") {{data.name}}
 </template>
 
 <script>
@@ -14,7 +14,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "block-dot",
-    props: ["data", "blockId", "type"],
+    props: ["data", "blockId"],
     data: function() {
         return {
             currBlock: null
@@ -25,6 +25,7 @@ export default {
 
         linkStart: function(evt) {
             console.log(evt);
+            console.log(this.data, this.blockId);
             let startX = evt.pageX;
             let startY = evt.pageY;
         }
@@ -55,7 +56,7 @@ export default {
         coords: function(newCoords) {
             this.updateIOCoords({
                 block_id: this.blockId,
-                ioType: this.type,
+                ioType: this.data.type,
                 ioId: this.data.id,
                 coords: newCoords
             });

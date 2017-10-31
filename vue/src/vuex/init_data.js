@@ -5,21 +5,24 @@ export let initFlows = {
                 title: "Заголовок",
                 buttons: [],
                 inputs: [{
-                        type: "circle",
+                        type: "input",
+                        figure: "circle",
                         color: "red",
                         name: "Image",
                         checkFunction: () => {},
                         id: "input_image"
                     },
                     {
-                        type: "triangle",
+                        type: "input",
+                        figure: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},
                         id: "input_sigma"
                     },
                     {
-                        type: "square",
+                        type: "input",
+                        figure: "square",
                         color: "white",
                         name: "Mean",
                         checkFunction: () => {},
@@ -27,14 +30,16 @@ export let initFlows = {
                     }
                 ],
                 outputs: [{
-                        type: "circle",
+                        type: "output",
+                        figure: "circle",
                         color: "red",
                         name: "Image Very long name",
                         checkFunction: () => {},
                         id: "output_image"
                     },
                     {
-                        type: "triangle",
+                        type: "output",
+                        figure: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},
@@ -47,21 +52,24 @@ export let initFlows = {
                 title: "Заголовок 2",
                 buttons: [],
                 inputs: [{
-                        type: "circle",
+                        type: "input",
+                        figure: "circle",
                         color: "red",
                         name: "Image",
                         checkFunction: () => {},
                         id: "input_image"
                     },
                     {
-                        type: "triangle",
+                        type: "input",
+                        figure: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},
                         id: "input_sigma"
                     },
                     {
-                        type: "square",
+                        type: "input",
+                        figure: "square",
                         color: "white",
                         name: "Mean",
                         checkFunction: () => {},
@@ -69,14 +77,16 @@ export let initFlows = {
                     }
                 ],
                 outputs: [{
-                        type: "circle",
+                        type: "output",
+                        figure: "circle",
                         color: "red",
                         name: "Image Very long name",
                         checkFunction: () => {},
                         id: "output_image"
                     },
                     {
-                        type: "triangle",
+                        type: "output",
+                        figure: "triangle",
                         color: "red",
                         name: "Sigma",
                         checkFunction: () => {},

@@ -24,7 +24,6 @@
                         v-for="input in block.inputs" 
                         :key="input.id" 
                         :data="input" 
-                        type="input"
                         :block-id="block_id"
                         )
                     td: table.fb-outputs: tbody
@@ -32,7 +31,6 @@
                         v-for="output in block.outputs" 
                         :key="output.id" 
                         :data="output" 
-                        type="output"
                         :block-id="block_id"
                         )
 
