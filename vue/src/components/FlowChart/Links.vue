@@ -30,9 +30,9 @@ export default {
             let coords = { x: 0, y: 0 };
             if (this.link) {
                 coords = _.get(this.ioCoords, [
-                    this.link.toBlock,
+                    this.link.input.block_id,
                     "input",
-                    this.link.input
+                    this.link.input.dot_id
                 ]);
             }
             return coords;
@@ -42,9 +42,9 @@ export default {
             let coords = { x: 0, y: 0 };
             if (this.link) {
                 coords = _.get(this.ioCoords, [
-                    this.link.fromBlock,
+                    this.link.output.block_id,
                     "output",
-                    this.link.output
+                    this.link.output.dot_id
                 ]);
             }
             return coords;

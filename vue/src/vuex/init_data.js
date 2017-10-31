@@ -98,10 +98,14 @@ export let initFlows = {
         },
         links: {
             id1: {
-                fromBlock: "first_block",
-                toBlock: "second_block",
-                output: "output_image",
-                input: "input_image",
+                output: {
+                    block_id: "first_block",
+                    dot_id: "output_image"
+                },
+                input: {
+                    block_id: "second_block",
+                    dot_id: "input_image"
+                },
                 style: {}
             }
         }

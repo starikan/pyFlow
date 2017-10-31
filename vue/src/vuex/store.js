@@ -18,7 +18,6 @@ const store = new Vuex.Store({
             isShow: false
         },
         blocksPositions: {},
-        linksPositions: {},
         ioCoords: {},
         flowCurrId: "testFlow",
         flows: initFlows,

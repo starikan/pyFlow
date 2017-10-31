@@ -22,17 +22,17 @@
                 tbody: tr
                     td: table.fb-inputs: tbody
                         block-dot(
-                        v-for="input in block.inputs" 
-                        :key="input.id" 
-                        :data="input" 
-                        :block-id="block_id"
+                            v-for="input in block.inputs" 
+                            :key="input.id" 
+                            :data="input" 
+                            :block-id="block_id"
                         )
                     td: table.fb-outputs: tbody
                         block-dot(
-                        v-for="output in block.outputs" 
-                        :key="output.id" 
-                        :data="output" 
-                        :block-id="block_id"
+                            v-for="output in block.outputs" 
+                            :key="output.id" 
+                            :data="output" 
+                            :block-id="block_id"
                         )
 
             .flow-block-image
@@ -65,22 +65,12 @@ export default {
     components: { BlockDot, Links },
     name: "flow",
     mounted() {
+        // Get initial positions
         this.getPositions();
     },
     computed: {
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
-        },
-        linesData: function() {
-            let data = {};
-            _.forEach(this.linksCurr, (link, id) => {
-                let coords = {};
-                let fromBlock = link.fromBlock;
-                let toBlock = link.toBlock;
-                let output = link.output;
-                let input = link.input;
-            });
-            return data;
         },
         ...mapState(["flow"]),
         ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
