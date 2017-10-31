@@ -119,7 +119,6 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #flow {
     width: 100%;
@@ -128,25 +127,22 @@ export default {
     position: absolute;
     font-family: "Open Sans Condensed", sans-serif;
 }
-
 .fb {
     position: absolute;
     border-color: black;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .fb-title {
     font-size: 28px;
     padding: 5px;
     width: 100%;
-    background-color: magenta;
 }
 
 .fb-main {
-    /* font-size: 28px; */
     padding: 5px;
     width: 100%;
-    background-color: green;
+    background-color: rgba(127, 127, 127, 0.5);
 }
 
 .fb-main td {
