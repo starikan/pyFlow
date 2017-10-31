@@ -20,17 +20,19 @@
             table.fb-main
                 tbody: tr
                     td: table.fb-inputs: tbody
-                        block-input(
+                        block-dot(
                         v-for="input in block.inputs" 
                         :key="input.id" 
-                        :input="input" 
+                        :data="input" 
+                        type="input"
                         :block-id="block_id"
                         )
                     td: table.fb-outputs: tbody
-                        block-output(
+                        block-dot(
                         v-for="output in block.outputs" 
                         :key="output.id" 
-                        :output="output" 
+                        :data="output" 
+                        type="output"
                         :block-id="block_id"
                         )
 
@@ -48,8 +50,7 @@
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
-import BlockInput from "./BlockInput";
-import BlockOutput from "./BlockOutput";
+import BlockDot from "./BlockDot";
 import Links from "./Links";
 
 export default {
@@ -61,7 +62,7 @@ export default {
             blockOffsetY: 0
         };
     },
-    components: { BlockInput, BlockOutput, Links },
+    components: { BlockDot, Links },
     name: "flow",
     mounted() {
         this.getPositions();
