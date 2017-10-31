@@ -24,9 +24,9 @@ const store = new Vuex.Store({
         blocks: blocks
     },
     mutations: {
-        addLink: function(
-            state, { link_id, from_block, output_id, to_block, input_id }
-        ) {},
+        addLink: function(state, { dot0, dot1, link_id, style }) {
+            console.log(dot0, dot1);
+        },
         editLink: (state, { link_id }) => {},
         removeLink: (state, { link_id }) => {
             let links = Object.assign({}, state.flows[state.flowCurrId].links);

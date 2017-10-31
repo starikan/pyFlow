@@ -3,6 +3,7 @@
         td(v-if="data.type=='output'") {{data.name}}
         td: i.bullseye.icon(
             @mousedown="linkStart($event)"
+            @mouseup="linkEnd($event)"
             ref="icon"
         )
         td(v-if="data.type=='input'") {{data.name}}
@@ -24,10 +25,19 @@ export default {
         ...mapMutations(["updateIOCoords"]),
 
         linkStart: function(evt) {
-            console.log(evt);
-            console.log(this.data, this.blockId);
-            let startX = evt.pageX;
-            let startY = evt.pageY;
+            this.$emit("linkStart", {
+                block_id: this.blockId,
+                data: this.data,
+                coords: this.coords
+            });
+        },
+
+        linkEnd: function(evt) {
+            this.$emit("linkEnd", {
+                block_id: this.blockId,
+                data: this.data,
+                coords: this.coords
+            });
         }
     },
     computed: {
@@ -48,6 +58,7 @@ export default {
         }
     },
     watch: {
+        // Need only element of object updates
         blocksPositions: function(newPos) {
             if (!_.isEqual(newPos[this.blockId], this.currBlock)) {
                 this.currBlock = _.clone(newPos[this.blockId]);
