@@ -1,17 +1,16 @@
 <template>
-  <div id="flow">
+  <div id="flow"
+       @mousemove.stop="flow_mousemove(blockDraggedId, $event)"
+       @mouseup.stop="flow_mouseup($event)">
+
     <div class="fb"
          v-for="(block, block_id) in flowCurr.blocks"
          :key="block_id"
          @click.stop="fb_click(block_id)"
-         @dragstart.stop="block_dragstart(block_id, $event)"
-         @drag.stop="block_drag($event)"
-         @dragend.stop="block_dragend($event)"
-         :draggable="draggedBlock == block_id"
          :style="blocks_pos_style[block_id]">
 
       <table class="fb-title"
-             @mousedown="title_mousedown(block_id)">
+             @mousedown.stop="title_mousedown(block_id, $event)">
 
         <tbody>
           <tr>
@@ -72,12 +71,10 @@ import Links from "./Links";
 export default {
   data: function() {
     return {
-      selectedBlock: null,
-      draggedBlock: null,
-      dragData: {
-        startX: 0,
-        startY: 0
-      }
+      blockSelectedId: null,
+      blockDraggedId: null,
+      blockOffsetX: 0,
+      blockOffsetY: 0
     };
   },
   components: { BlockInput, BlockOutput, Links },
@@ -100,7 +97,6 @@ export default {
         let toBlock = link.toBlock;
         let output = link.output;
         let input = link.input;
-        // console.log(link, id);
       });
       return data;
     },
@@ -110,41 +106,27 @@ export default {
   methods: {
     getCoordInOut: function() {},
     fb_click: function(block_id) {
-      this.selectedBlock = block_id;
+      this.blockSelectedId = block_id;
     },
-    title_mousedown: function(block_id) {
-      this.draggedBlock = block_id;
+    // First click on title to move block
+    title_mousedown: function(block_id, evt) {
+      this.blockDraggedId = block_id;
+      this.blockOffsetX = evt.offsetX;
+      this.blockOffsetY = evt.offsetY;
     },
-    block_dragstart: function(block_id, evt) {
-      if (this.draggedBlock == block_id) {
-        this.dragData.startX = evt.offsetX;
-        this.dragData.startY = evt.offsetY;
-      }
+    // Second move clock, but get event on all flow
+    flow_mousemove: function(block_id, evt) {
+      this.updatePosition({
+        block_id: block_id,
+        panX: evt.pageX - this.blockOffsetX,
+        panY: evt.pageY - this.blockOffsetY
+      });
+      return false;
     },
-    block_drag: function(evt) {
-      let block_id = this.draggedBlock;
-      if (block_id) {
-        this.updatePosition({
-          block_id: block_id,
-          panX: evt.x - this.dragData.startX,
-          panY: evt.y - this.dragData.startY
-        });
-      }
-    },
-    block_dragend: function(evt) {
-      let block_id = this.draggedBlock;
-      if (block_id) {
-        this.updatePosition({
-          block_id: block_id,
-          panX: evt.x - this.dragData.startX,
-          panY: evt.y - this.dragData.startY
-        });
-        this.draggedBlock = null;
-        this.dragData.startX = 0;
-        this.dragData.startY = 0;
-
-        this.savePositions();
-      }
+    // End of dragging
+    flow_mouseup: function(evt) {
+      this.blockDraggedId = null;
+      this.savePositions();
     },
     ...mapMutations(["updatePosition"]),
     ...mapActions(["savePositions", "getPositions"])
