@@ -37,7 +37,11 @@
       .flow-block-image
       .flow-block-extend
 
-    links v-for="(link, link_id) in linksCurr" :key="link_id" :link="link"
+    links(
+      v-for="(link, link_id) in linksCurr" 
+      :key="link_id" 
+      :link="link"
+    )
 </template>
 
 <script>

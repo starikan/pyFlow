@@ -1,7 +1,10 @@
 Смена слоев видимости блоков, чтобы при клике на низлежащий блок он перемещался на верх при перекрытии
-https://kryogenix.org/code/browser/custom-drag-image.html
 
 Курсор над блоком при таскании
+
+Прилипание блока к сетке
+
+Стиль линка
 
 Сделать зум
     https://github.com/timmywil/jquery.panzoom
