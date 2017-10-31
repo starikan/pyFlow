@@ -5,9 +5,10 @@
     )
 
         .fb(
-        v-for="(block, block_id) in flowCurr.blocks" 
-        :key="block_id" @click.stop="fb_click(block_id)" 
-        :style="blocks_pos_style[block_id]"
+            v-for="(block, block_id) in flowCurr.blocks" 
+            :key="block_id" 
+            @click.stop="fb_click(block_id)" 
+            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
         )
 
             table.fb-title(
@@ -67,10 +68,7 @@ export default {
     },
     computed: {
         blocks_pos_style: function() {
-            return _.mapValues(
-                this.blocksPositions,
-                val => `transform: matrix(${val})`
-            );
+            return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
         linesData: function() {
             let data = {};
