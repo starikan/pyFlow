@@ -1,10 +1,11 @@
 <template lang="pug">
     .link: svg: line(
-        v-bind:x1="x1"
-        v-bind:y1="y1"
-        v-bind:x2="x2"
-        v-bind:y2="y2"
+        :x1="x1"
+        :y1="y1"
+        :x2="x2"
+        :y2="y2"
         style="stroke:rgb(255,0,0);stroke-width:2"
+        @dblclick="line_dblclick($event)"
     )
 </template>
 
@@ -14,7 +15,14 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "links",
-    props: ["link"],
+    props: ["link", "linkId"],
+    methods: {
+        ...mapMutations(["removeLink"]),
+
+        line_dblclick: function(evt) {
+            this.removeLink({ link_id: this.linkId });
+        }
+    },
     computed: {
         ...mapState(["ioCoords"]),
 
@@ -43,35 +51,19 @@ export default {
         },
 
         x1: function() {
-            let coord = 0;
-            if (this.input) {
-                coord = this.input.x;
-            }
-            return coord;
+            return _.get(this.input, ["x"], 0);
         },
 
         y1: function() {
-            let coord = 0;
-            if (this.input) {
-                coord = this.input.y;
-            }
-            return coord;
+            return _.get(this.input, ["y"], 0);
         },
 
         x2: function() {
-            let coord = 0;
-            if (this.output) {
-                coord = this.output.x;
-            }
-            return coord;
+            return _.get(this.output, ["x"], 0);
         },
 
         y2: function() {
-            let coord = 0;
-            if (this.output) {
-                coord = this.output.y;
-            }
-            return coord;
+            return _.get(this.output, ["y"], 0);
         }
     }
 };

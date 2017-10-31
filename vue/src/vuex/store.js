@@ -25,19 +25,29 @@ const store = new Vuex.Store({
         blocks: blocks
     },
     mutations: {
+        addLink: function(
+            state, { link_id, from_block, output_id, to_block, input_id }
+        ) {},
+        editLink: (state, { link_id }) => {},
+        removeLink: (state, { link_id }) => {
+            let links = Object.assign({}, state.flows[state.flowCurrId].links);
+            _.unset(links, link_id);
+            state.flows[state.flowCurrId].links = links;
+        },
         updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
             let ioCoords = Object.assign({}, state.ioCoords);
             _.set(ioCoords, [block_id, ioType, ioId], coords);
             state.ioCoords = ioCoords;
         },
-        updateLinks: (state, {}) => {},
         updatePosition: (state, { block_id, panX, panY, zoom, fullDump }) => {
             if (!block_id) return;
             let flowCurrId = state.flowCurrId;
             let blocksPositions = Object.assign({}, state.blocksPositions);
 
             if (!_.get(blocksPositions, [flowCurrId, block_id])) {
-                _.set(blocksPositions, [flowCurrId, block_id], [1, 0, 0, 1, 0, 0]);
+                _.set(
+                    blocksPositions, [flowCurrId, block_id], [1, 0, 0, 1, 0, 0]
+                );
             }
             let position = _.get(blocksPositions, [flowCurrId, block_id]);
 
@@ -57,7 +67,10 @@ const store = new Vuex.Store({
     },
     actions: {
         savePositions: ({ state }) =>
-            lstore.set("blocksPositions", Object.assign({}, state.blocksPositions)),
+            lstore.set(
+                "blocksPositions",
+                Object.assign({}, state.blocksPositions)
+            ),
         getPositions: ({ commit, state }) => {
             let blocksPositions = lstore.get("blocksPositions");
             commit("updateAllPositions", {

@@ -42,6 +42,7 @@
             v-for="(link, link_id) in linksCurr" 
             :key="link_id" 
             :link="link"
+            :link-id="link_id"
         )
 </template>
 
