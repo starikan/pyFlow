@@ -100,11 +100,13 @@ export default {
         },
         // Second move clock, but get event on all flow
         flow_mousemove: function(block_id, evt) {
-            this.updatePosition({
-                block_id: block_id,
-                panX: evt.pageX - this.blockOffsetX,
-                panY: evt.pageY - this.blockOffsetY
-            });
+            if (block_id) {
+                this.updatePosition({
+                    block_id: block_id,
+                    panX: evt.pageX - this.blockOffsetX,
+                    panY: evt.pageY - this.blockOffsetY
+                });
+            }
             return false;
         },
         // End of dragging

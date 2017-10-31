@@ -11,9 +11,6 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 export default {
     name: "block-input",
     props: ["input", "blockId"],
-    data: function() {
-        return {};
-    },
     methods: {
         ...mapMutations(["updateIOCoords"])
     },
@@ -36,22 +33,25 @@ export default {
                 return 0;
             }
         },
-        coords: function() {
-            return {
-                x: this.pageX,
-                y: this.pageY
-            };
-        },
         ...mapGetters(["blocksPositions"])
     },
     watch: {
-        coords: function(newCoords) {
-            // TODO: срабатывает 2 раза за каждое движение. Сократить в 2 раза
+        // Update like this, i.e. on every move update every coord
+        // needs in that point then blocks will modify in live
+        pageX: function(newX) {
             this.updateIOCoords({
                 block_id: this.blockId,
                 ioType: "input",
                 ioId: this.input.id,
-                coords: newCoords
+                coords: { x: newX, y: this.pageY }
+            });
+        },
+        pageY: function(newY) {
+            this.updateIOCoords({
+                block_id: this.blockId,
+                ioType: "input",
+                ioId: this.input.id,
+                coords: { x: this.pageX, y: newY }
             });
         }
     }
