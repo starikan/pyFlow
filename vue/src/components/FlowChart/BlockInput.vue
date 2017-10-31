@@ -1,13 +1,7 @@
-<template>
-    <tr>
-        <td>
-            <i class="bullseye icon"
-               ref="icon"></i>
-        </td>
-        <td>
-            {{input.name}}
-        </td>
-    </tr>
+<template lang="pug">
+    tr
+      td: i.bullseye.icon(ref="icon")
+      td {{input.name}}
 </template>
 
 <script>

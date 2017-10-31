@@ -1,63 +1,43 @@
-<template>
-  <div id="flow"
-       @mousemove.stop="flow_mousemove(blockDraggedId, $event)"
-       @mouseup.stop="flow_mouseup($event)">
+<template lang="pug">
+  #flow(
+    @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
+    @mouseup.stop="flow_mouseup($event)"
+  )
 
-    <div class="fb"
-         v-for="(block, block_id) in flowCurr.blocks"
-         :key="block_id"
-         @click.stop="fb_click(block_id)"
-         :style="blocks_pos_style[block_id]">
+    .fb(
+      v-for="(block, block_id) in flowCurr.blocks" 
+      :key="block_id" @click.stop="fb_click(block_id)" 
+      :style="blocks_pos_style[block_id]"
+    )
 
-      <table class="fb-title"
-             @mousedown.stop="title_mousedown(block_id, $event)">
+      table.fb-title(
+        @mousedown.stop="title_mousedown(block_id, $event)"
+      )
+        tbody: tr
+          td {{block.title}}
+          td: .flow-block-title-buttons
 
-        <tbody>
-          <tr>
-            <td>{{block.title}}</td>
-            <td>
-              <div class="flow-block-title-buttons"></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      table.fb-main
+        tbody: tr
+          td: table.fb-inputs: tbody
+            block-input(
+              v-for="input in block.inputs" 
+              :key="input.id" 
+              :input="input" 
+              :block-id="block_id"
+            )
+          td: table.fb-outputs: tbody
+            block-output(
+              v-for="output in block.outputs" 
+              :key="output.id" 
+              :output="output" 
+              :block-id="block_id"
+            )
 
-      <table class="fb-main">
-        <tbody>
-          <tr>
-            <td>
-              <table class="fb-inputs">
-                <tbody>
-                  <block-input v-for="input in block.inputs"
-                               :key="input.id"
-                               :input="input"
-                               :block-id="block_id">
-                  </block-input>
-                </tbody>
-              </table>
-            </td>
-            <td>
-              <table class="fb-outputs">
-                <tbody>
-                  <block-output v-for="output in block.outputs"
-                                :key="output.id"
-                                :output="output"
-                                :block-id="block_id"></block-output>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      .flow-block-image
+      .flow-block-extend
 
-      <div class="flow-block-image"></div>
-      <div class="flow-block-extend"></div>
-    </div>
-    <links v-for="(link, link_id) in linksCurr"
-           :key="link_id"
-           :link="link"></links>
-
-  </div>
+    links v-for="(link, link_id) in linksCurr" :key="link_id" :link="link"
 </template>
 
 <script>

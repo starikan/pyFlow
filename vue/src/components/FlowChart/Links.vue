@@ -1,13 +1,11 @@
-<template>
-    <div class="link">
-        <svg>
-            <line :x1="output.x"
-                  :y1="output.y"
-                  :x2="input.x"
-                  :y2="input.y"
-                  style="stroke:rgb(255,0,0);stroke-width:2" />
-        </svg>
-    </div>
+<template lang="pug">
+  .link: svg: line(
+    :x1="output.x"
+    :y1="output.y"
+    :x2="input.x"
+    :y2="input.y"
+    style="stroke:rgb(255,0,0);stroke-width:2"
+  )
 </template>
 
 <script>

@@ -1,14 +1,10 @@
-<template>
-    <tr>
-        <td>
-            {{output.name}}
-        </td>
-        <td>
-            <i class="bullseye icon"
-               @mousedown="linkStart($event)"
-               ref="icon"></i>
-        </td>
-    </tr>
+<template lang="pug">
+  tr
+    td {{output.name}}
+    td: i.bullseye.icon(
+      @mousedown="linkStart($event)"
+      ref="icon"
+    )
 </template>
 
 <script>
