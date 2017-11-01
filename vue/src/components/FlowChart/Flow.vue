@@ -2,6 +2,7 @@
     #flow(
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
+        @dblclick.stop="flow_dblclick($event)"
     )
 
         link-temp( 
@@ -94,9 +95,11 @@ export default {
         ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
     },
     methods: {
-        getCoordInOut: function() {},
         fb_click: function(block_id) {
             this.blockSelectedId = block_id;
+        },
+        flow_dblclick: function(evt) {
+            console.log(evt);
         },
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
@@ -164,46 +167,39 @@ export default {
 };
 </script>
 
-<style scoped>
-#flow {
-    width: 100%;
-    height: 100%;
-    background-image: url("/static/background.jpg");
-    position: absolute;
-    font-family: "Open Sans Condensed", sans-serif;
-    user-select: none;
-}
-.fb {
-    position: absolute;
-    border-color: black;
-    background-color: rgba(255, 255, 255, 0.5);
-}
+<style scoped lang="stylus">
+#flow
+    width 100%
+    height 100%
+    background-image url('/static/background.jpg')
+    position absolute
+    font-family 'Open Sans Condensed', sans-serif
+    user-select none
 
-.fb-title {
-    font-size: 28px;
-    padding: 5px;
-    width: 100%;
-    cursor: move;
-}
+.fb
+    position absolute
+    border 1px solid black
+    background-color rgba(255, 255, 255, 0.5)
 
-.fb-main {
-    padding: 5px;
-    width: 100%;
-    background-color: rgba(127, 127, 127, 0.5);
-}
+.fb-title
+    font-size 28px
+    padding 5px
+    width 100%
+    cursor move
 
-.fb-main td {
-    vertical-align: top;
-}
+.fb-main
+    padding 5px
+    width 100%
+    background-color rgba(127, 127, 127, 0.5)
 
-.fb-outputs {
-    text-align: right;
-}
+.fb-main td
+    vertical-align top
 
-.link,
-svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
+.fb-outputs
+    text-align right
+
+.link, svg
+    width 100%
+    height 100%
+    position absolute
 </style>
