@@ -25,7 +25,25 @@ const store = new Vuex.Store({
     },
     mutations: {
         addLink: function(state, { dot0, dot1, link_id, style }) {
-            console.log(dot0, dot1);
+            link_id = link_id || shortid.generate();
+            style = style || {};
+            if (dot0.dot_type != dot1.dot_type) {
+                let links = Object.assign({},
+                    state.flows[state.flowCurrId].links
+                );
+                links[link_id] = {
+                    style: style,
+                    [dot0.dot_type]: {
+                        block_id: dot0.block_id,
+                        dot_id: dot0.dot_id
+                    },
+                    [dot1.dot_type]: {
+                        block_id: dot1.block_id,
+                        dot_id: dot1.dot_id
+                    }
+                };
+                state.flows[state.flowCurrId].links = links;
+            }
         },
         editLink: (state, { link_id }) => {},
         removeLink: (state, { link_id }) => {
