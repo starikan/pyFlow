@@ -14,6 +14,9 @@ Vue.config.productionTip = false;
 
 import store from "./vuex/store";
 
+import VModal from 'vue-js-modal'
+Vue.use(VModal)
+
 /* eslint-disable no-new */
 new Vue({
     el: "#app",

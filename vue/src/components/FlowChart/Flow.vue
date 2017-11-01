@@ -3,9 +3,8 @@
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
         @dblclick.stop="flow_dblclick($event)"
+        @click.stop="flow_click($event)"
     )
-
-        modal
 
         link-temp( 
             :x1="linkTempStartCoords.x"
@@ -70,7 +69,6 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import BlockDot from "./BlockDot";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
-import Modal from "../Modal";
 
 export default {
     data: function() {
@@ -86,7 +84,7 @@ export default {
             linkTempEndCoords: { x: 0, y: 0 }
         };
     },
-    components: { BlockDot, Links, LinkTemp, Modal },
+    components: { BlockDot, Links, LinkTemp },
     name: "flow",
     mounted() {
         // Get initial positions
@@ -106,8 +104,12 @@ export default {
         fb_dblclick: function(evt) {
             console.log("fb_dblclick", evt);
         },
+        flow_click: function(evt) {
+            this.blockSelectedId = null;
+            console.log("flow_click", evt);
+        },
         flow_dblclick: function(evt) {
-            console.log("flow_dblclick", evt);
+            console.log("flow_dblclick", evt, this.$modal);
         },
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
