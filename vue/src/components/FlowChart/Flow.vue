@@ -24,6 +24,7 @@
             :key="block_id" 
             @click.stop="fb_click(block_id)" 
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
+            :class="[{'select': block_id == blockSelectedId}]"
         )
 
             table.fb-title(
@@ -140,8 +141,6 @@ export default {
             this.linkTempEndCoords = evt.coords;
         },
         linkEnd: function(evt) {
-            // console.log(evt);
-
             this.addLink({
                 dot0: {
                     dot_id: evt.data.id,
@@ -180,6 +179,9 @@ export default {
     position absolute
     border 1px solid black
     background-color rgba(255, 255, 255, 0.5)
+
+    &.select
+        border 1px solid red
 
 .fb-title
     font-size 28px
