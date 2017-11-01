@@ -11,7 +11,7 @@
             :y2="linkTempEndCoords.y"
         )
 
-        links(
+        .link: svg: links(
             v-for="(link, link_id) in linksCurr" 
             :key="link_id" 
             :link="link"
@@ -34,8 +34,8 @@
 
             table.fb-main
                 tbody: tr
-                    td: table.fb-inputs: tbody
-                        block-dot(
+                    td: table: tbody
+                        block-dot.fb-inputs(
                             v-for="input in block.inputs" 
                             :key="input.id" 
                             :data="input" 
@@ -43,8 +43,8 @@
                             @linkStart="linkStart"
                             @linkEnd="linkEnd"
                         )
-                    td: table.fb-outputs: tbody
-                        block-dot(
+                    td: table: tbody
+                        block-dot.fb-outputs(
                             v-for="output in block.outputs" 
                             :key="output.id" 
                             :data="output" 
@@ -198,5 +198,12 @@ export default {
 
 .fb-outputs {
     text-align: right;
+}
+
+.link,
+svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 </style>

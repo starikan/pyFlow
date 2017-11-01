@@ -1,5 +1,5 @@
 <template lang="pug">
-    .link: svg: line(
+    line(
         :x1="x1"
         :y1="y1"
         :x2="x2"
@@ -70,10 +70,5 @@ export default {
 </script>
 
 <style>
-.link,
-svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
+
 </style>

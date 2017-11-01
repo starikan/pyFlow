@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .linkTemp,
 svg {
     width: 100%;
