@@ -5,7 +5,7 @@
         :x2="x2"
         :y2="y2"
         style="stroke:rgb(255,0,0);stroke-width:2"
-        @dblclick="line_dblclick($event)"
+        @dblclick.stop="line_dblclick($event)"
     )
 </template>
 

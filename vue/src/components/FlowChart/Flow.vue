@@ -5,6 +5,8 @@
         @dblclick.stop="flow_dblclick($event)"
     )
 
+        modal
+
         link-temp( 
             :x1="linkTempStartCoords.x"
             :y1="linkTempStartCoords.y"
@@ -23,6 +25,7 @@
             v-for="(block, block_id) in flowCurr.blocks" 
             :key="block_id" 
             @click.stop="fb_click(block_id)" 
+            @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
             :class="[{'select': block_id == blockSelectedId}]"
         )
@@ -67,6 +70,7 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import BlockDot from "./BlockDot";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
+import Modal from "../Modal";
 
 export default {
     data: function() {
@@ -82,7 +86,7 @@ export default {
             linkTempEndCoords: { x: 0, y: 0 }
         };
     },
-    components: { BlockDot, Links, LinkTemp },
+    components: { BlockDot, Links, LinkTemp, Modal },
     name: "flow",
     mounted() {
         // Get initial positions
@@ -99,8 +103,11 @@ export default {
         fb_click: function(block_id) {
             this.blockSelectedId = block_id;
         },
+        fb_dblclick: function(evt) {
+            console.log("fb_dblclick", evt);
+        },
         flow_dblclick: function(evt) {
-            console.log(evt);
+            console.log("flow_dblclick", evt);
         },
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
