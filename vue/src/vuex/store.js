@@ -11,12 +11,11 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     strict: process.env.NODE_ENV !== "production",
     state: {
-        leftPanel: {
-            isShow: false
-        },
-        infoPanel: {
-            isShow: false
-        },
+        leftPanelShow: false,
+
+        infoPanelShow: false,
+        blockSelectedId: null,
+
         blocksPositions: {},
         ioCoords: {},
         flowCurrId: "testFlow",
@@ -50,6 +49,15 @@ const store = new Vuex.Store({
             let links = Object.assign({}, state.flows[state.flowCurrId].links);
             _.unset(links, link_id);
             state.flows[state.flowCurrId].links = links;
+        },
+        addBlock: (state, { block_id }) => {},
+        editBlock: (state, { block_id }) => {},
+        removeBlock: (state, { block_id }) => {},
+        selectBlock: (state, { block_id, value }) => {
+            state.blockSelectedId = block_id;
+        },
+        toggleLeftPanel: (state, { show }) => {
+            state.infoPanelShow = show && state.blockSelectedId;
         },
         updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
             let ioCoords = Object.assign({}, state.ioCoords);

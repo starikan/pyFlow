@@ -73,7 +73,7 @@ import LinkTemp from "./LinkTemp";
 export default {
     data: function() {
         return {
-            blockSelectedId: null,
+            // blockSelectedId: null,
             blockDraggedId: null,
             blockOffsetX: 0,
             blockOffsetY: 0,
@@ -94,18 +94,26 @@ export default {
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
-        ...mapState(["flow"]),
+        ...mapState(["flow", "infoPanelShow", "blockSelectedId"]),
         ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
     },
     methods: {
+        ...mapMutations([
+            "updatePosition",
+            "addLink",
+            "selectBlock",
+            "toggleLeftPanel"
+        ]),
+        ...mapActions(["savePositions", "getPositions"]),
         fb_click: function(block_id) {
-            this.blockSelectedId = block_id;
+            this.selectBlock({ block_id: block_id });
         },
         fb_dblclick: function(evt) {
             console.log("fb_dblclick", evt);
+            this.toggleLeftPanel({ show: true });
         },
         flow_click: function(evt) {
-            this.blockSelectedId = null;
+            this.selectBlock({ block_id: null });
             console.log("flow_click", evt);
         },
         flow_dblclick: function(evt) {
@@ -114,6 +122,8 @@ export default {
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
             this.blockDraggedId = block_id;
+            this.selectBlock({ block_id: block_id });
+
             this.blockOffsetX = evt.offsetX;
             this.blockOffsetY = evt.offsetY;
         },
@@ -167,9 +177,7 @@ export default {
             this.linkTempData = {};
             this.linkTempStartCoords = { x: 0, y: 0 };
             this.linkTempEndCoords = { x: 0, y: 0 };
-        },
-        ...mapMutations(["updatePosition", "addLink"]),
-        ...mapActions(["savePositions", "getPositions"])
+        }
     },
     watch: {}
 };
