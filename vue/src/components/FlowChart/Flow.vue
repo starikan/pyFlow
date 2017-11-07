@@ -84,7 +84,6 @@ export default {
     },
     data: function() {
         return {
-            // blockSelectedId: null,
             blockDraggedId: null,
             blockOffsetX: 0,
             blockOffsetY: 0,
