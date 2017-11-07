@@ -24,6 +24,7 @@
             v-for="(block, block_id) in flowCurr.blocks" 
             :key="block_id" 
             @click.stop="fb_click(block_id)" 
+            v-stream:click="{subject: fb_click$, data: block_id}" 
             @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
             :class="[{'select': block_id == blockSelectedId}]"
@@ -66,11 +67,21 @@
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
+import { Subject } from "rxjs/Subject";
+import "rxjs/add/operator/map";
+import "rxjs/add/observable/fromEvent";
+
 import BlockDot from "./BlockDot";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
 
 export default {
+    subscriptions() {
+        this.fb_click$ = new Subject().map(raw => raw.data);
+        return {
+            mouse_x: this.fb_click$
+        };
+    },
     data: function() {
         return {
             // blockSelectedId: null,

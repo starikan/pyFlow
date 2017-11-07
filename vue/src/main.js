@@ -14,8 +14,19 @@ Vue.config.productionTip = false;
 
 import store from "./vuex/store";
 
-import VModal from 'vue-js-modal'
-Vue.use(VModal)
+import VModal from "vue-js-modal";
+Vue.use(VModal);
+
+import VueRx from 'vue-rx'
+import { Observable } from 'rxjs/Observable'
+import { Subscription } from 'rxjs/Subscription' // Disposable if using RxJS4
+import { Subject } from 'rxjs/Subject' // required for domStreams option
+
+Vue.use(VueRx, {
+    Observable,
+    Subscription,
+    Subject
+})
 
 /* eslint-disable no-new */
 new Vue({
