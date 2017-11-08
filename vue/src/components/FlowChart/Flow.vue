@@ -1,38 +1,40 @@
 <template lang="pug">
+    //- @click.stop="flow_click($event)"
     #flow(
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
         @dblclick.stop="flow_dblclick($event)"
-        @click.stop="flow_click($event)"
-    )
+        v-stream:click.stop="{subject: fb_click$, data: null}" 
+        )
 
         link-temp( 
             :x1="linkTempStartCoords.x"
             :y1="linkTempStartCoords.y"
             :x2="linkTempEndCoords.x"
             :y2="linkTempEndCoords.y"
-        )
+            )
 
         .link: svg: links(
             v-for="(link, link_id) in linksCurr" 
             :key="link_id" 
             :link="link"
             :link-id="link_id"
-        )
+            )
 
+        //- @click.stop="fb_click(block_id)" 
         .fb(
             v-for="(block, block_id) in flowCurr.blocks" 
             :key="block_id" 
-            @click.stop="fb_click(block_id)" 
-            v-stream:click="{subject: fb_click$, data: block_id}" 
+            v-stream:click.stop="{subject: fb_click$, data: block_id}" 
             @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
             :class="[{'select': block_id == blockSelectedId}]"
-        )
+            )
 
             table.fb-title(
                 @mousedown.stop="title_mousedown(block_id, $event)"
-            )
+                )
+
                 tbody: tr
                     td {{block.title}}
                     td: .flow-block-title-buttons
@@ -67,19 +69,27 @@
 import _ from "lodash";
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
-import { Subject } from "rxjs/Subject";
-import "rxjs/add/operator/map";
-import "rxjs/add/observable/fromEvent";
+import Rx from "rxjs";
+// import { Subject } from "rxjs/Subject";
+// import "rxjs/add/operator/map";
+// import "rxjs/add/observable/fromEvent";
 
 import BlockDot from "./BlockDot";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
 
+let fb_click$ = new Rx.BehaviorSubject({ data: null })
+    .pluck("data")
+    .distinctUntilChanged()
+    .do(val => console.log(val));
+
 export default {
+    completed() {},
     subscriptions() {
-        this.fb_click$ = new Subject().map(raw => raw.data);
+        this.fb_click$ = fb_click$;
+
         return {
-            mouse_x: this.fb_click$
+            blockSelectedId: this.fb_click$
         };
     },
     data: function() {
@@ -101,10 +111,16 @@ export default {
         this.getPositions();
     },
     computed: {
+        // blockSelectedId: {
+        //     get() {},
+        //     set(val) {
+        //         console.log(val);
+        //     }
+        // },
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
-        ...mapState(["flow", "infoPanelShow", "blockSelectedId"]),
+        ...mapState(["flow", "infoPanelShow"]),
         ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
     },
     methods: {
@@ -126,8 +142,8 @@ export default {
             this.selectBlock({ block_id: null });
             console.log("flow_click", evt);
         },
-        flow_dblclick: function(evt) {
-            console.log("flow_dblclick", evt, this.$modal);
+        flow_dblclick: function(data, evt) {
+            console.log("flow_dblclick", evt, data, this.$modal);
         },
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
