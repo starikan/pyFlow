@@ -1,10 +1,9 @@
 <template lang="pug">
-    //- @click.stop="flow_click($event)"
     #flow(
+        v-stream:click.stop="{subject: block_select$, data: null}" 
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
         @dblclick.stop="flow_dblclick($event)"
-        v-stream:click.stop="{subject: fb_click$, data: null}" 
         )
 
         link-temp( 
@@ -21,11 +20,11 @@
             :link-id="link_id"
             )
 
-        //- @click.stop="fb_click(block_id)" 
         .fb(
+            v-stream:mousedown.stop="{subject: block_select$, data: block_id}" 
+            @click.stop=""
             v-for="(block, block_id) in flowCurr.blocks" 
             :key="block_id" 
-            v-stream:click.stop="{subject: fb_click$, data: block_id}" 
             @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
             :class="[{'select': block_id == blockSelectedId}]"
@@ -33,6 +32,7 @@
 
             table.fb-title(
                 @mousedown.stop="title_mousedown(block_id, $event)"
+                v-stream:mousedown.stop="{subject: block_select$, data: block_id}" 
                 )
 
                 tbody: tr
@@ -78,19 +78,21 @@ import BlockDot from "./BlockDot";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
 
-let fb_click$ = new Rx.BehaviorSubject({ data: null })
+let block_select$ = new Rx.BehaviorSubject({ data: null })
     .pluck("data")
     .distinctUntilChanged()
-    .do(val => console.log(val));
+    .do(val => console.log("block_select$", val))
+    .share();
 
 export default {
-    completed() {},
     subscriptions() {
-        this.fb_click$ = fb_click$;
+        let streams = {};
 
-        return {
-            blockSelectedId: this.fb_click$
-        };
+        this.block_select$ = block_select$;
+        streams.blockSelectedId = block_select$;
+        streams.blockSelectedId.subscribe(val => console.log(val));
+
+        return streams;
     },
     data: function() {
         return {
@@ -109,14 +111,9 @@ export default {
     mounted() {
         // Get initial positions
         this.getPositions();
+        this.$observables.blockSelectedId.subscribe(val => console.log(val));
     },
     computed: {
-        // blockSelectedId: {
-        //     get() {},
-        //     set(val) {
-        //         console.log(val);
-        //     }
-        // },
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
