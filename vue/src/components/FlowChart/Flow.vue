@@ -109,6 +109,11 @@ export default {
         // Get initial positions
         this.$store.dispatch("oldStore/getPositions");
         this.$observables.blockSelectedId.subscribe(val => console.log(val));
+
+        this.$store.dispatch("loadFlows");
+        // this.$store.dispatch("LOAD_FLOW_ID");
+        // this.$store.dispatch("LOAD_BLOCKS_POSITIONS");
+        // this.$store.dispatch("flow/SET_FLOW");
     },
     computed: {
         blocks_pos_style: function() {
