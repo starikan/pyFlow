@@ -17,15 +17,14 @@ export default {
     name: "links",
     props: ["link", "linkId"],
     methods: {
-        ...mapMutations(["removeLink"]),
-
         line_dblclick: function(evt) {
-            this.removeLink({ link_id: this.linkId });
+            this.$store.commit("removeLink", { link_id: this.linkId });
         }
     },
     computed: {
-        ...mapState(["ioCoords"]),
-
+        ioCoords: function() {
+            return this.$store["oldStore/ioCoords"];
+        },
         input: function() {
             let coords = { x: 0, y: 0 };
             if (this.link) {

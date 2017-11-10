@@ -4,12 +4,12 @@ import _ from "lodash";
 import shortid from "shortid";
 import lstore from "store";
 
-import { initFlows, blocks } from "./init_data";
+import { initFlows, blocksCollection } from "./init_data";
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store({
-    strict: process.env.NODE_ENV !== "production",
+const store = {
+    namespaced: true,
     state: {
         leftPanelShow: false,
 
@@ -20,7 +20,7 @@ const store = new Vuex.Store({
         ioCoords: {},
         flowCurrId: "testFlow",
         flows: initFlows,
-        blocks: blocks
+        blocks: blocksCollection
     },
     mutations: {
         addLink: function(state, { dot0, dot1, link_id, style }) {
@@ -108,6 +108,57 @@ const store = new Vuex.Store({
         linksCurr: state => state.flows[state.flowCurrId].links,
         blocksPositions: state => state.blocksPositions[state.flowCurrId]
     }
+};
+
+const mainStore = new Vuex.Store({
+    strict: process.env.NODE_ENV !== "production",
+    modules: {
+        oldStore: store,
+        flow: {
+            state: {
+                blocksPositions: {}
+            }
+        },
+        base: {
+            state: {
+                blocksPositions: {},
+                flowId: "testFlow",
+                flows: initFlows,
+                blocks: blocksCollection
+            },
+            actions: {
+                SAVE_FLOWS: () => {},
+
+                // TODO: Get flows from API
+                LOAD_FLOWS: ({ state }) => {
+                    state.flows = initFlows;
+                },
+
+                SAVE_FLOW_ID: ({ state }) => lstore.set("flowId", state.flowId),
+
+                LOAD_FLOW_ID: ({ state }) => {
+                    state.flowId = lstore.get("flowId");
+                },
+
+                LOAD_BLOCKS_POSITIONS: ({ state }) => {
+                    state.blocksPositions = lstore.get("blocksPositions");
+                },
+
+                UPDATE_BLOCKS_POSITIONS: ({ state, dispatch }, { positions, flowId = state.flowId }) => {
+                    Object.assign(state.blocksPositions, { flowId: positions });
+                    dispatch("SAVE_BLOCKS_POSITIONS");
+                },
+
+                SAVE_BLOCKS_POSITIONS: ({ state }) =>
+                    lstore.set("blocksPositions", state.blocksPositions)
+            },
+            getters: {
+                // Flow from external source, without current unsaved updates
+                flow: state => state.flows[state.flowId]
+            }
+        },
+        panels: {}
+    }
 });
 
-export default store;
+export default mainStore;

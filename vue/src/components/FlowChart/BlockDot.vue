@@ -22,8 +22,6 @@ export default {
         };
     },
     methods: {
-        ...mapMutations(["updateIOCoords"]),
-
         linkStart: function(evt) {
             this.$emit("linkStart", {
                 block_id: this.blockId,
@@ -41,8 +39,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["blocksPositions"]),
-
+        blocksPositions: function() {
+            return this.$store["oldStore/blocksPositions"];
+        },
         // Update like this, i.e. on every move update every coord
         // needs in that point then blocks will modify in live
         coords: function() {
@@ -65,7 +64,7 @@ export default {
             }
         },
         coords: function(newCoords) {
-            this.updateIOCoords({
+            this.$store.commit("updateIOCoords", {
                 block_id: this.blockId,
                 ioType: this.data.type,
                 ioId: this.data.id,

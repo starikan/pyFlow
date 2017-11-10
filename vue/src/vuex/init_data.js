@@ -112,7 +112,7 @@ export let initFlows = {
     }
 };
 
-export let blocks = {
+export let blocksCollection = {
     uploadFile: {
         name: "uploadFile",
         groups: ["OpenCV"],

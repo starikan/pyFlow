@@ -107,26 +107,39 @@ export default {
     name: "flow",
     mounted() {
         // Get initial positions
-        this.$store.dispatch("getPositions");
+        this.$store.dispatch("oldStore/getPositions");
         this.$observables.blockSelectedId.subscribe(val => console.log(val));
     },
     computed: {
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
-        ...mapState(["flow", "infoPanelShow"]),
-        ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
+        flow: function() {
+            return this.$store["oldStore/flow"];
+        },
+        infoPanelShow: function() {
+            return this.$store["oldStore/infoPanelShow"];
+        },
+        flowCurr: function() {
+            return this.$store.getters["oldStore/flowCurr"];
+        },
+        blocksPositions: function() {
+            return this.$store.getters["oldStore/blocksPositions"];
+        },
+        linksCurr: function() {
+            return this.$store.getters["oldStore/linksCurr"];
+        }
     },
     methods: {
         fb_click: function(block_id) {
-            this.$store.commit("selectBlock", { block_id: block_id });
+            this.$store.commit("oldStore/selectBlock", { block_id: block_id });
         },
         fb_dblclick: function(evt) {
             console.log("fb_dblclick", evt);
-            this.$store.commit("toggleLeftPanel", { show: true });
+            this.$store.commit("oldStore/toggleLeftPanel", { show: true });
         },
         flow_click: function(evt) {
-            this.$store.commit("selectBlock", { block_id: null });
+            this.$store.commit("oldStore/selectBlock", { block_id: null });
             console.log("flow_click", evt);
         },
         flow_dblclick: function(data, evt) {
@@ -135,7 +148,7 @@ export default {
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
             this.blockDraggedId = block_id;
-            this.$store.commit("selectBlock", { block_id: block_id });
+            this.$store.commit("oldStore/selectBlock", { block_id: block_id });
 
             this.blockOffsetX = evt.offsetX;
             this.blockOffsetY = evt.offsetY;
@@ -143,7 +156,7 @@ export default {
         flow_mousemove: function(block_id, evt) {
             // Move block, but get event on all flow
             if (block_id) {
-                this.$store.commit("updatePosition", {
+                this.$store.commit("oldStore/updatePosition", {
                     block_id: block_id,
                     panX: evt.pageX - this.blockOffsetX,
                     panY: evt.pageY - this.blockOffsetY
@@ -158,7 +171,7 @@ export default {
         // End of dragging
         flow_mouseup: function(evt) {
             this.blockDraggedId = null;
-            this.$store.dispatch("savePositions");
+            this.$store.dispatch("oldStore/savePositions");
 
             this.linkTempFlag = false;
             this.linkTempData = {};
@@ -173,7 +186,7 @@ export default {
             this.linkTempEndCoords = evt.coords;
         },
         linkEnd: function(evt) {
-            this.$store.commit("addLink", {
+            this.$store.commit("oldStore/addLink", {
                 dot0: {
                     dot_id: evt.data.id,
                     dot_type: evt.data.type,
