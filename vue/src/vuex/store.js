@@ -5,7 +5,9 @@ import shortid from "shortid";
 import lstore from "store";
 
 import { initFlows, blocksCollection } from "./init_data";
-import _mut from "./_mut";
+
+import base from "./modules/base";
+import flow from "./modules/flow";
 
 Vue.use(Vuex);
 
@@ -111,87 +113,20 @@ const store = {
     }
 };
 
-let base_store = {
-    blocksPositions: {},
-    flowId: "",
-    flows: {},
-    blocks: blocksCollection
-};
-
-let base = {
-    // namespaced: true,
-    state: Object.assign({}, base_store),
-    mutations: Object.assign({}, _mut(base_store)),
-    actions: {
-        // loadAllData: ({ state, commit, dispatch, getters }) => {},
-
-        // TODO: Get flows from API
-        loadFlows: ({ state, commit, dispatch, getters }) => {
-            let flows = initFlows;
-            commit("SET_flows", flows);
-            // dispatch("SET_FLOW", getters.flow, { root: true });
-        },
-
-        SAVE_FLOWS: () => {},
-
-        SAVE_FLOW_ID: ({ state }) => {
-            lstore.set("flowId", state.flowId);
-        },
-
-        // TODO: remove "testFlow"
-        LOAD_FLOW_ID: ({ state, commit, dispatch, getters }) => {
-            commit("SET_flowId", lstore.get("flowId") || "testFlow");
-            // dispatch("SET_FLOW", getters.flow);
-        },
-
-        LOAD_BLOCKS_POSITIONS: ({ state, commit }) => {
-            commit("SET_blocksPositions", lstore.get("blocksPositions"));
-        },
-
-        UPDATE_BLOCKS_POSITIONS: ({ state, dispatch }, { positions, flowId = state.flowId }) => {
-            Object.assign(state.blocksPositions, { flowId: positions });
-            dispatch("SAVE_BLOCKS_POSITIONS");
-        },
-
-        SAVE_BLOCKS_POSITIONS: ({ state }) =>
-            lstore.set("blocksPositions", state.blocksPositions)
-    },
-    getters: {
-        // Flow from external source, without current unsaved updates
-        flow: state => state.flows[state.flowId]
-    }
-};
-
 const mainStore = new Vuex.Store({
     strict: process.env.NODE_ENV !== "production",
     modules: {
         oldStore: store,
         base: base,
-        flow: {
-            namespaced: true,
-            state: {
-                blocksPositions: {},
-                flow: {}
-            },
-            mutations: {
-                SET_FLOW: (state, flow) => {
-                    state.flow = flow;
-                }
-            },
-            actions: {
-                SET_FLOW: ({ commit, rootGetters }, flow) => {
-                    console.log(flow);
-                    if (!flow) {
-                        flow = rootGetters.flow;
-                        // console.log(rootGetters);
-                        // flow = rootGetters.
-                    }
-                    commit("SET_FLOW", flow);
-                }
-            }
-        },
+        flow: flow,
         panels: {}
     }
 });
+
+// Update current flow in 'flow' if loaded from external API
+// mainStore.watch(
+//     () => mainStore.getters["base/flow"],
+//     data => mainStore.dispatch("flow/updateCurrentFlowFromBase", data)
+// );
 
 export default mainStore;
