@@ -67,12 +67,9 @@
 
 <script>
 import _ from "lodash";
-import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 import Rx from "rxjs";
-// import { Subject } from "rxjs/Subject";
-// import "rxjs/add/operator/map";
-// import "rxjs/add/observable/fromEvent";
 
 import BlockDot from "./BlockDot";
 import Links from "./Links";
@@ -81,7 +78,7 @@ import LinkTemp from "./LinkTemp";
 let block_select$ = new Rx.BehaviorSubject({ data: null })
     .pluck("data")
     .distinctUntilChanged()
-    .do(val => console.log("block_select$", val))
+    // .do(val => console.log("block_select$", val))
     .share();
 
 export default {
@@ -110,7 +107,7 @@ export default {
     name: "flow",
     mounted() {
         // Get initial positions
-        this.getPositions();
+        this.$store.dispatch("getPositions");
         this.$observables.blockSelectedId.subscribe(val => console.log(val));
     },
     computed: {
@@ -121,22 +118,15 @@ export default {
         ...mapGetters(["flowCurr", "blocksPositions", "linksCurr"])
     },
     methods: {
-        ...mapMutations([
-            "updatePosition",
-            "addLink",
-            "selectBlock",
-            "toggleLeftPanel"
-        ]),
-        ...mapActions(["savePositions", "getPositions"]),
         fb_click: function(block_id) {
-            this.selectBlock({ block_id: block_id });
+            this.$store.commit("selectBlock", { block_id: block_id });
         },
         fb_dblclick: function(evt) {
             console.log("fb_dblclick", evt);
-            this.toggleLeftPanel({ show: true });
+            this.$store.commit("toggleLeftPanel", { show: true });
         },
         flow_click: function(evt) {
-            this.selectBlock({ block_id: null });
+            this.$store.commit("selectBlock", { block_id: null });
             console.log("flow_click", evt);
         },
         flow_dblclick: function(data, evt) {
@@ -145,7 +135,7 @@ export default {
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
             this.blockDraggedId = block_id;
-            this.selectBlock({ block_id: block_id });
+            this.$store.commit("selectBlock", { block_id: block_id });
 
             this.blockOffsetX = evt.offsetX;
             this.blockOffsetY = evt.offsetY;
@@ -153,7 +143,7 @@ export default {
         flow_mousemove: function(block_id, evt) {
             // Move block, but get event on all flow
             if (block_id) {
-                this.updatePosition({
+                this.$store.commit("updatePosition", {
                     block_id: block_id,
                     panX: evt.pageX - this.blockOffsetX,
                     panY: evt.pageY - this.blockOffsetY
@@ -168,7 +158,7 @@ export default {
         // End of dragging
         flow_mouseup: function(evt) {
             this.blockDraggedId = null;
-            this.savePositions();
+            this.$store.dispatch("savePositions");
 
             this.linkTempFlag = false;
             this.linkTempData = {};
@@ -183,7 +173,7 @@ export default {
             this.linkTempEndCoords = evt.coords;
         },
         linkEnd: function(evt) {
-            this.addLink({
+            this.$store.commit("addLink", {
                 dot0: {
                     dot_id: evt.data.id,
                     dot_type: evt.data.type,
