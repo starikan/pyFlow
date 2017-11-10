@@ -23,7 +23,7 @@
         .fb(
             v-stream:mousedown.stop="{subject: block_select$, data: block_id}" 
             @click.stop=""
-            v-for="(block, block_id) in flowCurr.blocks" 
+            v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
             @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
@@ -111,20 +111,23 @@ export default {
         this.$observables.blockSelectedId.subscribe(val => console.log(val));
 
         this.$store.dispatch("base/loadAllData");
-        this.$store.dispatch("flow/updateCurrentFlow");
+        this.$store.commit("flow/SET_flow", this.flowBase);
+        this.$store.commit("flow/SET_positions", this.positionsBase);
     },
     computed: {
+        ...mapGetters({
+            flowBase: "base/flow",
+            positionsBase: "base/positions"
+        }),
+        ...mapState({
+            flow: state => state.flow.flow,
+            positions: state => state.flow.positions
+        }),
         blocks_pos_style: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
         },
-        flow: function() {
-            return this.$store["oldStore/flow"];
-        },
         infoPanelShow: function() {
             return this.$store["oldStore/infoPanelShow"];
-        },
-        flowCurr: function() {
-            return this.$store.getters["oldStore/flowCurr"];
         },
         blocksPositions: function() {
             return this.$store.getters["oldStore/blocksPositions"];

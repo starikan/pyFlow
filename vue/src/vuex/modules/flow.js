@@ -5,19 +5,13 @@
 import _mut from "../_mut";
 
 let state = {
-    blocksPositions: {},
+    positions: {},
     flow: {}
 };
 
 let mutations = {};
 
-let actions = {
-    // TODO: replace on mutation
-    updateCurrentFlow: ({ commit, rootGetters }, flow) => {
-        flow = flow || rootGetters["base/flow"];
-        commit("SET_flow", flow);
-    }
-};
+let actions = {};
 
 let getters = {};
 

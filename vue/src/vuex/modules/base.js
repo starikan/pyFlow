@@ -8,7 +8,7 @@ import _mut from "../_mut";
 import { initFlows, blocksCollection } from "../init_data";
 
 let state = {
-    blocksPositions: {},
+    positions: {},
     flowId: "",
     flows: {},
     blocks: {}
@@ -26,7 +26,8 @@ let actions = {
         // TODO: remove "testFlow"
         commit("SET_flowId", lstore.get("flowId") || "testFlow");
 
-        commit("SET_blocksPositions", lstore.get("blocksPositions"));
+        let positions = lstore.get("positions") || {};
+        commit("SET_positions", positions);
 
         commit("SET_blocks", blocksCollection);
 
@@ -48,7 +49,8 @@ let actions = {
 
 let getters = {
     // Flow from external source, without current unsaved updates
-    flow: state => state.flows[state.flowId]
+    flow: state => state.flows[state.flowId],
+    positions: state => _.get(state.positions, [state.flowId], {})
 };
 
 export default {
