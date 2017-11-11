@@ -86,6 +86,10 @@ export default {
         this.$store.dispatch("base/loadAllData");
         this.$store.commit("flow/SET_flow", this.flowBase);
         this.$store.commit("flow/SET_positions", this.positionsBase);
+
+        this.$bus.$on("$stream.fb_title_events", ({ block_id, $streams }) => {
+            console.log(block_id, $streams);
+        });
     },
     computed: {
         ...mapGetters({

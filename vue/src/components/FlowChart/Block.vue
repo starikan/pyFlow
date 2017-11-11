@@ -77,6 +77,12 @@ export default {
 
         return this.$streams; // Same names as streams values
     },
+    mounted() {
+        this.$bus.$emit("$stream.fb_title_events", {
+            block_id: this.block_id,
+            $streams: this.$streams
+        });
+    },
     methods: {
         linkStart: function(evt) {
             // console.log(evt);
