@@ -24,27 +24,30 @@ let actions = {
         commit("SET_flows", flows);
 
         // TODO: remove "testFlow"
-        commit("SET_flowId", lstore.get("flowId") || "testFlow");
+        commit("SET_flowId", lstore.get("new_flowId") || "testFlow");
 
-        let positions = lstore.get("positions") || {};
+        let positions = lstore.get("new_positions") || {};
         commit("SET_positions", positions);
 
         commit("SET_blocks", blocksCollection);
+    },
 
-        // dispatch("SET_FLOW", getters.flow, { root: true });
+    // TODO: remove new_ prefix
+    // TODO: default values
+    // saveData: ({ state }, { positions = true, flowId = true, flows = true }) => {
+    saveData: ({ state }) => {
+        let positions = true;
+        let flowId = true;
+        let flows = true;
+        positions ? lstore.set("new_positions", state.positions) : "";
+        flowId ? lstore.set("new_flowId", state.flowId) : "";
+        flows ? lstore.set("new_flows", state.flows) : "";
     }
-
-    // SAVE_FLOW_ID: ({ state }) => {
-    //     lstore.set("flowId", state.flowId);
-    // },
 
     // UPDATE_BLOCKS_POSITIONS: ({ state, dispatch }, { positions, flowId = state.flowId }) => {
     //     Object.assign(state.blocksPositions, { flowId: positions });
     //     dispatch("SAVE_BLOCKS_POSITIONS");
     // },
-
-    // SAVE_BLOCKS_POSITIONS: ({ state }) =>
-    //     lstore.set("blocksPositions", state.blocksPositions)
 };
 
 let getters = {

@@ -17,7 +17,6 @@ const store = {
         leftPanelShow: false,
 
         infoPanelShow: false,
-        blockSelectedId: null,
 
         blocksPositions: {},
         ioCoords: {},
@@ -56,11 +55,8 @@ const store = {
         addBlock: (state, { block_id }) => {},
         editBlock: (state, { block_id }) => {},
         removeBlock: (state, { block_id }) => {},
-        selectBlock: (state, { block_id, value }) => {
-            state.blockSelectedId = block_id;
-        },
         toggleLeftPanel: (state, { show }) => {
-            state.infoPanelShow = show && state.blockSelectedId;
+            state.infoPanelShow = show;
         },
         updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
             let ioCoords = Object.assign({}, state.ioCoords);
@@ -107,7 +103,6 @@ const store = {
         }
     },
     getters: {
-        flowCurr: state => state.flows[state.flowCurrId],
         linksCurr: state => state.flows[state.flowCurrId].links,
         blocksPositions: state => state.blocksPositions[state.flowCurrId]
     }

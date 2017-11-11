@@ -1,6 +1,6 @@
 <template lang="pug">
     #flow(
-        v-stream:click.stop="{subject: $streams.$block_select, data: null}" 
+        v-stream:mousedown.stop="{subject: $streams.block_select$, data: null}" 
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
         @dblclick.stop="flow_dblclick($event)"
@@ -21,18 +21,17 @@
             )
 
         .fb(
-            v-stream:mousedown.stop="{subject: $streams.$block_select, data: block_id}" 
-            @click.stop=""
+            v-stream:mousedown.stop="{subject: $streams.block_select$, data: block_id}" 
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
             @dblclick.stop="fb_dblclick($event)"
-            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == $block_select_data ? 1000 : 0}"
-            :class="[{'select': block_id == $block_select_data}]"
+            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
+            :class="[{'select': block_id == blockSelectedId}]"
             )
 
             table.fb-title(
                 @mousedown.stop="title_mousedown(block_id, $event)"
-                v-stream:mousedown.stop="{subject: $streams.$block_select, data: block_id}" 
+                v-stream:mousedown.stop="{subject: $streams.block_select$, data: block_id}" 
                 )
 
                 tbody: tr
@@ -77,22 +76,31 @@ import LinkTemp from "./LinkTemp";
 
 export default {
     subscriptions() {
-        this.$streams = {
-            $block_select: new Rx.BehaviorSubject({ data: null })
-                .pluck("data")
-                .distinctUntilChanged()
-                // .do(val => console.log("block_select$", val))
-                .share()
-        };
+        this.$streams = {};
+        let streams_values = {};
 
-        let streams_gen = Object.assign(
-            {},
-            ..._.keys(this.$streams).map(key => {
-                return { [key + "_data"]: this.$streams[key] };
-            })
-        );
+        /*
+            Block selection stream
+        */
+        let block_select_stream$ = new Rx.BehaviorSubject({ data: null })
+            .pluck("data")
+            .distinctUntilChanged()
+            // .do(val => console.log(this))
+            .share();
 
-        return streams_gen;
+        this.$streams.block_select$ = block_select_stream$;
+        streams_values.blockSelectedId = block_select_stream$;
+
+        block_select_stream$.subscribe();
+
+        // let streams_gen = Object.assign(
+        //     {},
+        //     ..._.keys(this.$streams).map(key => {
+        //         return { [key + "_data"]: this.$streams[key] };
+        //     })
+        // );
+
+        return streams_values;
     },
     data: function() {
         return {
@@ -109,10 +117,10 @@ export default {
     components: { BlockDot, Links, LinkTemp },
     name: "flow",
     mounted() {
-        // Get initial positions
+        /*
+            Get initial data on startup
+        */
         this.$store.dispatch("oldStore/getPositions");
-        // this.$observables.blockSelectedId.subscribe(val => console.log(val));
-
         this.$store.dispatch("base/loadAllData");
         this.$store.commit("flow/SET_flow", this.flowBase);
         this.$store.commit("flow/SET_positions", this.positionsBase);
@@ -140,16 +148,9 @@ export default {
         }
     },
     methods: {
-        fb_click: function(block_id) {
-            this.$store.commit("oldStore/selectBlock", { block_id: block_id });
-        },
         fb_dblclick: function(evt) {
             console.log("fb_dblclick", evt);
             this.$store.commit("oldStore/toggleLeftPanel", { show: true });
-        },
-        flow_click: function(evt) {
-            this.$store.commit("oldStore/selectBlock", { block_id: null });
-            console.log("flow_click", evt);
         },
         flow_dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
@@ -157,7 +158,6 @@ export default {
         // Click on title to move block
         title_mousedown: function(block_id, evt) {
             this.blockDraggedId = block_id;
-            this.$store.commit("oldStore/selectBlock", { block_id: block_id });
 
             this.blockOffsetX = evt.offsetX;
             this.blockOffsetY = evt.offsetY;
@@ -181,6 +181,7 @@ export default {
         flow_mouseup: function(evt) {
             this.blockDraggedId = null;
             this.$store.dispatch("oldStore/savePositions");
+            this.$store.dispatch("base/saveData");
 
             this.linkTempFlag = false;
             this.linkTempData = {};
