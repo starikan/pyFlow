@@ -1,66 +1,34 @@
 <template lang="pug">
     #flow(
-        v-stream:mousedown.stop="{subject: $streams.block_select$, data: null}" 
+        v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: null}" 
         @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
         @mouseup.stop="flow_mouseup($event)"
-        @dblclick.stop="flow_dblclick($event)"
-        )
+        @dblclick.stop="flow_dblclick($event)")
 
         link-temp( 
             :x1="linkTempStartCoords.x"
             :y1="linkTempStartCoords.y"
             :x2="linkTempEndCoords.x"
-            :y2="linkTempEndCoords.y"
-            )
+            :y2="linkTempEndCoords.y")
 
         .link: svg: links(
             v-for="(link, link_id) in linksCurr" 
             :key="link_id" 
+            
             :link="link"
-            :link-id="link_id"
-            )
+            :link-id="link_id")
 
-        .fb(
-            v-stream:mousedown.stop="{subject: $streams.block_select$, data: block_id}" 
+        fb-block.fb(
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
-            @dblclick.stop="fb_dblclick($event)"
             :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
             :class="[{'select': block_id == blockSelectedId}]"
-            )
-
-            table.fb-title(
-                @mousedown.stop="title_mousedown(block_id, $event)"
-                v-stream:mousedown.stop="{subject: $streams.block_select$, data: block_id}" 
-                )
-
-                tbody: tr
-                    td {{block.title}}
-                    td: .flow-block-title-buttons
-
-            table.fb-main
-                tbody: tr
-                    td: table: tbody
-                        block-dot.fb-inputs(
-                            v-for="input in block.inputs" 
-                            :key="input.id" 
-                            :data="input" 
-                            :block-id="block_id"
-                            @linkStart="linkStart"
-                            @linkEnd="linkEnd"
-                        )
-                    td: table: tbody
-                        block-dot.fb-outputs(
-                            v-for="output in block.outputs" 
-                            :key="output.id" 
-                            :data="output" 
-                            :block-id="block_id"
-                            @linkStart="linkStart"
-                            @linkEnd="linkEnd"
-                        )
-
-            .flow-block-image
-            .flow-block-extend
+            
+            v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: block_id}" 
+            @dblclick.stop.native="fb_dblclick($event)"
+            
+            :block="block"
+            :block_id="block_id")
 
 </template>
 
@@ -70,11 +38,14 @@ import { mapState, mapGetters } from "vuex";
 
 import Rx from "rxjs";
 
-import BlockDot from "./BlockDot";
+// import BlockDot from "./BlockDot";
+import Block from "./Block";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
 
 export default {
+    name: "flow",
+    components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
     subscriptions() {
         this.$streams = {};
         let streams_values = {};
@@ -85,13 +56,13 @@ export default {
         let block_select_stream$ = new Rx.BehaviorSubject({ data: null })
             .pluck("data")
             .distinctUntilChanged()
-            // .do(val => console.log(this))
+            .do(val => console.log(this))
             .share();
 
         this.$streams.block_select$ = block_select_stream$;
         streams_values.blockSelectedId = block_select_stream$;
 
-        block_select_stream$.subscribe();
+        block_select_stream$.subscribe(val => console.log(val));
 
         // let streams_gen = Object.assign(
         //     {},
@@ -114,8 +85,6 @@ export default {
             linkTempEndCoords: { x: 0, y: 0 }
         };
     },
-    components: { BlockDot, Links, LinkTemp },
-    name: "flow",
     mounted() {
         /*
             Get initial data on startup
@@ -155,13 +124,6 @@ export default {
         flow_dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
         },
-        // Click on title to move block
-        title_mousedown: function(block_id, evt) {
-            this.blockDraggedId = block_id;
-
-            this.blockOffsetX = evt.offsetX;
-            this.blockOffsetY = evt.offsetY;
-        },
         flow_mousemove: function(block_id, evt) {
             // Move block, but get event on all flow
             if (block_id) {
@@ -182,32 +144,6 @@ export default {
             this.blockDraggedId = null;
             this.$store.dispatch("oldStore/savePositions");
             this.$store.dispatch("base/saveData");
-
-            this.linkTempFlag = false;
-            this.linkTempData = {};
-            this.linkTempStartCoords = { x: 0, y: 0 };
-            this.linkTempEndCoords = { x: 0, y: 0 };
-        },
-        linkStart: function(evt) {
-            // console.log(evt);
-            this.linkTempFlag = true;
-            this.linkTempData = evt;
-            this.linkTempStartCoords = evt.coords;
-            this.linkTempEndCoords = evt.coords;
-        },
-        linkEnd: function(evt) {
-            this.$store.commit("oldStore/addLink", {
-                dot0: {
-                    dot_id: evt.data.id,
-                    dot_type: evt.data.type,
-                    block_id: evt.block_id
-                },
-                dot1: {
-                    dot_id: this.linkTempData.data.id,
-                    dot_type: this.linkTempData.data.type,
-                    block_id: this.linkTempData.block_id
-                }
-            });
 
             this.linkTempFlag = false;
             this.linkTempData = {};
@@ -235,23 +171,6 @@ export default {
 
     &.select
         border 1px solid red
-
-.fb-title
-    font-size 28px
-    padding 5px
-    width 100%
-    cursor move
-
-.fb-main
-    padding 5px
-    width 100%
-    background-color rgba(127, 127, 127, 0.5)
-
-.fb-main td
-    vertical-align top
-
-.fb-outputs
-    text-align right
 
 .link, svg
     width 100%
