@@ -2,8 +2,9 @@
 
     div
         table.fb-title( 
-            @mousedown.stop="title_mousedown(block_id, $event)" 
-            )
+            v-stream:mousedown = "{subject: $streams.drag$}"
+            v-stream:mouseup = "{subject: $streams.drag$}"
+            v-stream:mouseleave = "{subject: $streams.drag$}")
 
             tbody: tr
                 td {{block.title}}
@@ -35,6 +36,8 @@
 </template>
 
 <script>
+import Rx from "rxjs";
+
 import BlockDot from "./BlockDot";
 
 export default {
@@ -43,14 +46,38 @@ export default {
         "block-dot": BlockDot
     },
     props: ["block", "block_id"],
-    methods: {
-        // Click on title to move block
-        title_mousedown: function(block_id, evt) {
-            this.blockDraggedId = block_id;
+    data: function() {
+        return {};
+    },
+    subscriptions() {
+        this.$streams = {}; // Streams to subscribe
 
-            this.blockOffsetX = evt.offsetX;
-            this.blockOffsetY = evt.offsetY;
-        },
+        /*
+            Title interaction stream
+        */
+        this.$streams.drag$ = new Rx.BehaviorSubject(null)
+            .filter(val => val != null)
+            .pluck("event")
+            .distinctUntilChanged()
+            .map(event => ({
+                offcetX: event.offsetX,
+                offcetY: event.offsetY,
+                block_id: this.block_id,
+                condition: event.type
+            }))
+            .distinctUntilChanged((prev, curr) => {
+                return (
+                    curr.condition == "mouseleave" &&
+                    prev.condition != "mousedown"
+                );
+            })
+            .share();
+
+        this.$streams.drag$.subscribe(val => console.log(val));
+
+        return this.$streams; // Same names as streams values
+    },
+    methods: {
         linkStart: function(evt) {
             // console.log(evt);
             this.linkTempFlag = true;

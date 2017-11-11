@@ -47,8 +47,8 @@ export default {
     name: "flow",
     components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
     subscriptions() {
-        this.$streams = {};
-        let streams_values = {};
+        this.$streams = {}; // Streams to subscribe
+        let streams_values = {}; // Last value of stream
 
         /*
             Block selection stream
@@ -56,20 +56,13 @@ export default {
         let block_select_stream$ = new Rx.BehaviorSubject({ data: null })
             .pluck("data")
             .distinctUntilChanged()
-            .do(val => console.log(this))
+            // .do(val => console.log(this))
             .share();
 
         this.$streams.block_select$ = block_select_stream$;
         streams_values.blockSelectedId = block_select_stream$;
 
         block_select_stream$.subscribe(val => console.log(val));
-
-        // let streams_gen = Object.assign(
-        //     {},
-        //     ..._.keys(this.$streams).map(key => {
-        //         return { [key + "_data"]: this.$streams[key] };
-        //     })
-        // );
 
         return streams_values;
     },
