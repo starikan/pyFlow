@@ -21,8 +21,8 @@
         fb-block.fb(
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
-            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == blockSelectedId ? 1000 : 0}"
-            :class="[{'select': block_id == blockSelectedId}]"
+            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == block_select$ ? 1000 : 0}"
+            :class="[{'select': block_id == block_select$}]"
             
             v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: block_id}" 
             @dblclick.stop.native="fb_dblclick($event)"
@@ -48,23 +48,28 @@ export default {
     components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
     subscriptions() {
         this.$streams = {}; // Streams to subscribe
-        let streams_values = {}; // Last value of stream
 
         /*
             Block selection stream
         */
-        let block_select_stream$ = new Rx.BehaviorSubject({ data: null })
+        this.$streams.block_select$ = new Rx.BehaviorSubject({ data: null })
             .pluck("data")
             .distinctUntilChanged()
             // .do(val => console.log(this))
             .share();
 
-        this.$streams.block_select$ = block_select_stream$;
-        streams_values.blockSelectedId = block_select_stream$;
+        // this.$streams.block_select$.subscribe(val => console.log(val));
 
-        block_select_stream$.subscribe(val => console.log(val));
+        /*
+            Titles all events combine stream
+        */
+        this.$streams.block_drag_flag$ = new Rx.Observable.fromEventPattern(h =>
+            this.$bus.$on("$stream.fb_title_events", h)
+        );
 
-        return streams_values;
+        // this.$streams.block_drag_flag$.subscribe(val => console.log(val));
+
+        return this.$streams;
     },
     data: function() {
         return {
@@ -86,10 +91,6 @@ export default {
         this.$store.dispatch("base/loadAllData");
         this.$store.commit("flow/SET_flow", this.flowBase);
         this.$store.commit("flow/SET_positions", this.positionsBase);
-
-        this.$bus.$on("$stream.fb_title_events", ({ block_id, $streams }) => {
-            console.log(block_id, $streams);
-        });
     },
     computed: {
         ...mapGetters({
