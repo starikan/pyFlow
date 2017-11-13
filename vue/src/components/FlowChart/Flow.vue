@@ -1,16 +1,10 @@
 <template lang="pug">
     #flow(
         @dblclick.stop="dblclick($event)"
-        @mousemove.stop="mousemove($event)" 
+        @mousemove="mousemove($event)" 
         @mouseup.stop="mouseup($event)"
         @mousedown.stop="mousedown($event)"
         )
-
-        link-temp( 
-            :x1="linkTempStartCoords.x"
-            :y1="linkTempStartCoords.y"
-            :x2="linkTempEndCoords.x"
-            :y2="linkTempEndCoords.y")
 
         .link: svg: links(
             v-for="(link, link_id) in linksCurr" 
@@ -30,6 +24,7 @@
             :block="block"
             :block_id="block_id")
 
+        link-temp
 </template>
 
 <script>
@@ -45,12 +40,7 @@ export default {
     components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
     data: function() {
         return {
-            blockSelect: null,
-
-            linkTempFlag: false,
-            linkTempData: {},
-            linkTempStartCoords: { x: 0, y: 0 },
-            linkTempEndCoords: { x: 0, y: 0 }
+            blockSelect: null
         };
     },
     mounted() {
@@ -107,25 +97,17 @@ export default {
             if (this.linkTempFlag) {
                 this.linkTempEndCoords = { x: evt.clientX, y: evt.clientY };
             }
-
-            return false;
         },
 
         mouseup: function(evt) {
             // End of dragging
             this.$store.dispatch("base/saveData");
             this.$store.commit("flow/SET_draggingBlock", null);
-
-            this.linkTempFlag = false;
-            this.linkTempData = {};
-            this.linkTempStartCoords = { x: 0, y: 0 };
-            this.linkTempEndCoords = { x: 0, y: 0 };
-            return false;
         },
         block_style: function(block_id) {
             return {
                 transform: _.get(this.transform_matrix, [block_id]),
-                "z-index": block_id == this.block_select$ ? 1000 : 0
+                "z-index": block_id == this.blockSelect ? 100 : 0
             };
         }
     }

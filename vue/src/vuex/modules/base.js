@@ -37,7 +37,6 @@ let actions = {
 
         let positions = lstore.get("positions") || {};
         commit("SET_positions", positions);
-        console.log(state.positions);
 
         commit("SET_blocks", blocksCollection);
     },
