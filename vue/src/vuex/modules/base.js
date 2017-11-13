@@ -35,17 +35,6 @@ let actions = {
         // TODO: remove "testFlow" when exist selector of flow
         commit("SET_flowId", lstore.get("flowId") || "testFlow");
 
-        // Должно быть {flow_id:{block_id: {x, y}}}
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // let blankPositions = Object.assign({},
-        //     ..._.keys(_.get(state.flows, [state.flowId, "blocks"])).map(key => ({
-        //         [key]: {
-        //             x: 0,
-        //             y: 0
-        //         }
-        //     }))
-        // );
-        // let positions = Object.assign(blankPositions, lstore.get("positions"));
         let positions = lstore.get("positions") || {};
         commit("SET_positions", positions);
         console.log(state.positions);

@@ -16,12 +16,10 @@ let mutations = {
         }));
         positions = Object.assign({}, ...blankPositions, positions);
         state.positions = Object.assign(state.positions, positions);
-        console.log(state.positions);
     },
 
     UPDATE_BLOCK_POSITION: (state, coords) => {
         state.positions = Object.assign(state.positions, coords);
-        console.log(state.positions);
     }
 };
 
