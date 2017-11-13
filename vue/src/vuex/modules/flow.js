@@ -6,7 +6,8 @@ import _mut from "../_mut";
 
 let state = {
     positions: {},
-    flow: {}
+    flow: {},
+    draggingBlock: null
 };
 
 let mutations = {
@@ -30,7 +31,10 @@ let getters = {};
 export default {
     namespaced: true,
     state: state,
-    mutations: Object.assign(_mut(state), mutations),
+    mutations: {
+        ..._mut(state),
+        ...mutations
+    },
     actions: actions,
     getters: getters
 };

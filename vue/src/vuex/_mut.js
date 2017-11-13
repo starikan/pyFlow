@@ -1,6 +1,8 @@
-export default stateObj => {
-    return Object.assign({},
-        ..._.keys(stateObj).map(key => {
+import _ from "lodash";
+
+export default stateObj =>
+    Object.assign({},
+        ..._.map(stateObj, (data, key) => {
             return {
                 ["SET_" + key]: function(state, val) {
                     state[key] = val;
@@ -8,4 +10,3 @@ export default stateObj => {
             };
         })
     );
-};

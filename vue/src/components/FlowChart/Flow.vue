@@ -1,11 +1,9 @@
 <template lang="pug">
-    //- @dblclick.stop="flow_dblclick($event)"
-        @mousemove.stop="flow_mousemove($event)" 
-        @mouseup.stop="flow_mouseup($event)"
     #flow(
-        v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: null}" 
-        v-stream:mousemove.stop.native="{subject: $streams.block_move$}" 
-        @mouseup.stop="flow_mouseup($event)"
+        @dblclick.stop="dblclick($event)"
+        @mousemove.stop="mousemove($event)" 
+        @mouseup.stop="mouseup($event)"
+        @mousedown.stop="mousedown($event)"
         )
 
         link-temp( 
@@ -17,7 +15,6 @@
         .link: svg: links(
             v-for="(link, link_id) in linksCurr" 
             :key="link_id" 
-            
             :link="link"
             :link-id="link_id")
 
@@ -25,9 +22,9 @@
             :style="block_style(block_id)"
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
-            :class="[{'select': block_id == block_select$}]"
+            :class="[{'select': blockSelect == block_id}]"
             
-            v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: block_id}" 
+            @mousedown.stop.native="blockSelect = block_id" 
             @dblclick.stop.native="fb_dblclick($event)"
             
             :block="block"
@@ -39,9 +36,6 @@
 import _ from "lodash";
 import { mapState, mapGetters } from "vuex";
 
-import Rx from "rxjs";
-
-// import BlockDot from "./BlockDot";
 import Block from "./Block";
 import Links from "./Links";
 import LinkTemp from "./LinkTemp";
@@ -49,47 +43,10 @@ import LinkTemp from "./LinkTemp";
 export default {
     name: "flow",
     components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
-    subscriptions() {
-        this.$streams = {}; // Streams to subscribe
-
-        /*
-            Block selection stream
-        */
-        this.$streams.block_select$ = new Rx.BehaviorSubject({ data: null })
-            .pluck("data")
-            .distinctUntilChanged()
-            .share();
-
-        /*
-            Events from all Blocks merge stream
-        */
-        this.$streams.block_drag_flag$ = new Rx.Observable.fromEventPattern(h =>
-            this.$bus.$on("$stream.fb_title_events", h)
-        );
-
-        /*
-            Mouse move and drag blocks stream
-        */
-        this.$streams.block_move$ = new Rx.BehaviorSubject({ event: null })
-            .skip(1)
-            .withLatestFrom(this.$streams.block_drag_flag$)
-            // TODO: mouseleave
-            .filter(([evt, flag]) => _.get(flag, "condition") == "mousedown")
-            .map(([evt, flag]) => ({
-                [flag.block_id]: {
-                    x: evt.event.pageX - flag.offcetX,
-                    y: evt.event.pageY - flag.offcetY
-                }
-            }));
-
-        this.$streams.block_move$.subscribe(val => {
-            this.$store.commit("flow/UPDATE_BLOCK_POSITION", val);
-        });
-
-        return this.$streams;
-    },
     data: function() {
         return {
+            blockSelect: null,
+
             linkTempFlag: false,
             linkTempData: {},
             linkTempStartCoords: { x: 0, y: 0 },
@@ -111,7 +68,8 @@ export default {
         }),
         ...mapState({
             flow: state => state.flow.flow,
-            positions: state => state.flow.positions
+            positions: state => state.flow.positions,
+            draggingBlock: state => state.flow.draggingBlock
         }),
         transform_matrix: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
@@ -128,19 +86,36 @@ export default {
             console.log("fb_dblclick", evt);
             this.$store.commit("oldStore/toggleLeftPanel", { show: true });
         },
-        flow_dblclick: function(data, evt) {
+        dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
         },
-        flow_mousemove: function(evt) {
+        mousedown: function(evt) {
+            this.blockSelect = null;
+        },
+        mousemove: function(evt) {
+            // Move block
+            if (this.draggingBlock) {
+                this.$store.commit("flow/UPDATE_BLOCK_POSITION", {
+                    [this.draggingBlock.block_id]: {
+                        x: evt.pageX - this.draggingBlock.offcetX,
+                        y: evt.pageY - this.draggingBlock.offcetY
+                    }
+                });
+            }
+
             // Temp link move
             if (this.linkTempFlag) {
                 this.linkTempEndCoords = { x: evt.clientX, y: evt.clientY };
             }
+
             return false;
         },
-        // End of dragging
-        flow_mouseup: function(evt) {
+
+        mouseup: function(evt) {
+            // End of dragging
             this.$store.dispatch("base/saveData");
+            this.$store.commit("flow/SET_draggingBlock", null);
+
             this.linkTempFlag = false;
             this.linkTempData = {};
             this.linkTempStartCoords = { x: 0, y: 0 };
