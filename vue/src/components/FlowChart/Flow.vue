@@ -84,21 +84,12 @@ export default {
 
         this.$streams.block_move$.subscribe(val => {
             this.$store.commit("flow/UPDATE_BLOCK_POSITION", val);
-            let matrix = _.mapValues(val, xy => `matrix(1, 0, 0, 1, ${xy.x}, ${xy.y})`);
-            _.forEach(matrix, (value, key) => {
-                this.$set(this.transform_matrix, key, value);
-            });
-            // Not working issues
-            // this.$set(this, "transform_matrix", Object.assign(this.transform_matrix, matrix));
-            // this.transform_matrix = Object.assign(this.transform_matrix, matrix);
         });
 
         return this.$streams;
     },
     data: function() {
         return {
-            transform_matrix: {},
-
             linkTempFlag: false,
             linkTempData: {},
             linkTempStartCoords: { x: 0, y: 0 },
@@ -122,6 +113,9 @@ export default {
             flow: state => state.flow.flow,
             positions: state => state.flow.positions
         }),
+        transform_matrix: function() {
+            return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
+        },
         infoPanelShow: function() {
             return this.$store["oldStore/infoPanelShow"];
         },
@@ -154,7 +148,6 @@ export default {
             return false;
         },
         block_style: function(block_id) {
-            console.log(block_id, this.transform_matrix[block_id]);
             return {
                 transform: _.get(this.transform_matrix, [block_id]),
                 "z-index": block_id == this.block_select$ ? 1000 : 0

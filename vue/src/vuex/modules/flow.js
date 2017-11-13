@@ -19,7 +19,7 @@ let mutations = {
     },
 
     UPDATE_BLOCK_POSITION: (state, coords) => {
-        state.positions = Object.assign(state.positions, coords);
+        state.positions = {...state.positions, ...coords };
     }
 };
 
