@@ -7,7 +7,7 @@
         )
 
         .link: svg: links(
-            v-for="(link, link_id) in linksCurr" 
+            v-for="(link, link_id) in links" 
             :key="link_id" 
             :link="link"
             :link-id="link_id")
@@ -59,6 +59,7 @@ export default {
         ...mapState({
             flow: state => state.flow.flow,
             positions: state => state.flow.positions,
+            links: state => state.flow.flow.links,
             draggingBlock: state => state.flow.draggingBlock
         }),
         transform_matrix: function() {
@@ -66,9 +67,6 @@ export default {
         },
         infoPanelShow: function() {
             return this.$store["oldStore/infoPanelShow"];
-        },
-        linksCurr: function() {
-            return this.$store.getters["oldStore/linksCurr"];
         }
     },
     methods: {

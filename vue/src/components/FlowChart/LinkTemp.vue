@@ -43,6 +43,19 @@ export default {
         this.$bus.$on("linkTempEnd", evt => {
             console.log(evt);
             this.x1 = this.y1 = this.x2 = this.y2 = -1000;
+
+            //     this.$store.commit("oldStore/addLink", {
+            //         dot0: {
+            //             dot_id: evt.data.id,
+            //             dot_type: evt.data.type,
+            //             block_id: evt.block_id
+            //         },
+            //         dot1: {
+            //             dot_id: this.linkTempData.data.id,
+            //             dot_type: this.linkTempData.data.type,
+            //             block_id: this.linkTempData.block_id
+            //         }
+            //     });
         });
     }
 };
