@@ -18,7 +18,6 @@ const store = {
 
         infoPanelShow: false,
 
-        blocksPositions: {},
         ioCoords: {},
         flowCurrId: "testFlow",
         flows: initFlows,
@@ -29,9 +28,7 @@ const store = {
             link_id = link_id || shortid.generate();
             style = style || {};
             if (dot0.dot_type != dot1.dot_type) {
-                let links = Object.assign({},
-                    state.flows[state.flowCurrId].links
-                );
+                let links = Object.assign({}, state.flows[state.flowCurrId].links);
                 links[link_id] = {
                     style: style,
                     [dot0.dot_type]: {
@@ -62,49 +59,10 @@ const store = {
             let ioCoords = Object.assign({}, state.ioCoords);
             _.set(ioCoords, [block_id, ioType, ioId], coords);
             state.ioCoords = ioCoords;
-        },
-        updatePosition: (state, { block_id, panX, panY, zoom, fullDump }) => {
-            if (!block_id) return;
-            let flowCurrId = state.flowCurrId;
-            let blocksPositions = Object.assign({}, state.blocksPositions);
-
-            if (!_.get(blocksPositions, [flowCurrId, block_id])) {
-                _.set(
-                    blocksPositions, [flowCurrId, block_id], [1, 0, 0, 1, 0, 0]
-                );
-            }
-            let position = _.get(blocksPositions, [flowCurrId, block_id]);
-
-            if (_.isNumber(panX)) position[4] = panX;
-            if (_.isNumber(panY)) position[5] = panY;
-            if (_.isNumber(zoom)) position[0] = position[3] = zoom;
-
-            _.set(blocksPositions, [flowCurrId, block_id], position);
-
-            state.blocksPositions = blocksPositions;
-        },
-        updateAllPositions: (state, { flow_id, fullDump }) => {
-            if (fullDump && _.isObject(fullDump) && !_.isEmpty(fullDump)) {
-                state.blocksPositions = fullDump;
-            }
-        }
-    },
-    actions: {
-        savePositions: ({ state }) =>
-            lstore.set(
-                "blocksPositions",
-                Object.assign({}, state.blocksPositions)
-            ),
-        getPositions: ({ commit, state }) => {
-            let blocksPositions = lstore.get("blocksPositions");
-            commit("updateAllPositions", {
-                fullDump: blocksPositions
-            });
         }
     },
     getters: {
-        linksCurr: state => state.flows[state.flowCurrId].links,
-        blocksPositions: state => state.blocksPositions[state.flowCurrId]
+        linksCurr: state => state.flows[state.flowCurrId].links
     }
 };
 
@@ -122,6 +80,13 @@ const mainStore = new Vuex.Store({
 // mainStore.watch(
 //     () => mainStore.getters["base/flow"],
 //     data => mainStore.dispatch("flow/updateCurrentFlowFromBase", data)
+// );
+// mainStore.watch(
+//     () => mainStore.getters["base/positions"],
+//     data => {
+//         console.log(data);
+//         mainStore.commit("flow/SET_positions", data);
+//     }
 // );
 
 export default mainStore;

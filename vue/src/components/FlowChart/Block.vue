@@ -56,7 +56,7 @@ export default {
             Title interaction stream
         */
         this.$streams.drag$ = new Rx.BehaviorSubject(null)
-            .filter(val => val != null)
+            .skip(1)
             .pluck("event")
             .distinctUntilChanged()
             .map(event => ({
@@ -66,16 +66,11 @@ export default {
                 condition: event.type
             }))
             .distinctUntilChanged((prev, curr) => {
-                return (
-                    curr.condition == "mouseleave" &&
-                    prev.condition != "mousedown"
-                );
+                return curr.condition == "mouseleave" && prev.condition != "mousedown";
             })
             .share();
 
-        this.$streams.drag$.subscribe(val =>
-            this.$bus.$emit("$stream.fb_title_events", val)
-        );
+        this.$streams.drag$.subscribe(val => this.$bus.$emit("$stream.fb_title_events", val));
 
         return this.$streams; // Same names as streams values
     },

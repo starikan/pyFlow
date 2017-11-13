@@ -1,7 +1,8 @@
 <template lang="pug">
     #flow(
         v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: null}" 
-        @mousemove.stop="flow_mousemove(blockDraggedId, $event)" 
+        v-stream:mousemove.stop.native="{subject: $streams.block_move$}" 
+        @mousemove.stop="flow_mousemove($event)" 
         @mouseup.stop="flow_mouseup($event)"
         @dblclick.stop="flow_dblclick($event)")
 
@@ -21,7 +22,7 @@
         fb-block.fb(
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
-            :style="{transform: blocks_pos_style[block_id], 'z-index': block_id == block_select$ ? 1000 : 0}"
+            :style="{transform: transform_matrix[block_id], 'z-index': block_id == block_select$ ? 1000 : 0}"
             :class="[{'select': block_id == block_select$}]"
             
             v-stream:mousedown.stop.native="{subject: $streams.block_select$, data: block_id}" 
@@ -55,27 +56,42 @@ export default {
         this.$streams.block_select$ = new Rx.BehaviorSubject({ data: null })
             .pluck("data")
             .distinctUntilChanged()
-            // .do(val => console.log(this))
             .share();
 
-        // this.$streams.block_select$.subscribe(val => console.log(val));
-
         /*
-            Titles all events combine stream
+            Events from all Blocks merge stream
         */
         this.$streams.block_drag_flag$ = new Rx.Observable.fromEventPattern(h =>
             this.$bus.$on("$stream.fb_title_events", h)
         );
 
-        // this.$streams.block_drag_flag$.subscribe(val => console.log(val));
+        /*
+            Mouse move and drag blocks stream
+        */
+        this.$streams.block_move$ = new Rx.BehaviorSubject({ event: null })
+            .skip(1)
+            .withLatestFrom(this.$streams.block_drag_flag$)
+            // TODO: mouseleave
+            .filter(([evt, flag]) => _.get(flag, "condition") == "mousedown")
+            .map(([evt, flag]) => ({
+                [flag.block_id]: {
+                    x: evt.event.pageX - flag.offcetX,
+                    y: evt.event.pageY - flag.offcetY
+                }
+            }));
+
+        this.$streams.block_move$.subscribe(val => {
+            this.$store.commit("flow/UPDATE_BLOCK_POSITION", val);
+            let matrix = _.mapValues(val, xy => `matrix(1, 0, 0, 1, ${xy.x}, ${xy.y})`);
+            Object.assign(this.transform_matrix, matrix);
+            console.log(this.transform_matrix);
+        });
 
         return this.$streams;
     },
     data: function() {
         return {
-            blockDraggedId: null,
-            blockOffsetX: 0,
-            blockOffsetY: 0,
+            transform_matrix: {},
 
             linkTempFlag: false,
             linkTempData: {},
@@ -87,7 +103,6 @@ export default {
         /*
             Get initial data on startup
         */
-        this.$store.dispatch("oldStore/getPositions");
         this.$store.dispatch("base/loadAllData");
         this.$store.commit("flow/SET_flow", this.flowBase);
         this.$store.commit("flow/SET_positions", this.positionsBase);
@@ -101,14 +116,8 @@ export default {
             flow: state => state.flow.flow,
             positions: state => state.flow.positions
         }),
-        blocks_pos_style: function() {
-            return _.mapValues(this.blocksPositions, val => `matrix(${val})`);
-        },
         infoPanelShow: function() {
             return this.$store["oldStore/infoPanelShow"];
-        },
-        blocksPositions: function() {
-            return this.$store.getters["oldStore/blocksPositions"];
         },
         linksCurr: function() {
             return this.$store.getters["oldStore/linksCurr"];
@@ -122,15 +131,7 @@ export default {
         flow_dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
         },
-        flow_mousemove: function(block_id, evt) {
-            // Move block, but get event on all flow
-            if (block_id) {
-                this.$store.commit("oldStore/updatePosition", {
-                    block_id: block_id,
-                    panX: evt.pageX - this.blockOffsetX,
-                    panY: evt.pageY - this.blockOffsetY
-                });
-            }
+        flow_mousemove: function(evt) {
             // Temp link move
             if (this.linkTempFlag) {
                 this.linkTempEndCoords = { x: evt.clientX, y: evt.clientY };
@@ -139,8 +140,6 @@ export default {
         },
         // End of dragging
         flow_mouseup: function(evt) {
-            this.blockDraggedId = null;
-            this.$store.dispatch("oldStore/savePositions");
             this.$store.dispatch("base/saveData");
 
             this.linkTempFlag = false;
@@ -148,8 +147,7 @@ export default {
             this.linkTempStartCoords = { x: 0, y: 0 };
             this.linkTempEndCoords = { x: 0, y: 0 };
         }
-    },
-    watch: {}
+    }
 };
 </script>
 
