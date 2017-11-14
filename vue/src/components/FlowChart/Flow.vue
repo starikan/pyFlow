@@ -2,9 +2,8 @@
     #flow(
         @dblclick.stop="dblclick($event)"
         @mousemove="mousemove($event)" 
-        @mouseup.stop="mouseup($event)"
-        @mousedown.stop="mousedown($event)"
-        )
+        @mouseup="mouseup($event)"
+        @mousedown="mousedown($event)")
 
         .link: svg: links(
             v-for="(link, link_id) in links" 

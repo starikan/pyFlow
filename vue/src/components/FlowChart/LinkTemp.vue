@@ -22,9 +22,11 @@ export default {
     },
     created: function() {
         document.addEventListener("mousemove", this.mousemove);
+        document.addEventListener("mouseup", this.mouseup);
     },
     destroyed: function() {
         document.removeEventListener("mousemove", this.mousemove);
+        document.removeEventListener("mouseup", this.mouseup);
     },
     methods: {
         mousemove: function(evt) {
@@ -32,13 +34,16 @@ export default {
                 this.x2 = evt.pageX;
                 this.y2 = evt.pageY;
             }
+        },
+        mouseup: function(evt) {
+            this.x1 = this.y1 = this.x2 = this.y2 = -1000;
         }
     },
     mounted() {
         this.$bus.$on("linkTempStart", evt => {
             console.log(evt);
-            this.x1 = _.get(evt, ["dot_position", "x"], -1000);
-            this.y1 = _.get(evt, ["dot_position", "y"], -1000);
+            this.x1 = this.x2 = _.get(evt, ["dot_position", "x"], -1000);
+            this.y1 = this.y2 = _.get(evt, ["dot_position", "y"], -1000);
         });
         this.$bus.$on("linkTempEnd", evt => {
             console.log(evt);
