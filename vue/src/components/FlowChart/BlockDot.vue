@@ -43,13 +43,28 @@ export default {
         dotPosition: function() {
             if (this.$refs["icon"]) {
                 let bounds = this.$refs["icon"].getBoundingClientRect();
-                return {
+                let xy = {
                     x: bounds.x + bounds.width / 2 + this.blockPosition.x,
                     y: bounds.y + bounds.height / 2 + this.blockPosition.y
                 };
+                // this.$store.commit("flow/UPDATE_DOT_POSITION", {
+                //     block_id: this.blockId,
+                //     dot_id: this.data.dot_id,
+                //     x: xy.x,
+                //     y: xy.y
+                // });
+                return xy;
             } else {
                 return false;
             }
+        }
+    },
+    watch: {
+        dotPosition: {
+            handler(prev, curr) {
+                console.log(this.blockId, this.data.dot_id, curr);
+            },
+            deep: true
         }
     }
 };

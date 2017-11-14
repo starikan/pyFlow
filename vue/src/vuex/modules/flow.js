@@ -7,6 +7,7 @@ import _mut from "../_mut";
 let state = {
     positions: {},
     flow: {},
+    dotsPositions: {},
     draggingBlock: null
 };
 
@@ -21,6 +22,11 @@ let mutations = {
 
     UPDATE_BLOCK_POSITION: (state, coords) => {
         state.positions = {...state.positions, ...coords };
+    },
+
+    UPDATE_DOT_POSITION: (state, { block_id, dot_id, x, y }) => {
+        console.log(block_id, dot_id, x, y);
+        // state.positions = {...state.positions, ...coords };
     }
 };
 
