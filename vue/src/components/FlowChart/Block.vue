@@ -14,14 +14,14 @@
                 block-dot.fb-inputs(
                     v-for="input in block.inputs" 
                     :key="input.id" 
-                    :data="input" 
+                    :dot-data="input" 
                     :block-id="block_id")
 
             td: table: tbody
                 block-dot.fb-outputs(
                     v-for="output in block.outputs" 
                     :key="output.id" 
-                    :data="output" 
+                    :dot-data="output" 
                     :block-id="block_id")
 
         .flow-block-image

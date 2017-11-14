@@ -25,8 +25,8 @@ let mutations = {
     },
 
     UPDATE_DOT_POSITION: (state, { block_id, dot_id, x, y }) => {
-        console.log(block_id, dot_id, x, y);
-        // state.positions = {...state.positions, ...coords };
+        _.set(state.dotsPositions, [block_id, dot_id, "x"], x);
+        _.set(state.dotsPositions, [block_id, dot_id, "y"], y);
     }
 };
 

@@ -1,12 +1,12 @@
 <template lang="pug">
     tr
-        td(v-if="data.type=='output'") {{data.name}}
+        td(v-if="dotData.type=='output'") {{dotData.name}}
         td: i.bullseye.icon(
             @mousedown="linkStart($event)"
             @mouseup="linkEnd($event)"
             ref="icon"
         )
-        td(v-if="data.type=='input'") {{data.name}}
+        td(v-if="dotData.type=='input'") {{dotData.name}}
 </template>
 
 <script>
@@ -15,12 +15,21 @@ import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "block-dot",
-    props: ["data", "blockId"],
+    props: ["dotData", "blockId"],
+    // this.done value is flag of DOM complite
+    data: function() {
+        return {
+            done: false
+        };
+    },
+    mounted() {
+        this.done = true;
+    },
     methods: {
         linkStart: function(evt) {
             this.$bus.$emit("linkTempStart", {
                 block_id: this.blockId,
-                dot_data: this.data,
+                dot_data: this.dotData,
                 dot_position: this.dotPosition
             });
         },
@@ -28,7 +37,7 @@ export default {
         linkEnd: function(evt) {
             this.$bus.$emit("linkTempEnd", {
                 block_id: this.blockId,
-                dot_data: this.data,
+                dot_data: this.dotData,
                 dot_position: this.dotPosition
             });
         }
@@ -40,31 +49,32 @@ export default {
         blockPosition: function() {
             return _.get(this.positions, [this.block_id], { x: 0, y: 0 });
         },
+        bounds: function() {
+            return this.$refs["icon"].getBoundingClientRect();
+        },
         dotPosition: function() {
-            if (this.$refs["icon"]) {
+            if (this.done) {
                 let bounds = this.$refs["icon"].getBoundingClientRect();
                 let xy = {
                     x: bounds.x + bounds.width / 2 + this.blockPosition.x,
                     y: bounds.y + bounds.height / 2 + this.blockPosition.y
                 };
-                // this.$store.commit("flow/UPDATE_DOT_POSITION", {
-                //     block_id: this.blockId,
-                //     dot_id: this.data.dot_id,
-                //     x: xy.x,
-                //     y: xy.y
-                // });
                 return xy;
             } else {
-                return false;
+                return { x: 0, y: 0 };
             }
         }
     },
     watch: {
-        dotPosition: {
-            handler(prev, curr) {
-                console.log(this.blockId, this.data.dot_id, curr);
-            },
-            deep: true
+        dotPosition: function(prev, curr) {
+            if (prev.x != curr.x || prev.y != curr.y) {
+                this.$store.commit("flow/UPDATE_DOT_POSITION", {
+                    block_id: this.blockId,
+                    dot_id: this.dotData.id,
+                    x: curr.x,
+                    y: curr.y
+                });
+            }
         }
     }
 };

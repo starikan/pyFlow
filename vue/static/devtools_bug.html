@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width">
+    <title>Vue</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html,
+        body,
+        #app {
+            height: 100%
+        }
+        
+        #block {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: brown;
+        }
+        
+        i {
+            position: relative;
+            margin: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app"
+        @mousemove="move($event)">
+        <div>{{starPosition}}</div>
+        <div id="block"
+            :style="style">
+            <i ref="icon"
+                class="fa fa-snowflake-o"></i>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function() {
+                return {
+                    left: 0,
+                    top: 0
+                }
+            },
+            computed: {
+                style: function() {
+                    return {
+                        left: this.left + "px",
+                        top: this.top + "px"
+                    }
+                },
+                blockPosition: function() {
+                    return {
+                        x: this.left,
+                        y: this.top
+                    }
+                },
+                starPosition: function() {
+                    if (this.$refs["icon"]) {
+                        let bounds = this.$refs["icon"].getBoundingClientRect();
+                        let xy = {
+                            x: bounds.x + this.left,
+                            y: bounds.y + this.top
+                        };
+                        console.log(xy)
+                        return xy;
+                    } else {
+                        let xy = {
+                            x: 0,
+                            y: 0
+                        };
+                        console.log(xy)
+                        return xy;
+                    }
+                }
+            },
+            methods: {
+                move: function(evt) {
+                    this.left = evt.pageX
+                    this.top = evt.pageY
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
