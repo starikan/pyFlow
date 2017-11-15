@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="description"
+        content="Vue bootstrap">
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width">
+    <title>Vue</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+
+    <style>
+        html,
+        body,
+        #app {
+            height: 100%
+        }
+        
+        #blk {
+            position: absolute
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app"
+        @mousemove="mousemove($event)">
+        <div id="blk"
+            ref="block"
+            :style="style">
+            <p> Cache: {{cache}} </p>
+            <p> NoCache: {{noCache}} </p>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                style: {
+                    top: "0px",
+                    left: "0px"
+                }
+            },
+            mounted() {
+                this.done = true
+            },
+            computed: {
+                cache: function() {
+                    let bounds = {}
+                    if (this.done) {
+                        bounds = this.$refs["block"].getBoundingClientRect();
+                    }
+                    return bounds
+                },
+                noCache: {
+                    cache: false,
+                    get: function() {
+                        let bounds = {}
+                        if (this.done) {
+                            bounds = this.$refs["block"].getBoundingClientRect();
+                        }
+                        return bounds
+                    }
+                }
+            },
+            methods: {
+                mousemove: function(evt) {
+                    this.style = {
+                        top: evt.y + "px",
+                        left: evt.x + "px"
+                    }
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
