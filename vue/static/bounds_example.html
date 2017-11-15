@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width">
     <title>Vue</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
 
     <style>
         html,
@@ -31,27 +31,59 @@
             ref="block"
             :style="style">
             <p> Cache: {{cache}} </p>
+            <p> Block: {{block}} </p>
             <p> NoCache: {{noCache}} </p>
+            <p> Func in data: {{now}} </p>
         </div>
     </div>
 
     <script>
+        // https://github.com/vuejs/vue/issues/5096
         var app = new Vue({
             el: '#app',
-            data: {
-                style: {
-                    top: "0px",
-                    left: "0px"
+            data: function() {
+                let vm = this;
+                return {
+                    get now() {
+                        console.log(vm)
+                        return vm.getBound()
+                    },
+                    style: {
+                        top: "0px",
+                        left: "0px"
+                    },
+                    block: null
                 }
             },
             mounted() {
                 this.done = true
+                this.block = this.$refs["block"].getBoundingClientRect().x
+            },
+            watch: {
+                block: function(curr, prev) {
+                    console.log(curr)
+                }
+            },
+            methods: {
+                getBound: function() {
+                    let bounds = {}
+                    if (this.done) {
+                        bounds = this.$refs["block"].getBoundingClientRect();
+                    }
+                    return bounds
+                },
+                mousemove: function(evt) {
+                    this.style = {
+                        top: evt.y + "px",
+                        left: evt.x + "px"
+                    }
+                }
             },
             computed: {
                 cache: function() {
                     let bounds = {}
                     if (this.done) {
-                        bounds = this.$refs["block"].getBoundingClientRect();
+                        bounds = this.block.getBoundingClientRect();
                     }
                     return bounds
                 },
@@ -64,15 +96,7 @@
                         }
                         return bounds
                     }
-                }
-            },
-            methods: {
-                mousemove: function(evt) {
-                    this.style = {
-                        top: evt.y + "px",
-                        left: evt.x + "px"
-                    }
-                }
+                },
             }
         })
     </script>
