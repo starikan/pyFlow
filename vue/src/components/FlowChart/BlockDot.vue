@@ -46,18 +46,14 @@ export default {
         ...mapState({
             positions: state => state.flow.positions
         }),
-        blockPosition: function() {
-            return _.get(this.positions, [this.block_id], { x: 0, y: 0 });
-        },
         bounds: function() {
             return this.$refs["icon"].getBoundingClientRect();
         },
         dotPosition: function() {
             if (this.done) {
-                let bounds = this.$refs["icon"].getBoundingClientRect();
                 let xy = {
-                    x: bounds.x + bounds.width / 2 + this.blockPosition.x,
-                    y: bounds.y + bounds.height / 2 + this.blockPosition.y
+                    x: this.bounds.width / 2 + this.positions[this.blockId].x,
+                    y: this.bounds.height / 2 + this.positions[this.blockId].y
                 };
                 return xy;
             } else {
@@ -66,7 +62,7 @@ export default {
         }
     },
     watch: {
-        dotPosition: function(prev, curr) {
+        dotPosition: function(curr, prev) {
             if (prev.x != curr.x || prev.y != curr.y) {
                 this.$store.commit("flow/UPDATE_DOT_POSITION", {
                     block_id: this.blockId,
