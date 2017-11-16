@@ -5,7 +5,7 @@
         @mouseup="mouseup($event)"
         @mousedown="mousedown($event)")
 
-        .link: svg: links(
+        .link: svg: linkConnector(
             v-for="(link, link_id) in links" 
             :key="link_id" 
             :link="link"
@@ -31,12 +31,12 @@ import _ from "lodash";
 import { mapState, mapGetters } from "vuex";
 
 import Block from "./Block";
-import Links from "./Links";
+import Link from "./Link";
 import LinkTemp from "./LinkTemp";
 
 export default {
     name: "flow",
-    components: { links: Links, "link-temp": LinkTemp, "fb-block": Block },
+    components: { linkConnector: Link, "link-temp": LinkTemp, "fb-block": Block },
     data: function() {
         return {
             blockSelect: null
