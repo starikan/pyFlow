@@ -11,7 +11,7 @@ import flow from "./modules/flow";
 
 Vue.use(Vuex);
 
-const store = {
+const oldStore = {
     namespaced: true,
     state: {
         leftPanelShow: false,
@@ -66,27 +66,43 @@ const store = {
     }
 };
 
-const mainStore = new Vuex.Store({
+const modulesHooks = store => {
+    _.forEach(store._modulesNamespaceMap, (val, key) => {
+        let init = key + "INIT";
+        if (_.get(store._mutations, init)) {
+            store.commit(init);
+        }
+    });
+
+    let hooks = _(vuexData.modules)
+        .mapValues(val => val.hooks)
+        .map((val, key) => _.mapKeys(val, (_val, _key) => key + "/" + _key))
+        .filter(val => !_.isEmpty(val))
+        .reduce((result, value, key) => {
+            return {...result, ...value };
+        });
+
+    store.subscribe((mutation, state) => {
+        // called after every mutation.
+        _.mapKeys(hooks, (hook, mut) => {
+            if (mut == mutation.type) {
+                hook(state, mutation.payload);
+            }
+        });
+    });
+};
+
+const vuexData = {
     strict: process.env.NODE_ENV !== "production",
     modules: {
-        oldStore: store,
+        oldStore: oldStore,
         base: base,
         flow: flow,
         panels: {}
-    }
-});
+    },
+    plugins: [modulesHooks]
+};
 
-// Update current flow in 'flow' if loaded from external API
-// mainStore.watch(
-//     () => mainStore.getters["base/flow"],
-//     data => mainStore.dispatch("flow/updateCurrentFlowFromBase", data)
-// );
-// mainStore.watch(
-//     () => mainStore.getters["base/positions"],
-//     data => {
-//         console.log(data);
-//         mainStore.commit("flow/SET_positions", data);
-//     }
-// );
+const mainStore = new Vuex.Store(vuexData);
 
 export default mainStore;

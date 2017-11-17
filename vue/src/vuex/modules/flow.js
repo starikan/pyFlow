@@ -12,6 +12,10 @@ let state = {
 };
 
 let mutations = {
+    INIT: state => {
+        console.log("Init Flow");
+    },
+
     SET_positions: (state, positions) => {
         let blankPositions = _.keys(state.flow.blocks).map(key => ({
             [key]: { x: 0, y: 0 }
@@ -34,6 +38,12 @@ let actions = {};
 
 let getters = {};
 
+let hooks = {
+    INIT: (state, payload) => {
+        console.log("Init hook", state, payload);
+    }
+};
+
 export default {
     namespaced: true,
     state: state,
@@ -42,5 +52,6 @@ export default {
         ...mutations
     },
     actions: actions,
-    getters: getters
+    getters: getters,
+    hooks: hooks
 };

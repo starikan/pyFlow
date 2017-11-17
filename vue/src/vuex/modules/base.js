@@ -64,10 +64,16 @@ let getters = {
     positions: state => _.get(state.positions, [state.flowId], {})
 };
 
+let hooks = {};
+
 export default {
     namespaced: true,
     state: state,
-    mutations: Object.assign(_mut(state), mutations),
+    mutations: {
+        ..._mut(state),
+        ...mutations
+    },
     actions: actions,
-    getters: getters
+    getters: getters,
+    hooks: hooks
 };
