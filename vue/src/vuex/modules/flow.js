@@ -5,8 +5,8 @@
 import _mut from "../_mut";
 
 let state = {
-    positions: {},
     flow: {},
+    positions: {},
     dotsPositions: {},
     draggingBlock: null
 };
@@ -17,10 +17,6 @@ let mutations = {
     },
 
     SET_positions: (state, positions) => {
-        let blankPositions = _.keys(state.flow.blocks).map(key => ({
-            [key]: { x: 0, y: 0 }
-        }));
-        positions = Object.assign({}, ...blankPositions, positions);
         state.positions = Object.assign(state.positions, positions);
     },
 
@@ -39,8 +35,50 @@ let actions = {};
 let getters = {};
 
 let hooks = {
-    INIT: (state, payload) => {
+    INIT: ({ state, payload }) => {
         console.log("Init hook", state, payload);
+    },
+    SET_flow: ({ state, stateGlobal, payload, mutation, store }) => {
+        // Init blank positions
+        let blankPositions = _(state.flow.blocks)
+            .map((val, key) => ({
+                [key]: { x: 0, y: 0 }
+            }))
+            .reduce((result, value) => {
+                return {...result, ...value };
+            });
+        blankPositions = {...blankPositions, ...state.positions };
+
+        store.commit("flow/SET_positions", blankPositions);
+
+        // Init blank dot position
+        let blankDotPositions = _(state.flow.blocks)
+            .map((val, key) => {
+                let inputs = _.map(_.get(val, ["inputs"]), "id");
+                let outputs = _.map(_.get(val, ["outputs"]), "id");
+                let res = inputs.concat(outputs);
+                return {
+                    [key]: res
+                };
+            })
+            .reduce((result, value) => {
+                return {...result, ...value };
+            });
+
+        blankDotPositions = _.mapValues(blankDotPositions, val => {
+            return _.map(val, (val_in, key_in) => {
+                return {
+                    [val_in]: { x: 0, y: 0 }
+                };
+            }).reduce((result, value) => {
+                return {...result, ...value };
+            });
+        });
+
+        blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
+        store.commit("flow/SET_dotsPositions", blankDotPositions);
+
+        console.log(state.dotsPositions);
     }
 };
 
