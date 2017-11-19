@@ -1,29 +1,32 @@
 <template lang="pug">
     #flow(
+        @mousewheel="mousewheel($event)"
         @dblclick.stop="dblclick($event)"
         @mousemove="mousemove($event)" 
         @mouseup="mouseup($event)"
         @mousedown="mousedown($event)")
 
-        .link: svg: linkConnector(
-            v-for="(link, link_id) in links" 
-            :key="link_id" 
-            :link="link"
-            :link-id="link_id")
+        #elements(:style="flow_style")
 
-        fb-block.fb(
-            :style="block_style(block_id)"
-            v-for="(block, block_id) in flow.blocks" 
-            :key="block_id" 
-            :class="[{'select': blockSelect == block_id}]"
-            
-            @mousedown.stop.native="blockSelect = block_id" 
-            @dblclick.stop.native="fb_dblclick($event)"
-            
-            :block="block"
-            :block_id="block_id")
+            .link: svg: linkConnector(
+                v-for="(link, link_id) in links" 
+                :key="link_id" 
+                :link="link"
+                :link-id="link_id")
 
-        link-temp
+            fb-block.fb(
+                :style="block_style(block_id)"
+                v-for="(block, block_id) in flow.blocks" 
+                :key="block_id" 
+                :class="[{'select': blockSelect == block_id}]"
+                
+                @mousedown.stop.native="blockSelect = block_id" 
+                @dblclick.stop.native="fb_dblclick($event)"
+                
+                :block="block"
+                :block_id="block_id")
+
+            link-temp
 </template>
 
 <script>
@@ -59,13 +62,27 @@ export default {
             flow: state => state.flow.flow,
             positions: state => state.flow.positions,
             links: state => state.flow.flow.links,
-            draggingBlock: state => state.flow.draggingBlock
+            draggingBlock: state => state.flow.draggingBlock,
+            flowZoom: state => state.flow.flowZoom
         }),
         transform_matrix: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
+        },
+        flow_style: function() {
+            return {
+                transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 1, 1)`
+            };
         }
     },
     methods: {
+        mousewheel: function(evt) {
+            console.log(evt);
+            if (evt.deltaY < 0) {
+                this.$store.commit("flow/ZOOM_IN");
+            } else {
+                this.$store.commit("flow/ZOOM_OUT");
+            }
+        },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/SET_isShowRightPanel", true);
         },
@@ -80,8 +97,8 @@ export default {
             if (this.draggingBlock) {
                 this.$store.commit("flow/UPDATE_BLOCK_POSITION", {
                     [this.draggingBlock.block_id]: {
-                        x: evt.pageX - this.draggingBlock.offcetX,
-                        y: evt.pageY - this.draggingBlock.offcetY
+                        x: (evt.pageX - this.draggingBlock.offcetX) / this.flowZoom,
+                        y: (evt.pageY - this.draggingBlock.offcetY) / this.flowZoom
                     }
                 });
             }
@@ -124,7 +141,7 @@ export default {
     &.select
         border 1px solid red
 
-.link, svg
+.link, svg, #elements
     width 100%
     height 100%
     position absolute
