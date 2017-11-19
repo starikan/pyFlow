@@ -3,18 +3,21 @@
         flow
         left-panel(v-if="isShowLeftPanel")
         info-panel(v-if="isShowRightPanel")
+        left-panel-switcher(v-if="!isShowLeftPanel")
+
 </template>
 
 <script>
 import Flow from "./components/FlowChart/Flow";
-import LeftPanel from "./components/LeftPanel";
-import InfoPanel from "./components/InfoPanel";
+import LeftPanel from "./components/Panels/LeftPanel";
+import LeftPanelSwitcher from "./components/Panels/LeftPanelSwitcher";
+import InfoPanel from "./components/Panels/InfoPanel";
 
-import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import { mapState } from "vuex";
 
 export default {
     name: "app",
-    components: { Flow, LeftPanel, InfoPanel },
+    components: { Flow, LeftPanel, InfoPanel, LeftPanelSwitcher },
     computed: {
         ...mapState({
             isShowLeftPanel: state => state.panels.isShowLeftPanel,
