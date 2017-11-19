@@ -88,11 +88,11 @@ export default {
     },
     methods: {
         mousewheel: function(evt) {
-            // if (evt.deltaY < 0) {
-            //     this.$store.commit("flow/ZOOM_IN");
-            // } else {
-            //     this.$store.commit("flow/ZOOM_OUT");
-            // }
+            if (evt.deltaY < 0) {
+                this.$store.commit("flow/ZOOM_IN");
+            } else {
+                this.$store.commit("flow/ZOOM_OUT");
+            }
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/SET_isShowRightPanel", true);
@@ -115,8 +115,8 @@ export default {
                 this.$store.commit("flow/UPDATE_BLOCK_POSITION", {
                     block_id: this.draggingBlock,
                     delta: {
-                        x: evt.movementX,
-                        y: evt.movementY
+                        x: evt.movementX / this.flowZoom,
+                        y: evt.movementY / this.flowZoom
                     }
                 });
             }

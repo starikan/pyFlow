@@ -30,4 +30,5 @@ export default {
 <style lang="stylus">
 html, body, #app
     height 100%
+    overflow hidden
 </style>

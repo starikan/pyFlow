@@ -44,9 +44,16 @@ export default {
 
         getBounds: function() {
             let bounds = this.$refs["icon"].getBoundingClientRect();
+
             let position = {
                 x: bounds.width / 2 + bounds.x,
+                // window.innerWidth * (this.flowZoom - 1) / 2 +
+                // bounds.width / 2 / this.flowZoom +
+                // bounds.x / this.flowZoom,
                 y: bounds.height / 2 + bounds.y
+                // window.innerHeight * (this.flowZoom - 1) / 2 +
+                // bounds.height / 2 / this.flowZoom +
+                // bounds.y / this.flowZoom
             };
             this.dotPosition = position;
 
@@ -60,7 +67,8 @@ export default {
     },
     computed: {
         ...mapState({
-            positions: state => state.flow.positions
+            positions: state => state.flow.positions,
+            flowZoom: state => state.flow.flowZoom
         }),
         blockPosition: function() {
             return this.positions[this.blockId];
