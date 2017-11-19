@@ -4,9 +4,11 @@
         @dblclick.stop="dblclick($event)"
         @mousemove="mousemove($event)" 
         @mouseup="mouseup($event)"
-        @mousedown="mousedown($event)")
+        @mousedown="mousedown($event)"
+        
+        :style="flow_style")
 
-        #elements(:style="flow_style")
+        #elements(:style="elements_style")
 
             .link: svg: linkConnector(
                 v-for="(link, link_id) in links" 
@@ -42,7 +44,12 @@ export default {
     components: { linkConnector: Link, "link-temp": LinkTemp, "fb-block": Block },
     data: function() {
         return {
-            blockSelect: null
+            blockSelect: null,
+            flowDragg: false,
+            flowPosition: {
+                x: 0,
+                y: 0
+            }
         };
     },
     mounted() {
@@ -65,12 +72,17 @@ export default {
             draggingBlock: state => state.flow.draggingBlock,
             flowZoom: state => state.flow.flowZoom
         }),
-        transform_matrix: function() {
+        blocks_transform: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
+        },
+        elements_style: function() {
+            return {
+                transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 0, 0)`
+            };
         },
         flow_style: function() {
             return {
-                transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 1, 1)`
+                transform: `matrix(1, 0, 0, 1, ${this.flowPosition.x}, ${this.flowPosition.y})`
             };
         }
     },
@@ -90,14 +102,21 @@ export default {
         },
         mousedown: function(evt) {
             this.blockSelect = null;
+            this.flowDragg = true;
         },
         mousemove: function(evt) {
+            // Move Flow
+            if (this.flowDragg) {
+                console.log(evt);
+            }
+
             // Move block
             if (this.draggingBlock) {
                 this.$store.commit("flow/UPDATE_BLOCK_POSITION", {
-                    [this.draggingBlock.block_id]: {
-                        x: (evt.pageX - this.draggingBlock.offcetX) / this.flowZoom,
-                        y: (evt.pageY - this.draggingBlock.offcetY) / this.flowZoom
+                    block_id: this.draggingBlock,
+                    delta: {
+                        x: evt.movementX,
+                        y: evt.movementY
                     }
                 });
             }
@@ -115,7 +134,7 @@ export default {
         },
         block_style: function(block_id) {
             return {
-                transform: _.get(this.transform_matrix, [block_id]),
+                transform: _.get(this.blocks_transform, [block_id]),
                 "z-index": block_id == this.blockSelect ? 100 : 0
             };
         }

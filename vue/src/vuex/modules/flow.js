@@ -21,8 +21,15 @@ let mutations = {
         state.positions = Object.assign(state.positions, positions);
     },
 
-    UPDATE_BLOCK_POSITION: (state, coords) => {
-        state.positions = {...state.positions, ...coords };
+    UPDATE_BLOCK_POSITION: (state, { block_id, delta }) => {
+        let newPosition = {
+            [block_id]: {
+                x: _.get(state.positions, [block_id, "x"]) + delta.x,
+                y: _.get(state.positions, [block_id, "y"]) + delta.y
+            }
+        };
+
+        state.positions = {...state.positions, ...newPosition };
     },
 
     UPDATE_DOT_POSITION: (state, { block_id, dot_id, x, y }) => {
