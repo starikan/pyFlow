@@ -1,8 +1,8 @@
 <template lang="pug">
     #app
         flow
-        left-panel(v-if="leftPanelShow")
-        info-panel(v-if="infoPanelShow")
+        left-panel(v-if="isShowLeftPanel")
+        info-panel(v-if="isShowRightPanel")
 </template>
 
 <script>
@@ -16,7 +16,10 @@ export default {
     name: "app",
     components: { Flow, LeftPanel, InfoPanel },
     computed: {
-        ...mapState(["infoPanelShow", "leftPanelShow"])
+        ...mapState({
+            isShowLeftPanel: state => state.panels.isShowLeftPanel,
+            isShowRightPanel: state => state.panels.isShowRightPanel
+        })
     }
 };
 </script>

@@ -8,21 +8,11 @@ import { initFlows, blocksCollection } from "./init_data";
 
 import base from "./modules/base";
 import flow from "./modules/flow";
+import panels from "./modules/panels";
 
 Vue.use(Vuex);
 
 const oldStore = {
-    namespaced: true,
-    state: {
-        leftPanelShow: false,
-
-        infoPanelShow: false,
-
-        ioCoords: {},
-        flowCurrId: "testFlow",
-        flows: initFlows,
-        blocks: blocksCollection
-    },
     mutations: {
         addLink: function(state, { dot0, dot1, link_id, style }) {
             link_id = link_id || shortid.generate();
@@ -54,15 +44,7 @@ const oldStore = {
         removeBlock: (state, { block_id }) => {},
         toggleLeftPanel: (state, { show }) => {
             state.infoPanelShow = show;
-        },
-        updateIOCoords: (state, { block_id, ioType, ioId, coords }) => {
-            let ioCoords = Object.assign({}, state.ioCoords);
-            _.set(ioCoords, [block_id, ioType, ioId], coords);
-            state.ioCoords = ioCoords;
         }
-    },
-    getters: {
-        linksCurr: state => state.flows[state.flowCurrId].links
     }
 };
 
@@ -71,10 +53,9 @@ import modulesHooks from "./plugins/hooks_plugin";
 const vuexData = {
     strict: process.env.NODE_ENV !== "production",
     modules: {
-        oldStore: oldStore,
         base: base,
         flow: flow,
-        panels: {}
+        panels: panels
     },
     plugins: [modulesHooks]
 };

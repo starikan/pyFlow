@@ -63,15 +63,11 @@ export default {
         }),
         transform_matrix: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
-        },
-        infoPanelShow: function() {
-            return this.$store["oldStore/infoPanelShow"];
         }
     },
     methods: {
         fb_dblclick: function(evt) {
-            console.log("fb_dblclick", evt);
-            this.$store.commit("oldStore/toggleLeftPanel", { show: true });
+            this.$store.commit("panels/SET_isShowRightPanel", true);
         },
         dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
