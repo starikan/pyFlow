@@ -1,34 +1,39 @@
 <template lang="pug">
-    #flow(
-        @mousewheel="mousewheel($event)"
-        @dblclick.stop="dblclick($event)"
-        @mousemove="mousemove($event)" 
-        @mouseup="mouseup($event)"
-        @mousedown="mousedown($event)"
-        
-        :style="flow_style")
+    #flows_wrap(
+            @mousewheel="mousewheel($event)"
+            @dblclick.stop="dblclick($event)"
+            @mousemove="mousemove($event)" 
+            @mouseup="mouseup($event)"
+            @mousedown="mousedown($event)"
+            
+            :style="flow_style")
 
-        #elements(:style="elements_style")
+        .flow#flowNW
+        .flow#flowNE
+        .flow#flowSW
+        .flow#flow
 
-            .link: svg: linkConnector(
-                v-for="(link, link_id) in links" 
-                :key="link_id" 
-                :link="link"
-                :link-id="link_id")
+            #elements(:style="elements_style")
 
-            fb-block.fb(
-                :style="block_style(block_id)"
-                v-for="(block, block_id) in flow.blocks" 
-                :key="block_id" 
-                :class="[{'select': blockSelect == block_id}]"
-                
-                @mousedown.stop.native="blockSelect = block_id" 
-                @dblclick.stop.native="fb_dblclick($event)"
-                
-                :block="block"
-                :block_id="block_id")
+                .link: svg: linkConnector(
+                    v-for="(link, link_id) in links" 
+                    :key="link_id" 
+                    :link="link"
+                    :link-id="link_id")
 
-            link-temp
+                fb-block.fb(
+                    :style="block_style(block_id)"
+                    v-for="(block, block_id) in flow.blocks" 
+                    :key="block_id" 
+                    :class="[{'select': blockSelect == block_id}]"
+                    
+                    @mousedown.stop.native="blockSelect = block_id" 
+                    @dblclick.stop.native="fb_dblclick($event)"
+                    
+                    :block="block"
+                    :block_id="block_id")
+
+                link-temp
 </template>
 
 <script>
@@ -107,7 +112,9 @@ export default {
         mousemove: function(evt) {
             // Move Flow
             if (this.flowDragg) {
-                console.log(evt);
+                // console.log(evt);
+                this.flowPosition.x += evt.movementX;
+                this.flowPosition.y += evt.movementY;
             }
 
             // Move block
@@ -131,6 +138,7 @@ export default {
             // End of dragging
             this.$store.dispatch("base/saveData");
             this.$store.commit("flow/SET_draggingBlock", null);
+            this.flowDragg = false;
         },
         block_style: function(block_id) {
             return {
@@ -143,11 +151,27 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-#flow
+#flows_wrap
+    width 100%
+    height 100%
+
+.flow
     width 100%
     height 100%
     background-image url('/static/background.jpg')
     position absolute
+
+#flowNW
+    top -100%
+    left -100%
+
+#flowNE
+    top -100%
+
+#flowSW
+    left -100%
+
+#flow
     font-family 'Open Sans Condensed', sans-serif
     user-select none
 

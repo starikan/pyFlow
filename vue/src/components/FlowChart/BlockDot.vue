@@ -44,16 +44,16 @@ export default {
 
         getBounds: function() {
             let bounds = this.$refs["icon"].getBoundingClientRect();
+            let blockDOM = this.$refs["icon"].parentNode.parentNode.parentNode.parentNode.parentNode.parentNode
+                .parentNode.parentNode.parentNode;
+            let blockBounds = blockDOM.getBoundingClientRect();
 
+            // if (this.blockId == "first_block" && this.dotData.id == "input_image") {
+            //     console.log(bounds.x - blockBounds.x);
+            // }
             let position = {
-                x: bounds.width / 2 + bounds.x,
-                // window.innerWidth * (this.flowZoom - 1) / 2 +
-                // bounds.width / 2 / this.flowZoom +
-                // bounds.x / this.flowZoom,
-                y: bounds.height / 2 + bounds.y
-                // window.innerHeight * (this.flowZoom - 1) / 2 +
-                // bounds.height / 2 / this.flowZoom +
-                // bounds.y / this.flowZoom
+                x: this.blockPosition.x + bounds.width / 2 + (bounds.x - blockBounds.x) / this.flowZoom,
+                y: this.blockPosition.y + bounds.height / 2 + (bounds.y - blockBounds.y) / this.flowZoom
             };
             this.dotPosition = position;
 
