@@ -48,12 +48,9 @@ export default {
                 .parentNode.parentNode.parentNode;
             let blockBounds = blockDOM.getBoundingClientRect();
 
-            // if (this.blockId == "first_block" && this.dotData.id == "input_image") {
-            //     console.log(bounds.x - blockBounds.x);
-            // }
             let position = {
-                x: this.blockPosition.x + bounds.width / 2 + (bounds.x - blockBounds.x) / this.flowZoom,
-                y: this.blockPosition.y + bounds.height / 2 + (bounds.y - blockBounds.y) / this.flowZoom
+                x: this.blockPosition.x + (bounds.width / 2 + bounds.x - blockBounds.x) / this.flowZoom,
+                y: this.blockPosition.y + (bounds.height / 2 + bounds.y - blockBounds.y) / this.flowZoom
             };
             this.dotPosition = position;
 
