@@ -76,12 +76,11 @@ export default {
     },
     methods: {
         mousewheel: function(evt) {
-            console.log(evt);
-            if (evt.deltaY < 0) {
-                this.$store.commit("flow/ZOOM_IN");
-            } else {
-                this.$store.commit("flow/ZOOM_OUT");
-            }
+            // if (evt.deltaY < 0) {
+            //     this.$store.commit("flow/ZOOM_IN");
+            // } else {
+            //     this.$store.commit("flow/ZOOM_OUT");
+            // }
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/SET_isShowRightPanel", true);

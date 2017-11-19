@@ -1,8 +1,9 @@
 <template lang="pug">
 
-    div
+    div(@mousedown="startDrag(block_id, $event)")
+
         table.fb-title(
-            @mousedown="startDrag(block_id, $event)")
+            @mousedown="draggingFlag = true")
 
             tbody: tr
                 td {{block.title}}
@@ -34,17 +35,23 @@ import BlockDot from "./BlockDot";
 
 export default {
     name: "fb-block",
-    components: {
-        "block-dot": BlockDot
+    components: { "block-dot": BlockDot },
+    data: function() {
+        return {
+            draggingFlag: false
+        };
     },
     props: ["block", "block_id"],
     methods: {
         startDrag: function(block_id, evt) {
-            this.$store.commit("flow/SET_draggingBlock", {
-                offcetX: evt.offsetX,
-                offcetY: evt.offsetY,
-                block_id: block_id
-            });
+            if (this.draggingFlag) {
+                this.$store.commit("flow/SET_draggingBlock", {
+                    offcetX: evt.offsetX,
+                    offcetY: evt.offsetY,
+                    block_id: block_id
+                });
+                this.draggingFlag = false;
+            }
         }
     }
 };
