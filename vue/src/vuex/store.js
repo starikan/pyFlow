@@ -41,10 +41,7 @@ const oldStore = {
         },
         addBlock: (state, { block_id }) => {},
         editBlock: (state, { block_id }) => {},
-        removeBlock: (state, { block_id }) => {},
-        toggleLeftPanel: (state, { show }) => {
-            state.infoPanelShow = show;
-        }
+        removeBlock: (state, { block_id }) => {}
     }
 };
 
