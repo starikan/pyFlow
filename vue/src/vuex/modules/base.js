@@ -15,13 +15,13 @@ let state = {
 };
 
 let mutations = {
-    UPDATE_BLOCK_POSITION: (state, coords) => {
+    UPDATE_BLOCK_POSITIONS: (state, positions) => {
         if (!state.positions[state.flowId]) {
             Object.assign(state.positions, {
                 [state.flowId]: {}
             });
         }
-        Object.assign(state.positions[state.flowId], coords);
+        Object.assign(state.positions[state.flowId], positions);
     }
 };
 
@@ -51,11 +51,6 @@ let actions = {
         flowId ? lstore.set("flowId", state.flowId) : "";
         flows ? lstore.set("flows", state.flows) : "";
     }
-
-    // UPDATE_BLOCKS_POSITIONS: ({ state, dispatch }, { positions, flowId = state.flowId }) => {
-    //     Object.assign(state.blocksPositions, { flowId: positions });
-    //     dispatch("SAVE_BLOCKS_POSITIONS");
-    // },
 };
 
 let getters = {

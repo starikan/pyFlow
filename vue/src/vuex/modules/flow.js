@@ -38,7 +38,7 @@ let hooks = {
     INIT: ({ state, payload }) => {
         console.log("Init hook", state, payload);
     },
-    SET_flow: ({ state, stateGlobal, payload, mutation, store }) => {
+    SET_flow: ({ state, store }) => {
         // Init blank positions
         let blankPositions = _(state.flow.blocks)
             .map((val, key) => ({
@@ -77,8 +77,10 @@ let hooks = {
 
         blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
         store.commit("flow/SET_dotsPositions", blankDotPositions);
+    },
 
-        console.log(state.dotsPositions);
+    UPDATE_BLOCK_POSITION: ({ state, store }) => {
+        store.commit("base/UPDATE_BLOCK_POSITIONS", state.positions);
     }
 };
 
