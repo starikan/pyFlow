@@ -49,19 +49,7 @@ export default {
             flowDragg: false
         };
     },
-    mounted() {
-        /*
-            Get initial data on startup
-        */
-        this.$store.dispatch("base/loadAllData");
-        this.$store.commit("flow/__set_flow", this.flowBase);
-        this.$store.commit("flow/__set_positions", this.positionsBase);
-    },
     computed: {
-        ...mapGetters({
-            flowBase: "base/flow",
-            positionsBase: "base/positions"
-        }),
         ...mapState({
             flow: state => state.flow.flow,
             positions: state => state.flow.positions,
@@ -127,7 +115,6 @@ export default {
 
         mouseup: function(evt) {
             // End of dragging
-            this.$store.dispatch("base/saveData");
             this.$store.commit("flow/__set_draggingBlock", null);
             this.flowDragg = false;
         },
@@ -142,12 +129,15 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+size = 1000px
+size2 = -100px
+
 #flow
     position absolute
-    width 10000px
-    height 10000px
-    top -5000px
-    left -5000px
+    width size
+    height size
+    top size2
+    left size2
     background-image url('/static/background.jpg')
     font-family 'Open Sans Condensed', sans-serif
     user-select none

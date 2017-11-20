@@ -1,4 +1,4 @@
-export let initFlows = {
+export const initFlows = {
     testFlow: {
         blocks: {
             first_block: {
@@ -112,7 +112,7 @@ export let initFlows = {
     }
 };
 
-export let blocksCollection = {
+export const blocksCollection = {
     uploadFile: {
         name: "uploadFile",
         groups: ["OpenCV"],
@@ -191,3 +191,5 @@ export let blocksCollection = {
         server: {}
     }
 };
+
+export const initFlowId = "testFlow";

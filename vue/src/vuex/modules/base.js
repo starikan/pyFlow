@@ -5,75 +5,79 @@
 import lstore from "store";
 
 import _mut from "../_mut";
-import { initFlows, blocksCollection } from "../init_data";
+
+import { initFlows, blocksCollection, initFlowId } from "../init_data";
 
 let state = {
     positions: {},
     flowId: "",
     flows: {},
     blocks: {},
-    flowsPositions: {}
+    flowPositions: {}
 };
 
 let mutations = {
     UPDATE_BLOCK_POSITIONS: (state, positions) => {
-        if (!state.positions[state.flowId]) {
-            Object.assign(state.positions, {
-                [state.flowId]: {}
-            });
-        }
-        Object.assign(state.positions[state.flowId], positions);
+        state.positions = _.set(state.positions, [state.flowId], positions);
     },
 
     UPDATE_flowPosition: (state, flowsPosition) => {
-        Object.assign(state.flowsPositions, {
-            [state.flowId]: flowsPosition
-        });
+        state.flowPositions = _.set(state.flowPositions, [state.flowId], flowsPosition);
     }
 };
 
-let actions = {
-    // Load all flows and others from external storages and APIs
-    loadAllData: ({ state, commit, dispatch, getters }) => {
-        // TODO: Get flows from API
-        let flows = initFlows;
-        commit("__set_flows", flows);
-
-        // TODO: remove "testFlow" when exist selector of flow
-        commit("__set_flowId", lstore.get("flowId") || "testFlow");
-
-        let positions = lstore.get("positions") || {};
-        commit("__set_positions", positions);
-
-        commit("__set_blocks", blocksCollection);
-    },
-
-    // TODO: default values
-    // saveData: ({ state }, { positions = true, flowId = true, flows = true }) => {
-    saveData: ({ state }) => {
-        let positions = true;
-        let flowId = true;
-        let flows = true;
-        positions ? lstore.set("positions", state.positions) : "";
-        flowId ? lstore.set("flowId", state.flowId) : "";
-        flows ? lstore.set("flows", state.flows) : "";
-    }
-};
+let actions = {};
 
 let getters = {
     // Flow from external source, without current unsaved updates
-    flow: state => _.get(state.flows, [state.flowId], {}),
-    positions: state => _.get(state.positions, [state.flowId], {})
+    // flow: state => _.get(state.flows, [state.flowId], {}),
+    // positions: state => _.get(state.positions, [state.flowId], {})
 };
 
 let hooks = {
-    __init__: ({ state, store }) => {
-        console.log("__init__", state, store);
+    __init__: ({ state, store, moduleName }) => {
+        let flows = lstore.get("flows") || initFlows;
+        store.commit(moduleName + "/__set_flows", flows);
+
+        // TODO: remove "testFlow" when exist selector of flow
+        let flowId = lstore.get("flowId") || initFlowId;
+        store.commit(moduleName + "/__set_flowId", flowId);
+
+        let positions = lstore.get("positions") || {};
+        store.commit(moduleName + "/__set_positions", positions);
+
+        let flowPositions = lstore.get("flowPositions") || {};
+        store.commit(moduleName + "/__set_flowPositions", flowPositions);
+
+        store.commit(moduleName + "/__set_blocks", blocksCollection);
+
+        // Set data into working flow base
+        let currFlow = _.get(flows, [flowId], {});
+        store.commit("flow/__set_flow", currFlow);
+        let currPositions = _.get(positions, [flowId], {});
+        store.commit("flow/__set_positions", currPositions);
+        let currFlowPositions = _.get(flowPositions, [flowId], { x: 0, y: 0 });
+        store.commit("flow/__set_flowPosition", currFlowPositions);
+    },
+
+    __set_flows: ({ state }) => {
+        lstore.set("flows", state.flows);
+    },
+
+    __set_flowId: ({ state }) => {
+        lstore.set("flowId", state.flowId);
+    },
+
+    __set_positions: ({ state }) => {
+        lstore.set("positions", state.positions);
+    },
+
+    UPDATE_BLOCK_POSITIONS: ({ state }) => {
+        lstore.set("positions", state.positions);
     },
 
     UPDATE_flowPosition: ({ state }) => {
-        console.log(state.flowsPositions);
-        lstore.set("flowPositions", state.flowsPositions);
+        lstore.set("flowPositions", state.flowPositions);
     }
 };
 

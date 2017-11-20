@@ -15,6 +15,7 @@ const modulesHooks = store => {
                 let moduleName = mut.split("/")[0];
                 hook({
                     state: state[moduleName],
+                    moduleName: moduleName,
                     stateGlobal: state,
                     payload: mutation.payload,
                     mutation: mutation.type,
