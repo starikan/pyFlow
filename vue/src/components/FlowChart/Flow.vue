@@ -74,11 +74,11 @@ export default {
     },
     methods: {
         mousewheel: function(evt) {
-            if (evt.deltaY < 0) {
-                this.$store.commit("flow/ZOOM_IN");
-            } else {
-                this.$store.commit("flow/ZOOM_OUT");
-            }
+            // if (evt.deltaY < 0) {
+            //     this.$store.commit("flow/ZOOM_IN");
+            // } else {
+            //     this.$store.commit("flow/ZOOM_OUT");
+            // }
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/__set_isShowRightPanel", true);
@@ -130,14 +130,13 @@ export default {
 
 <style scoped lang="stylus">
 size = 1000px
-size2 = -100px
 
 #flow
     position absolute
     width size
     height size
-    top size2
-    left size2
+    top 0px
+    left 0px
     background-image url('/static/background.jpg')
     font-family 'Open Sans Condensed', sans-serif
     user-select none

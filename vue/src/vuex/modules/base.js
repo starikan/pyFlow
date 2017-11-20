@@ -28,11 +28,7 @@ let mutations = {
 
 let actions = {};
 
-let getters = {
-    // Flow from external source, without current unsaved updates
-    // flow: state => _.get(state.flows, [state.flowId], {}),
-    // positions: state => _.get(state.positions, [state.flowId], {})
-};
+let getters = {};
 
 let hooks = {
     __init__: ({ state, store, moduleName }) => {

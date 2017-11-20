@@ -31,13 +31,16 @@ export default {
     computed: {
         flowZoom: function() {
             return this.$store.state.flow.flowZoom;
+        },
+        flowPosition: function() {
+            return this.$store.state.flow.flowPosition;
         }
     },
     methods: {
         mousemove: function(evt) {
             if (this.x1 > -1000 && this.y1 > -1000) {
-                this.x2 = evt.pageX;
-                this.y2 = evt.pageY;
+                this.x2 = evt.pageX - this.flowPosition.x;
+                this.y2 = evt.pageY - this.flowPosition.y;
             }
         },
         mouseup: function(evt) {
