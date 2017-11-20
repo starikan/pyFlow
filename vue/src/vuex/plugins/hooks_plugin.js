@@ -1,11 +1,5 @@
 const modulesHooks = store => {
-    _.forEach(store._modulesNamespaceMap, (val, key) => {
-        let init = key + "INIT";
-        if (_.get(store._mutations, init)) {
-            store.commit(init);
-        }
-    });
-
+    // Hooks from all modules
     let hooks = _(store._modules.root._rawModule.modules)
         .mapValues(val => val.hooks)
         .map((val, key) => _.mapKeys(val, (_val, _key) => key + "/" + _key))
@@ -28,6 +22,14 @@ const modulesHooks = store => {
                 });
             }
         });
+    });
+
+    // Initial hooks start
+    _.forEach(store._modulesNamespaceMap, (val, key) => {
+        let init = key + "__init__";
+        if (_.get(store._mutations, init)) {
+            store.commit(init);
+        }
     });
 };
 
