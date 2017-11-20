@@ -68,11 +68,7 @@ let hooks = {
         lstore.set("flowId", state.flowId);
     },
 
-    __set_positions: ({ state }) => {
-        lstore.set("positions", state.positions);
-    },
-
-    UPDATE_BLOCK_POSITIONS: ({ state }) => {
+    "__set_positions, UPDATE_BLOCK_POSITIONS": ({ state }) => {
         lstore.set("positions", state.positions);
     },
 

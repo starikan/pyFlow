@@ -1,12 +1,19 @@
 const modulesHooks = store => {
     // Hooks from all modules
-    let hooks = _(store._modules.root._rawModule.modules)
-        .mapValues(val => val.hooks)
-        .map((val, key) => _.mapKeys(val, (_val, _key) => key + "/" + _key))
-        .filter(val => !_.isEmpty(val))
-        .reduce((result, value, key) => {
-            return {...result, ...value };
+    let hooks = {};
+    let hooksRaw = _.mapValues(store._modules.root._rawModule.modules, val => val.hooks);
+    _.forEach(hooksRaw, (base, baseName) => {
+        _.forEach(base, (val, key) => {
+            // Combined mutation
+            if (key.includes(",")) {
+                _.forEach(key.split(/,\s?/), keySplited => {
+                    _.set(hooks, [baseName + "/" + keySplited], val);
+                });
+            } else {
+                _.set(hooks, [baseName + "/" + key], val);
+            }
         });
+    });
 
     store.subscribe((mutation, state) => {
         // called after every mutation.
