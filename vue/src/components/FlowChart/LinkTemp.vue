@@ -28,6 +28,11 @@ export default {
         document.removeEventListener("mousemove", this.mousemove);
         document.removeEventListener("mouseup", this.mouseup);
     },
+    computed: {
+        flowZoom: function() {
+            return this.$store.state.flow.flowZoom;
+        }
+    },
     methods: {
         mousemove: function(evt) {
             if (this.x1 > -1000 && this.y1 > -1000) {
