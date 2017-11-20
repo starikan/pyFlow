@@ -14,11 +14,7 @@ let state = {
 };
 
 let mutations = {
-    INIT: state => {
-        console.log("Init Flow");
-    },
-
-    SET_positions: (state, positions) => {
+    __set_positions: (state, positions) => {
         state.positions = Object.assign(state.positions, positions);
     },
 
@@ -61,10 +57,10 @@ let actions = {};
 let getters = {};
 
 let hooks = {
-    INIT: ({ state, payload }) => {
+    __init__: ({ state, payload }) => {
         console.log("Init hook", state, payload);
     },
-    SET_flow: ({ state, store }) => {
+    __set_flow: ({ state, store }) => {
         // Init blank positions
         let blankPositions = _(state.flow.blocks)
             .map((val, key) => ({
@@ -75,7 +71,7 @@ let hooks = {
             });
         blankPositions = {...blankPositions, ...state.positions };
 
-        store.commit("flow/SET_positions", blankPositions);
+        store.commit("flow/__set_positions", blankPositions);
 
         // Init blank dot position
         let blankDotPositions = _(state.flow.blocks)
@@ -102,11 +98,15 @@ let hooks = {
         });
 
         blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
-        store.commit("flow/SET_dotsPositions", blankDotPositions);
+        store.commit("flow/__set_dotsPositions", blankDotPositions);
     },
 
     UPDATE_BLOCK_POSITION: ({ state, store }) => {
         store.commit("base/UPDATE_BLOCK_POSITIONS", state.positions);
+    },
+
+    UPDATE_flowPosition: ({ state, store }) => {
+        store.commit("base/UPDATE_flowPosition", state.flowPosition);
     }
 };
 

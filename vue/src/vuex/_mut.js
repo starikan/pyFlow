@@ -6,7 +6,7 @@ export default stateObj =>
         },
         ..._.map(stateObj, (data, key) => {
             return {
-                ["SET_" + key]: function(state, val) {
+                ["__set_" + key]: function(state, val) {
                     state[key] = val;
                 }
             };

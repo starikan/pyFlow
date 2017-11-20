@@ -10,7 +10,7 @@ export default {
     name: "left-panel-switcher",
     methods: {
         click: function(evt) {
-            this.$store.commit("panels/SET_isShowLeftPanel", true);
+            this.$store.commit("panels/__set_isShowLeftPanel", true);
         }
     }
 };

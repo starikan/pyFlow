@@ -54,8 +54,8 @@ export default {
             Get initial data on startup
         */
         this.$store.dispatch("base/loadAllData");
-        this.$store.commit("flow/SET_flow", this.flowBase);
-        this.$store.commit("flow/SET_positions", this.positionsBase);
+        this.$store.commit("flow/__set_flow", this.flowBase);
+        this.$store.commit("flow/__set_positions", this.positionsBase);
     },
     computed: {
         ...mapGetters({
@@ -93,7 +93,7 @@ export default {
             }
         },
         fb_dblclick: function(evt) {
-            this.$store.commit("panels/SET_isShowRightPanel", true);
+            this.$store.commit("panels/__set_isShowRightPanel", true);
         },
         dblclick: function(data, evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
@@ -128,7 +128,7 @@ export default {
         mouseup: function(evt) {
             // End of dragging
             this.$store.dispatch("base/saveData");
-            this.$store.commit("flow/SET_draggingBlock", null);
+            this.$store.commit("flow/__set_draggingBlock", null);
             this.flowDragg = false;
         },
         block_style: function(block_id) {

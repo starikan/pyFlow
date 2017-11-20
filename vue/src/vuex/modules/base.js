@@ -11,7 +11,8 @@ let state = {
     positions: {},
     flowId: "",
     flows: {},
-    blocks: {}
+    blocks: {},
+    flowsPositions: {}
 };
 
 let mutations = {
@@ -22,6 +23,12 @@ let mutations = {
             });
         }
         Object.assign(state.positions[state.flowId], positions);
+    },
+
+    UPDATE_flowPosition: (state, flowsPosition) => {
+        Object.assign(state.flowsPositions, {
+            [state.flowId]: flowsPosition
+        });
     }
 };
 
@@ -30,15 +37,15 @@ let actions = {
     loadAllData: ({ state, commit, dispatch, getters }) => {
         // TODO: Get flows from API
         let flows = initFlows;
-        commit("SET_flows", flows);
+        commit("__set_flows", flows);
 
         // TODO: remove "testFlow" when exist selector of flow
-        commit("SET_flowId", lstore.get("flowId") || "testFlow");
+        commit("__set_flowId", lstore.get("flowId") || "testFlow");
 
         let positions = lstore.get("positions") || {};
-        commit("SET_positions", positions);
+        commit("__set_positions", positions);
 
-        commit("SET_blocks", blocksCollection);
+        commit("__set_blocks", blocksCollection);
     },
 
     // TODO: default values
@@ -59,7 +66,16 @@ let getters = {
     positions: state => _.get(state.positions, [state.flowId], {})
 };
 
-let hooks = {};
+let hooks = {
+    __init__: ({ state, store }) => {
+        console.log("__init__", state, store);
+    },
+
+    UPDATE_flowPosition: ({ state }) => {
+        console.log(state.flowsPositions);
+        lstore.set("flowPositions", state.flowsPositions);
+    }
+};
 
 export default {
     namespaced: true,
