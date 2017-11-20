@@ -9,7 +9,8 @@ let state = {
     positions: {},
     dotsPositions: {},
     draggingBlock: null,
-    flowZoom: 1
+    flowZoom: 1,
+    flowPosition: { x: 0, y: 0 }
 };
 
 let mutations = {
@@ -43,6 +44,15 @@ let mutations = {
 
     ZOOM_OUT: state => {
         state.flowZoom -= 0.1;
+    },
+
+    UPDATE_flowPosition: (state, { deltaX, deltaY }) => {
+        let newPosition = {
+            x: state.flowPosition.x + deltaX,
+            y: state.flowPosition.y + deltaY
+        };
+
+        state.flowPosition = newPosition;
     }
 };
 

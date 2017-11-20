@@ -46,11 +46,7 @@ export default {
     data: function() {
         return {
             blockSelect: null,
-            flowDragg: false,
-            flowPosition: {
-                x: 0,
-                y: 0
-            }
+            flowDragg: false
         };
     },
     mounted() {
@@ -71,7 +67,8 @@ export default {
             positions: state => state.flow.positions,
             links: state => state.flow.flow.links,
             draggingBlock: state => state.flow.draggingBlock,
-            flowZoom: state => state.flow.flowZoom
+            flowZoom: state => state.flow.flowZoom,
+            flowPosition: state => state.flow.flowPosition
         }),
         blocks_transform: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
@@ -108,9 +105,7 @@ export default {
         mousemove: function(evt) {
             // Move Flow
             if (this.flowDragg) {
-                // console.log(evt);
-                this.flowPosition.x += evt.movementX;
-                this.flowPosition.y += evt.movementY;
+                this.$store.commit("flow/UPDATE_flowPosition", { deltaX: evt.movementX, deltaY: evt.movementY });
             }
 
             // Move block
