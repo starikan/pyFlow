@@ -24,6 +24,10 @@ export default {
     },
     mounted() {
         this.getBounds(); // Get position on start app
+        let self = this;
+        document.fonts.ready.then(function() {
+            self.getBounds();
+        });
     },
     methods: {
         linkStart: function(evt) {
