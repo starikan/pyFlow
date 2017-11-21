@@ -99,12 +99,12 @@ export const initFlows = {
         links: {
             id1: {
                 output: {
-                    block_id: "first_block",
-                    dot_id: "output_image"
+                    blockId: "first_block",
+                    dotId: "output_image"
                 },
                 input: {
-                    block_id: "second_block",
-                    dot_id: "input_image"
+                    blockId: "second_block",
+                    dotId: "input_image"
                 },
                 style: {}
             }

@@ -2,15 +2,17 @@
     It`s live data from flow itteractions.
 */
 
+import shortid from "shortid";
+
 import _mut from "../_mut";
 
 let state = {
     flow: {},
+    flowPosition: { x: 0, y: 0 },
     positions: {},
     dotsPositions: {},
     draggingBlock: null,
-    flowZoom: 1,
-    flowPosition: { x: 0, y: 0 }
+    flowZoom: 1
 };
 
 let mutations = {
@@ -49,6 +51,34 @@ let mutations = {
         };
 
         state.flowPosition = newPosition;
+    },
+
+    UPDATE_link: (state, { startDot, endDot, style = {}, linkId = null }) => {
+        if (linkId) {} else {
+            let newId = shortid();
+            let newLink = {};
+
+            if (startDot.dotType == endDot.dotType) {
+                // TODO: Check
+            } else {
+                _.set(newLink, [newId], {
+                    [startDot.dotType]: {
+                        blockId: startDot.blockId,
+                        dotId: startDot.dotId
+                    },
+                    [endDot.dotType]: {
+                        blockId: endDot.blockId,
+                        dotId: endDot.dotId
+                    },
+                    style: style
+                });
+            }
+
+            state.flow.links = {...state.flow.links, ...newLink };
+        }
+    },
+    DELETE_link: (state, { linkId }) => {
+        state.flow.links = _.omit(state.flow.links, linkId);
     }
 };
 

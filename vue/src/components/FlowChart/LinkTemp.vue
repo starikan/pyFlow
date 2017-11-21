@@ -17,7 +17,9 @@ export default {
             x1: -1000,
             x2: -1000,
             y1: -1000,
-            y2: -1000
+            y2: -1000,
+            startDot: null,
+            endDot: null
         };
     },
     created: function() {
@@ -45,30 +47,38 @@ export default {
         },
         mouseup: function(evt) {
             this.x1 = this.y1 = this.x2 = this.y2 = -1000;
+            this.startDot = null;
+            this.endDot = null;
         }
     },
     mounted() {
         this.$bus.$on("linkTempStart", evt => {
-            console.log(evt);
             this.x1 = this.x2 = _.get(evt, ["dot_position", "x"], -1000);
             this.y1 = this.y2 = _.get(evt, ["dot_position", "y"], -1000);
+
+            this.startDot = {
+                blockId: evt.block_id,
+                dotId: evt.dot_data.id,
+                dotType: evt.dot_data.type
+            };
         });
+
         this.$bus.$on("linkTempEnd", evt => {
-            console.log(evt);
             this.x1 = this.y1 = this.x2 = this.y2 = -1000;
 
-            //     this.$store.commit("oldStore/addLink", {
-            //         dot0: {
-            //             dot_id: evt.data.id,
-            //             dot_type: evt.data.type,
-            //             block_id: evt.block_id
-            //         },
-            //         dot1: {
-            //             dot_id: this.linkTempData.data.id,
-            //             dot_type: this.linkTempData.data.type,
-            //             block_id: this.linkTempData.block_id
-            //         }
-            //     });
+            this.endDot = {
+                blockId: evt.block_id,
+                dotId: evt.dot_data.id,
+                dotType: evt.dot_data.type
+            };
+
+            this.$store.commit("flow/UPDATE_link", {
+                startDot: this.startDot,
+                endDot: this.endDot
+            });
+
+            this.startDot = null;
+            this.endDot = null;
         });
     }
 };

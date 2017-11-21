@@ -1,6 +1,11 @@
-Центрирование рисунка, с зумом по центру поля
+flow.positions -> blocksPositions
+Flow draggingBlock сделать на событии из блока и убрать из vuex
+FlowZoom нужно сохранять в локалсторадже
+По образцу hooks сделать watch
+https://learn.javascript.ru/onload-ondomcontentloaded
+CodeStyle
 
-Восстановить методы линий (добавление, удаление)
+Центрирование рисунка, с зумом по центру поля
 
 - Левая панель
 - Правая панель

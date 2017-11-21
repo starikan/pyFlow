@@ -15,15 +15,15 @@ export default {
     props: ["link", "linkId"],
     methods: {
         line_dblclick: function(evt) {
-            this.$store.commit("removeLink", { link_id: this.linkId });
+            this.$store.commit("flow/DELETE_link", { linkId: this.linkId });
         }
     },
     computed: {
         input: function() {
-            return this.$store.state.flow.dotsPositions[this.link.input.block_id][this.link.input.dot_id];
+            return this.$store.state.flow.dotsPositions[this.link.input.blockId][this.link.input.dotId];
         },
         output: function() {
-            return this.$store.state.flow.dotsPositions[this.link.output.block_id][this.link.output.dot_id];
+            return this.$store.state.flow.dotsPositions[this.link.output.blockId][this.link.output.dotId];
         }
     }
 };
