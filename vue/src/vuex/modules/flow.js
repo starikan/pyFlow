@@ -87,9 +87,6 @@ let actions = {};
 let getters = {};
 
 let hooks = {
-    __init__: ({ state, payload }) => {
-        console.log("Init hook", state, payload);
-    },
     __set_flow: ({ state, store }) => {
         // Init blank positions
         let blankPositions = _(state.flow.blocks)

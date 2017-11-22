@@ -2,6 +2,7 @@
 
     #flow(
         @mousewheel="mousewheel($event)"
+        @wheel="mousewheel($event)"
         @dblclick.stop="dblclick($event)"
         @mousemove="mousemove($event)" 
         @mouseup="mouseup($event)"
@@ -74,11 +75,11 @@ export default {
     },
     methods: {
         mousewheel: function(evt) {
-            // if (evt.deltaY < 0) {
-            //     this.$store.commit("flow/ZOOM_IN");
-            // } else {
-            //     this.$store.commit("flow/ZOOM_OUT");
-            // }
+            if (evt.deltaY < 0) {
+                this.$store.commit("flow/ZOOM_IN");
+            } else {
+                this.$store.commit("flow/ZOOM_OUT");
+            }
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/__set_isShowRightPanel", true);
