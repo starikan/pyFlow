@@ -2,11 +2,7 @@ flow.positions -> blocksPositions
 Flow draggingBlock сделать на событии из блока и убрать из vuex
 FlowZoom нужно сохранять в локалсторадже
 По образцу hooks сделать watch
-https://learn.javascript.ru/onload-ondomcontentloaded
 CodeStyle
-
-http://jsbin.com/geqabew/6/edit?html,js,output - No Font
-http://jsbin.com/geqabew/edit?html,js,output - With Font
 
 Центрирование рисунка, с зумом по центру поля
 

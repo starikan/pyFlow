@@ -7,30 +7,27 @@
         @mousemove="mousemove($event)" 
         @mouseup="mouseup($event)"
         @mousedown="mousedown($event)"
-        
         :style="flow_style")
 
-        #elements(:style="elements_style")
+        .link: svg: linkConnector(
+            v-for="(link, link_id) in links" 
+            :key="link_id" 
+            :link="link"
+            :link-id="link_id")
 
-            .link: svg: linkConnector(
-                v-for="(link, link_id) in links" 
-                :key="link_id" 
-                :link="link"
-                :link-id="link_id")
+        fb-block.fb(
+            :style="block_style(block_id)"
+            v-for="(block, block_id) in flow.blocks" 
+            :key="block_id" 
+            :class="[{'select': blockSelect == block_id}]"
+            
+            @mousedown.stop.native="blockSelect = block_id" 
+            @dblclick.stop.native="fb_dblclick($event)"
+            
+            :block="block"
+            :block_id="block_id")
 
-            fb-block.fb(
-                :style="block_style(block_id)"
-                v-for="(block, block_id) in flow.blocks" 
-                :key="block_id" 
-                :class="[{'select': blockSelect == block_id}]"
-                
-                @mousedown.stop.native="blockSelect = block_id" 
-                @dblclick.stop.native="fb_dblclick($event)"
-                
-                :block="block"
-                :block_id="block_id")
-
-            link-temp
+        link-temp
 </template>
 
 <script>
@@ -47,8 +44,8 @@ export default {
     data: function() {
         return {
             blockSelect: null,
-            flowDragg: false,
-            translate_origin: { x: 0, y: 0 }
+            flowDragg: false
+            // translate_origin: { x: 0, y: 0 }
         };
     },
     computed: {
@@ -63,35 +60,29 @@ export default {
         blocks_transform: function() {
             return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
         },
-        elements_style: function() {
-            return {
-                // transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 0, 0)`
-            };
-        },
         flow_style: function() {
             return {
                 transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, ${this.flowPosition.x}, ${this.flowPosition
-                    .y})`,
-                "transform-origin": `${this.translate_origin.x}px ${this.translate_origin.y}px`
+                    .y})`
             };
         }
     },
     methods: {
         mousewheel: function(evt) {
+            // http://jsfiddle.net/fxpc5rao/32/
             const { clientX, clientY } = evt;
 
-            this.translate_origin = {
-                x: clientX - this.flowPosition.x,
-                y: clientY - this.flowPosition.y
-            };
+            let deltaZ = evt.deltaY < 0 ? 1.1 : 1 / 1.1;
+            let deltaX = -(clientX - this.flowPosition.x) * (deltaZ - 1);
+            let deltaY = -(clientY - this.flowPosition.y) * (deltaZ - 1);
 
-            let deltaZ = evt.deltaY < 0 ? 0.1 : -0.1;
             this.$store.commit("flow/ZOOM", { delta: deltaZ });
+            this.$store.commit("flow/UPDATE_flowPosition", { deltaX: deltaX, deltaY: deltaY });
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/__set_isShowRightPanel", true);
         },
-        dblclick: function(data, evt) {
+        dblclick: function(evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
         },
         mousedown: function(evt) {
@@ -148,7 +139,7 @@ size = 1000px
     background-image url('/static/background.jpg')
     font-family 'Open Sans Condensed', sans-serif
     user-select none
-    // transform-origin 0 0
+    transform-origin 0 0
 
 .fb
     position absolute

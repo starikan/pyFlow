@@ -37,7 +37,7 @@ let mutations = {
     },
 
     ZOOM: (state, { delta = 0.1 }) => {
-        state.flowZoom += delta;
+        state.flowZoom *= delta;
     },
 
     UPDATE_flowPosition: (state, { deltaX, deltaY }) => {
