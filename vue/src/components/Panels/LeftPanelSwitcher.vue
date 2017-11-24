@@ -10,8 +10,13 @@ export default {
     name: "left-panel-switcher",
     methods: {
         click: function(evt) {
-            this.$store.commit("panels/__set_isShowLeftPanel", true);
+            this.$store.commit("panels/__set_isShowLeftPanel", !this.isShowLeftPanel);
         }
+    },
+    computed: {
+        ...mapState({
+            isShowLeftPanel: state => state.panels.isShowLeftPanel
+        })
     }
 };
 </script>

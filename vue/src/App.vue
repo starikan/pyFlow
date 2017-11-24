@@ -3,7 +3,7 @@
         flow
         left-panel(v-if="isShowLeftPanel")
         info-panel(v-if="isShowRightPanel")
-        left-panel-switcher(v-if="!isShowLeftPanel")
+        left-panel-switcher
 
 </template>
 

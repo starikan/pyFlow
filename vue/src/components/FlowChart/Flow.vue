@@ -139,6 +139,8 @@ size = 1000px
     font-family 'Open Sans Condensed', sans-serif
     user-select none
     transform-origin 0 0
+    // transition transform 0.2s
+    // transition-timing-function ease-in-out
 
 .fb
     position absolute
