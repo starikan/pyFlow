@@ -45,7 +45,6 @@ export default {
         return {
             blockSelect: null,
             flowDragg: false
-            // translate_origin: { x: 0, y: 0 }
         };
     },
     computed: {
