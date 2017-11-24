@@ -41,8 +41,8 @@ export default {
     methods: {
         mousemove: function(evt) {
             if (this.x1 > -1000 && this.y1 > -1000) {
-                this.x2 = evt.pageX - this.flowPosition.x;
-                this.y2 = evt.pageY - this.flowPosition.y;
+                this.x2 = (evt.pageX - this.flowPosition.x) / this.flowZoom;
+                this.y2 = (evt.pageY - this.flowPosition.y) / this.flowZoom;
             }
         },
         mouseup: function(evt) {
