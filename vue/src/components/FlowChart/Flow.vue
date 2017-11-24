@@ -47,7 +47,8 @@ export default {
     data: function() {
         return {
             blockSelect: null,
-            flowDragg: false
+            flowDragg: false,
+            translate_origin: { x: 0, y: 0 }
         };
     },
     computed: {
@@ -64,22 +65,28 @@ export default {
         },
         elements_style: function() {
             return {
-                transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 0, 0)`
+                // transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, 0, 0)`
             };
         },
         flow_style: function() {
             return {
-                transform: `matrix(1, 0, 0, 1, ${this.flowPosition.x}, ${this.flowPosition.y})`
+                transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, ${this.flowPosition.x}, ${this.flowPosition
+                    .y})`,
+                "transform-origin": `${this.translate_origin.x}px ${this.translate_origin.y}px`
             };
         }
     },
     methods: {
         mousewheel: function(evt) {
-            if (evt.deltaY < 0) {
-                this.$store.commit("flow/ZOOM_IN");
-            } else {
-                this.$store.commit("flow/ZOOM_OUT");
-            }
+            const { clientX, clientY } = evt;
+
+            this.translate_origin = {
+                x: clientX - this.flowPosition.x,
+                y: clientY - this.flowPosition.y
+            };
+
+            let deltaZ = evt.deltaY < 0 ? 0.1 : -0.1;
+            this.$store.commit("flow/ZOOM", { delta: deltaZ });
         },
         fb_dblclick: function(evt) {
             this.$store.commit("panels/__set_isShowRightPanel", true);
@@ -141,6 +148,7 @@ size = 1000px
     background-image url('/static/background.jpg')
     font-family 'Open Sans Condensed', sans-serif
     user-select none
+    // transform-origin 0 0
 
 .fb
     position absolute

@@ -36,12 +36,8 @@ let mutations = {
         _.set(state.dotsPositions, [block_id, dot_id, "y"], y);
     },
 
-    ZOOM_IN: state => {
-        state.flowZoom += 0.1;
-    },
-
-    ZOOM_OUT: state => {
-        state.flowZoom -= 0.1;
+    ZOOM: (state, { delta = 0.1 }) => {
+        state.flowZoom += delta;
     },
 
     UPDATE_flowPosition: (state, { deltaX, deltaY }) => {

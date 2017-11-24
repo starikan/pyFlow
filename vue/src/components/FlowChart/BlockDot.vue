@@ -31,6 +31,7 @@ export default {
     },
     methods: {
         linkStart: function(evt) {
+            console.log(evt);
             this.$bus.$emit("linkTempStart", {
                 block_id: this.blockId,
                 dot_data: this.dotData,

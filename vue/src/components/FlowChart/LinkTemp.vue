@@ -53,6 +53,7 @@ export default {
     },
     mounted() {
         this.$bus.$on("linkTempStart", evt => {
+            console.log(evt);
             this.x1 = this.x2 = _.get(evt, ["dot_position", "x"], -1000);
             this.y1 = this.y2 = _.get(evt, ["dot_position", "y"], -1000);
 
