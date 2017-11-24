@@ -1,5 +1,6 @@
 export const initFlows = {
     testFlow: {
+        name: "Тестовый",
         blocks: {
             first_block: {
                 title: "Заголовок",

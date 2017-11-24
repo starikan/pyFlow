@@ -5,7 +5,7 @@
 import _mut from "../_mut";
 
 let state = {
-    isShowLeftPanel: false,
+    isShowLeftPanel: true,
     isShowRightPanel: false
 };
 

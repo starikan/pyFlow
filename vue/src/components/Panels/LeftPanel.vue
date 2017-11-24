@@ -1,22 +1,55 @@
 <template lang="pug">
     #leftpanel
-        .ui.container
+        #lp_flows
+            h3 Flows
+            h4 {{flowCurrent.name}}
+            .ui.buttons
+                button.ui.button(@click="saveFlow") Save
+                button.ui.button Load
+                button.ui.button New
+
+        #lp_links
+            h3 Links
+            .ui.buttons
+                button.ui.button Delete
+                button.ui.button Edit
+
+        #lp_blocks
+            h3 Blocks
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
 
 export default {
-    name: "left-panel"
+    name: "left-panel",
+    computed: {
+        ...mapState({
+            flows: state => state.base.flows,
+            flowCurrent: state => state.flow.flow
+        })
+    },
+    methods: {
+        saveFlow: function() {
+            this.$store.commit("base/UPDATE_flows", this.flowCurrent);
+        }
+    }
 };
 </script>
 
 <style lang="stylus" scoped>
 #leftpanel
     height 100%
-    width 150px
     position absolute
     top 0px
     left 0px
-    background-color #ffff99
+    background-color rgba(127, 127, 127, 0.8)
+    padding-top 30px
+
+    h3
+        background-color rgba(80, 80, 80, 1)
+
+    h3, h4
+        text-align center
+        margin 10px 0px 10px 0px
 </style>

@@ -23,6 +23,11 @@ let mutations = {
 
     UPDATE_flowPosition: (state, flowsPosition) => {
         state.flowPositions = _.set(state.flowPositions, [state.flowId], flowsPosition);
+    },
+
+    UPDATE_flows: (state, flow) => {
+        console.log(flow);
+        state.flows = _.set(state.flows, [state.flowId], flow);
     }
 };
 
@@ -56,7 +61,7 @@ let hooks = {
         store.commit("flow/__set_flowPosition", currFlowPositions);
     },
 
-    __set_flows: ({ state }) => {
+    "__set_flows, UPDATE_flows": ({ state }) => {
         lstore.set("flows", state.flows);
     },
 
