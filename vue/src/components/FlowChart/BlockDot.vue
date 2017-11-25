@@ -69,11 +69,11 @@ export default {
     },
     computed: {
         ...mapState({
-            positions: state => state.flow.positions,
+            blocksPositions: state => state.flow.blocksPositions,
             flowZoom: state => state.flow.flowZoom
         }),
         blockPosition: function() {
-            return this.positions[this.blockId];
+            return this.blocksPositions[this.blockId];
         }
     },
     watch: {

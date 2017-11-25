@@ -10,25 +10,25 @@ let state = {
     flow: {},
     flowPosition: { x: 0, y: 0 },
     flowZoom: 1,
-    positions: {},
+    blocksPositions: {},
     dotsPositions: {},
     draggingBlock: null
 };
 
 let mutations = {
-    __set_positions: (state, positions) => {
-        state.positions = Object.assign(state.positions, positions);
+    __set_blocksPositions: (state, positions) => {
+        state.blocksPositions = Object.assign(state.blocksPositions, positions);
     },
 
     UPDATE_BLOCK_POSITION: (state, { block_id, delta }) => {
         let newPosition = {
             [block_id]: {
-                x: _.get(state.positions, [block_id, "x"]) + delta.x,
-                y: _.get(state.positions, [block_id, "y"]) + delta.y
+                x: _.get(state.blocksPositions, [block_id, "x"]) + delta.x,
+                y: _.get(state.blocksPositions, [block_id, "y"]) + delta.y
             }
         };
 
-        state.positions = {...state.positions, ...newPosition };
+        state.blocksPositions = {...state.blocksPositions, ...newPosition };
     },
 
     UPDATE_DOT_POSITION: (state, { block_id, dot_id, x, y }) => {
@@ -89,7 +89,7 @@ let getters = {};
 
 let hooks = {
     __set_flow: ({ state, store }) => {
-        // Init blank positions
+        // Init blank blocksPositions
         let blankPositions = _(state.flow.blocks)
             .map((val, key) => ({
                 [key]: { x: 0, y: 0 }
@@ -97,9 +97,9 @@ let hooks = {
             .reduce((result, value) => {
                 return {...result, ...value };
             });
-        blankPositions = {...blankPositions, ...state.positions };
+        blankPositions = {...blankPositions, ...state.blocksPositions };
 
-        store.commit("flow/__set_positions", blankPositions);
+        store.commit("flow/__set_blocksPositions", blankPositions);
 
         // Init blank dot position
         let blankDotPositions = _(state.flow.blocks)
@@ -130,7 +130,7 @@ let hooks = {
     },
 
     UPDATE_BLOCK_POSITION: ({ state, store }) => {
-        store.commit("base/UPDATE_BLOCK_POSITIONS", state.positions);
+        store.commit("base/UPDATE_blocksPositions", state.blocksPositions);
     },
 
     UPDATE_flowPosition: ({ state, store }) => {

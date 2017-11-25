@@ -39,7 +39,7 @@ export default {
             flows: state => state.base.flows,
             flow: state => state.flow.flow,
             flowPosition: state => state.flow.flowPosition,
-            blocksPosition: state => state.flow.positions,
+            blocksPositions: state => state.flow.blocksPositions,
             leftSubPanel: state => state.panels.leftSubPanel
         }),
         saveOnEditToBase: {

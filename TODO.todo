@@ -3,7 +3,6 @@
 Удаление блока
 Правая панель
 
-flow.positions -> blocksPositions
 Flow draggingBlock сделать на событии из блока и убрать из vuex
 FlowZoom нужно сохранять в локалсторадже
 По образцу hooks сделать watch

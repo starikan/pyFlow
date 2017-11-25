@@ -9,7 +9,7 @@ import _mut from "../_mut";
 import { initFlows, blocksCollection, initFlowId } from "../init_data";
 
 let state = {
-    positions: {},
+    blocksPositions: {},
     flowId: "",
     flows: {},
     blocks: {},
@@ -17,8 +17,8 @@ let state = {
 };
 
 let mutations = {
-    UPDATE_BLOCK_POSITIONS: (state, positions) => {
-        state.positions = _.set(state.positions, [state.flowId], positions);
+    UPDATE_blocksPositions: (state, positions) => {
+        state.blocksPositions = _.set(state.blocksPositions, [state.flowId], positions);
     },
 
     UPDATE_flowPosition: (state, flowsPosition) => {
@@ -43,8 +43,8 @@ let hooks = {
         let flowId = lstore.get("flowId") || initFlowId;
         store.commit(moduleName + "/__set_flowId", flowId);
 
-        let positions = lstore.get("positions") || {};
-        store.commit(moduleName + "/__set_positions", positions);
+        let blocksPositions = lstore.get("blocksPositions") || {};
+        store.commit(moduleName + "/__set_blocksPositions", blocksPositions);
 
         let flowPositions = lstore.get("flowPositions") || {};
         store.commit(moduleName + "/__set_flowPositions", flowPositions);
@@ -54,8 +54,8 @@ let hooks = {
         // Set data into working flow base
         let currFlow = _.get(flows, [flowId], {});
         store.commit("flow/__set_flow", currFlow);
-        let currPositions = _.get(positions, [flowId], {});
-        store.commit("flow/__set_positions", currPositions);
+        let currPositions = _.get(blocksPositions, [flowId], {});
+        store.commit("flow/__set_blocksPositions", currPositions);
         let currFlowPositions = _.get(flowPositions, [flowId], { x: 0, y: 0 });
         store.commit("flow/__set_flowPosition", currFlowPositions);
     },
@@ -68,8 +68,8 @@ let hooks = {
         lstore.set("flowId", state.flowId);
     },
 
-    "__set_positions, UPDATE_BLOCK_POSITIONS": ({ state }) => {
-        lstore.set("positions", state.positions);
+    "__set_blocksPositions, UPDATE_blocksPositions": ({ state }) => {
+        lstore.set("blocksPositions", state.blocksPositions);
     },
 
     UPDATE_flowPosition: ({ state }) => {

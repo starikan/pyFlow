@@ -50,14 +50,14 @@ export default {
     computed: {
         ...mapState({
             flow: state => state.flow.flow,
-            positions: state => state.flow.positions,
+            blocksPositions: state => state.flow.blocksPositions,
             links: state => state.flow.flow.links,
             draggingBlock: state => state.flow.draggingBlock,
             flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition
         }),
         blocks_transform: function() {
-            return _.mapValues(this.positions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
+            return _.mapValues(this.blocksPositions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
         },
         flow_style: function() {
             return {
