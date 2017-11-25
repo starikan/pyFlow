@@ -3,11 +3,11 @@
         #left-panel-switcher
             i.icon.sidebar.big(@click="selectSubPanel('main')")
             i.icon.setting.big(@click="selectSubPanel('settings')")
-
             i.icon.window.close.big.right(
                 @click="closePanel"
                 v-if="isShowLeftPanel"
             )
+
 </template>
 
 <script>
@@ -35,12 +35,10 @@ export default {
 <style lang="stylus" scoped>
 #left-panel-switcher
     position absolute
-    width 250px
     left 5px
     top 5px
     z-index 1000
 
 .right
-    position absolute
-    right 10px
+    margin-left 130px
 </style>
