@@ -1,21 +1,22 @@
 <template lang="pug">
     #leftpanel
-        #lp_flows
-            h3 Flows
-            h4 {{flowCurrent.name}}
-            .ui.buttons
-                button.ui.button(@click="saveFlow") Save
-                button.ui.button Load
-                button.ui.button New
+        .subpanel(v-if="leftSubPanel == 'main'")
+            #lp_flows
+                h3 Flows
+                h4 {{flowCurrent.name}}
+                .ui.buttons
+                    button.ui.button(@click="saveFlow") Save
+                    button.ui.button Load
+                    button.ui.button New
 
-        #lp_links
-            h3 Links
-            .ui.buttons
-                button.ui.button Delete
-                button.ui.button Edit
+            #lp_links
+                h3 Links
+                .ui.buttons
+                    button.ui.button Delete
+                    button.ui.button Edit
 
-        #lp_blocks
-            h3 Blocks
+            #lp_blocks
+                h3 Blocks
 </template>
 
 <script>
@@ -26,7 +27,8 @@ export default {
     computed: {
         ...mapState({
             flows: state => state.base.flows,
-            flowCurrent: state => state.flow.flow
+            flowCurrent: state => state.flow.flow,
+            leftSubPanel: state => state.panels.leftSubPanel
         })
     },
     methods: {
@@ -40,6 +42,7 @@ export default {
 <style lang="stylus" scoped>
 #leftpanel
     height 100%
+    width 250px
     position absolute
     top 0px
     left 0px

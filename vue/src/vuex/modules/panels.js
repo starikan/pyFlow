@@ -6,7 +6,8 @@ import _mut from "../_mut";
 
 let state = {
     isShowLeftPanel: true,
-    isShowRightPanel: false
+    isShowRightPanel: false,
+    leftSubPanel: "main"
 };
 
 let mutations = {};

@@ -1,6 +1,13 @@
 <template lang="pug">
-    div#left-panel-switcher(@click="click($event)")
-        i.icon.sidebar.big
+    div
+        #left-panel-switcher
+            i.icon.sidebar.big(@click="selectSubPanel('main')")
+            i.icon.setting.big(@click="selectSubPanel('settings')")
+
+            i.icon.window.close.big.right(
+                @click="closePanel"
+                v-if="isShowLeftPanel"
+            )
 </template>
 
 <script>
@@ -9,8 +16,12 @@ import { mapState } from "vuex";
 export default {
     name: "left-panel-switcher",
     methods: {
-        click: function(evt) {
-            this.$store.commit("panels/__set_isShowLeftPanel", !this.isShowLeftPanel);
+        selectSubPanel: function(type) {
+            this.$store.commit("panels/__set_isShowLeftPanel", true);
+            this.$store.commit("panels/__set_leftSubPanel", type);
+        },
+        closePanel: function() {
+            this.$store.commit("panels/__set_isShowLeftPanel", false);
         }
     },
     computed: {
@@ -24,7 +35,12 @@ export default {
 <style lang="stylus" scoped>
 #left-panel-switcher
     position absolute
+    width 250px
     left 5px
     top 5px
     z-index 1000
+
+.right
+    position absolute
+    right 10px
 </style>
