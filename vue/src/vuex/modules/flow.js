@@ -73,9 +73,14 @@ let mutations = {
             state.flow.links = {...state.flow.links, ...newLink };
         }
     },
+
     DELETE_link: (state, { linkId }) => {
         state.flow.links = _.omit(state.flow.links, linkId);
-    }
+    },
+
+    UPDATE_BLOCK: state => {},
+
+    DELETE_BLOCK: state => {}
 };
 
 let actions = {};
@@ -130,6 +135,13 @@ let hooks = {
 
     UPDATE_flowPosition: ({ state, store }) => {
         store.commit("base/UPDATE_flowPosition", state.flowPosition);
+    },
+
+    "UPDATE_link, DELETE_link, UPDATE_BLOCK, DELETE_BLOCK": ({ state, store, stateGlobal }) => {
+        let saveOnEditToBase = stateGlobal.settings.settingsFlow.saveOnEditToBase;
+        if (saveOnEditToBase) {
+            store.commit("base/UPDATE_flows", state.flow);
+        }
     }
 };
 
