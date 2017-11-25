@@ -37,38 +37,38 @@ let getters = {};
 let hooks = {
     __init__: ({ state, store, moduleName }) => {
         let flows = lstore.get("flows") || initFlows;
-        store.commit(moduleName + "/_SET_flows", flows);
+        store.commit(moduleName + "/SET_flows", flows);
 
         // TODO: remove "testFlow" when exist selector of flow
         let flowId = lstore.get("flowId") || initFlowId;
-        store.commit(moduleName + "/_SET_flowId", flowId);
+        store.commit(moduleName + "/SET_flowId", flowId);
 
         let blocksPositions = lstore.get("blocksPositions") || {};
-        store.commit(moduleName + "/_SET_blocksPositions", blocksPositions);
+        store.commit(moduleName + "/SET_blocksPositions", blocksPositions);
 
         let flowPositions = lstore.get("flowPositions") || {};
-        store.commit(moduleName + "/_SET_flowPositions", flowPositions);
+        store.commit(moduleName + "/SET_flowPositions", flowPositions);
 
-        store.commit(moduleName + "/_SET_blocks", blocksCollection);
+        store.commit(moduleName + "/SET_blocks", blocksCollection);
 
         // Set data into working flow base
         let currFlow = _.get(flows, [flowId], {});
-        store.commit("flow/_SET_flow", currFlow);
+        store.commit("flow/SET_flow", currFlow);
         let currPositions = _.get(blocksPositions, [flowId], {});
-        store.commit("flow/_SET_blocksPositions", currPositions);
+        store.commit("flow/SET_blocksPositions", currPositions);
         let currFlowPositions = _.get(flowPositions, [flowId], { x: 0, y: 0 });
-        store.commit("flow/_SET_flowPosition", currFlowPositions);
+        store.commit("flow/SET_flowPosition", currFlowPositions);
     },
 
-    "_SET_flows, UPDATE_flows": ({ state }) => {
+    "SET_flows, UPDATE_flows": ({ state }) => {
         lstore.set("flows", state.flows);
     },
 
-    _SET_flowId: ({ state }) => {
+    SET_flowId: ({ state }) => {
         lstore.set("flowId", state.flowId);
     },
 
-    "_SET_blocksPositions, UPDATE_blocksPositions": ({ state }) => {
+    "SET_blocksPositions, UPDATE_blocksPositions": ({ state }) => {
         lstore.set("blocksPositions", state.blocksPositions);
     },
 

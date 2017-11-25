@@ -17,7 +17,7 @@ let state = {
 };
 
 let mutations = {
-    _SET_blocksPositions: (state, positions) => {
+    SET_blocksPositions: (state, positions) => {
         state.blocksPositions = Object.assign(state.blocksPositions, positions);
     },
 
@@ -89,7 +89,7 @@ let actions = {};
 let getters = {};
 
 let hooks = {
-    _SET_flow: ({ state, store }) => {
+    SET_flow: ({ state, store }) => {
         // Init blank blocksPositions
         let blankPositions = _(state.flow.blocks)
             .map((val, key) => ({
@@ -100,7 +100,7 @@ let hooks = {
             });
         blankPositions = {...blankPositions, ...state.blocksPositions };
 
-        store.commit("flow/_SET_blocksPositions", blankPositions);
+        store.commit("flow/SET_blocksPositions", blankPositions);
 
         // Init blank dot position
         let blankDotPositions = _(state.flow.blocks)
@@ -127,7 +127,7 @@ let hooks = {
         });
 
         blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
-        store.commit("flow/_SET_dotsPositions", blankDotPositions);
+        store.commit("flow/SET_dotsPositions", blankDotPositions);
     },
 
     UPDATE_blocksPositions: ({ state, store }) => {

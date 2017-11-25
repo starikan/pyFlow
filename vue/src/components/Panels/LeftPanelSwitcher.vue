@@ -17,11 +17,11 @@ export default {
     name: "left-panel-switcher",
     methods: {
         selectSubPanel: function(type) {
-            this.$store.commit("panels/_SET_isShowLeftPanel", true);
-            this.$store.commit("panels/_SET_leftSubPanel", type);
+            this.$store.commit("panels/SET_isShowLeftPanel", true);
+            this.$store.commit("panels/SET_leftSubPanel", type);
         },
         closePanel: function() {
-            this.$store.commit("panels/_SET_isShowLeftPanel", false);
+            this.$store.commit("panels/SET_isShowLeftPanel", false);
         }
     },
     computed: {

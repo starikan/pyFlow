@@ -1,15 +1,15 @@
 import _ from "lodash";
 
 /*
-    commit("_SET_someValInStore", value) - Simple data rewrite
+    commit("SET_someValInStore", value) - Simple data rewrite
     commit({
-        type: "_SET_someValInStore",
+        type: "SET_someValInStore",
         path: "some.path.in.object.without.root",
         value: value
     })
 
     Naming:
-        - _SET_value - autogenerate setter for all values in state
+        - SET_value - autogenerate setter for all values in state
         - SOMEACTION_value - mutate value in state (UPDATE_flow)
         - SOMEACTION_SOMEPART_value - mutate part of value (UPDATE_LINK_flow)
 
@@ -21,7 +21,7 @@ export default stateObj =>
         },
         ..._.map(stateObj, (data, key) => {
             return {
-                ["_SET_" + key]: function(state, val) {
+                ["SET_" + key]: function(state, val) {
                     if (_.isObject(val) && !_.isUndefined(val.path) && !_.isUndefined(val.value)) {
                         _.set(state[key], val.path, val.value);
                     } else {
