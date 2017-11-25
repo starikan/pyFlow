@@ -1,11 +1,7 @@
-/*
-    It`s live data from flow itteractions.
-*/
-
 import _mut from "../_mut";
 
 let state = {
-    isShowLeftPanel: true,
+    isShowLeftPanel: false,
     isShowRightPanel: false,
     leftSubPanel: "main"
 };

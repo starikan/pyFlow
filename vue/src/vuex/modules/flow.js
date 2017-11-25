@@ -9,10 +9,10 @@ import _mut from "../_mut";
 let state = {
     flow: {},
     flowPosition: { x: 0, y: 0 },
+    flowZoom: 1,
     positions: {},
     dotsPositions: {},
-    draggingBlock: null,
-    flowZoom: 1
+    draggingBlock: null
 };
 
 let mutations = {

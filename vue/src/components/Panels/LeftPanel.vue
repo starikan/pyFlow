@@ -3,11 +3,12 @@
         .subpanel(v-if="leftSubPanel == 'main'")
             #lp_main_flows
                 h3 Flows
-                h4 {{flowCurrent.name}}
+                h4 {{flow.name}}
                 .ui.buttons
                     button.ui.button(@click="saveFlow") Save
                     button.ui.button Load
                     button.ui.button New
+                button.ui.button(@click="centerFlow") Center Flow
 
             #lp_main_links
                 h3 Links
@@ -36,7 +37,9 @@ export default {
     computed: {
         ...mapState({
             flows: state => state.base.flows,
-            flowCurrent: state => state.flow.flow,
+            flow: state => state.flow.flow,
+            flowPosition: state => state.flow.flowPosition,
+            blocksPosition: state => state.flow.positions,
             leftSubPanel: state => state.panels.leftSubPanel
         }),
         saveOnEditToBase: {
@@ -55,8 +58,9 @@ export default {
     },
     methods: {
         saveFlow: function() {
-            this.$store.commit("base/UPDATE_flows", this.flowCurrent);
-        }
+            this.$store.commit("base/UPDATE_flows", this.flow);
+        },
+        centerFlow: function() {}
     }
 };
 </script>

@@ -2,7 +2,8 @@ import _mut from "../_mut";
 
 let state = {
     settingsFlow: {
-        saveOnEditToBase: true
+        saveOnEditToBase: true,
+        zoomFlowStep: 0.1
     }
 };
 
@@ -10,7 +11,10 @@ let mutations = {};
 
 let actions = {};
 
-let getters = {};
+let getters = {
+    settings: state => state,
+    settingsFlow: state => state.settingsFlow
+};
 
 let hooks = {};
 
