@@ -39,7 +39,7 @@ export default {
     props: ["block", "block_id"],
     methods: {
         startDrag: function(block_id, evt) {
-            this.$store.commit("flow/__set_draggingBlock", block_id);
+            this.$store.commit("flow/_SET_draggingBlock", block_id);
         }
     }
 };

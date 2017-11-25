@@ -10,7 +10,7 @@ const modulesHooks = store => {
     let hooksRaw = _.mapValues(store._modules.root._rawModule.modules, val => val.hooks);
     _.forEach(hooksRaw, (base, baseName) => {
         _.forEach(base, (watcherFunc, watcherKey) => {
-            // Combined mutation like "__set_positions, UPDATE_BLOCK_POSITIONS"
+            // Combined mutation like "_SET_positions, UPDATE_BLOCK_POSITIONS"
             let keys = watcherKey.includes(",") ? watcherKey.split(/,\s?/) : [watcherKey];
             keys.forEach(key => {
                 let mutationName = baseName + "/" + key;

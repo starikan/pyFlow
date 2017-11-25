@@ -49,7 +49,7 @@ export default {
             set: function(newValue) {
                 console.log(newValue);
                 this.$store.commit({
-                    type: "settings/__set_settingsFlow",
+                    type: "settings/_SET_settingsFlow",
                     path: "saveOnEditToBase",
                     value: newValue
                 });

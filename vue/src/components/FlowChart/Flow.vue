@@ -79,7 +79,7 @@ export default {
             this.$store.commit("flow/UPDATE_flowPosition", { deltaX: deltaX, deltaY: deltaY });
         },
         fb_dblclick: function(evt) {
-            this.$store.commit("panels/__set_isShowRightPanel", true);
+            this.$store.commit("panels/_SET_isShowRightPanel", true);
         },
         dblclick: function(evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
@@ -113,7 +113,7 @@ export default {
 
         mouseup: function(evt) {
             // End of dragging
-            this.$store.commit("flow/__set_draggingBlock", null);
+            this.$store.commit("flow/_SET_draggingBlock", null);
             this.flowDragg = false;
         },
         block_style: function(block_id) {
