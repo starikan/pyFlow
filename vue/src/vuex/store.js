@@ -9,6 +9,7 @@ import { initFlows, blocksCollection } from "./init_data";
 import base from "./modules/base";
 import flow from "./modules/flow";
 import panels from "./modules/panels";
+import settings from "./modules/settings";
 
 Vue.use(Vuex);
 
@@ -19,7 +20,8 @@ const vuexData = {
     modules: {
         base: base,
         flow: flow,
-        panels: panels
+        panels: panels,
+        settings: settings
     },
     plugins: [modulesHooks]
 };
