@@ -26,7 +26,6 @@ let mutations = {
     },
 
     UPDATE_flows: (state, flow) => {
-        console.log(flow);
         state.flows = _.set(state.flows, [state.flowId], flow);
     }
 };
