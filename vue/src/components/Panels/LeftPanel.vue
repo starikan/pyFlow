@@ -1,7 +1,7 @@
 <template lang="pug">
     #leftpanel
         .subpanel(v-if="leftSubPanel == 'main'")
-            #lp_flows
+            #lp_main_flows
                 h3 Flows
                 h4 {{flowCurrent.name}}
                 .ui.buttons
@@ -9,14 +9,23 @@
                     button.ui.button Load
                     button.ui.button New
 
-            #lp_links
+            #lp_main_links
                 h3 Links
                 .ui.buttons
                     button.ui.button Delete
                     button.ui.button Edit
 
-            #lp_blocks
+            #lp_main_blocks
                 h3 Blocks
+
+        .subpanel(v-if="leftSubPanel == 'settings'")
+            #lp_settings_flow
+                h3 Flows
+                .ui.checkbox
+                    input(
+                        type="checkbox"
+                        v-model="saveOnEditToBase")
+                    label Autosave Flows on Edit
 </template>
 
 <script>
@@ -29,7 +38,20 @@ export default {
             flows: state => state.base.flows,
             flowCurrent: state => state.flow.flow,
             leftSubPanel: state => state.panels.leftSubPanel
-        })
+        }),
+        saveOnEditToBase: {
+            get: function() {
+                return this.$store.state.settings.settingsFlow.saveOnEditToBase;
+            },
+            set: function(newValue) {
+                console.log(newValue);
+                this.$store.commit({
+                    type: "settings/__set_settingsFlow",
+                    path: "saveOnEditToBase",
+                    value: newValue
+                });
+            }
+        }
     },
     methods: {
         saveFlow: function() {
