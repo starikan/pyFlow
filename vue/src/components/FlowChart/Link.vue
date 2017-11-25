@@ -15,7 +15,7 @@ export default {
     props: ["link", "linkId"],
     methods: {
         line_dblclick: function(evt) {
-            this.$store.commit("flow/DELETE_link", { linkId: this.linkId });
+            this.$store.commit("flow/DELETE_LINK_flow", { linkId: this.linkId });
         }
     },
     computed: {

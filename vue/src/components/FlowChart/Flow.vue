@@ -75,7 +75,7 @@ export default {
             let deltaX = -(clientX - this.flowPosition.x) * (deltaZ - 1);
             let deltaY = -(clientY - this.flowPosition.y) * (deltaZ - 1);
 
-            this.$store.commit("flow/ZOOM", { delta: deltaZ });
+            this.$store.commit("flow/UPDATE_flowZoom", { delta: deltaZ });
             this.$store.commit("flow/UPDATE_flowPosition", { deltaX: deltaX, deltaY: deltaY });
         },
         fb_dblclick: function(evt) {
@@ -96,7 +96,7 @@ export default {
 
             // Move block
             if (this.draggingBlock) {
-                this.$store.commit("flow/UPDATE_BLOCK_POSITION", {
+                this.$store.commit("flow/UPDATE_blocksPositions", {
                     block_id: this.draggingBlock,
                     delta: {
                         x: evt.movementX / this.flowZoom,

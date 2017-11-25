@@ -11,6 +11,7 @@ let state = {
     flowPosition: { x: 0, y: 0 },
     flowZoom: 1,
     blocksPositions: {},
+    blocksSizes: {},
     dotsPositions: {},
     draggingBlock: null
 };
@@ -20,7 +21,7 @@ let mutations = {
         state.blocksPositions = Object.assign(state.blocksPositions, positions);
     },
 
-    UPDATE_BLOCK_POSITION: (state, { block_id, delta }) => {
+    UPDATE_blocksPositions: (state, { block_id, delta }) => {
         let newPosition = {
             [block_id]: {
                 x: _.get(state.blocksPositions, [block_id, "x"]) + delta.x,
@@ -31,12 +32,12 @@ let mutations = {
         state.blocksPositions = {...state.blocksPositions, ...newPosition };
     },
 
-    UPDATE_DOT_POSITION: (state, { block_id, dot_id, x, y }) => {
+    UPDATE_dotsPositions: (state, { block_id, dot_id, x, y }) => {
         _.set(state.dotsPositions, [block_id, dot_id, "x"], x);
         _.set(state.dotsPositions, [block_id, dot_id, "y"], y);
     },
 
-    ZOOM: (state, { delta = 0.1 }) => {
+    UPDATE_flowZoom: (state, { delta = 0.1 }) => {
         state.flowZoom *= delta;
     },
 
@@ -49,7 +50,7 @@ let mutations = {
         state.flowPosition = newPosition;
     },
 
-    UPDATE_link: (state, { startDot, endDot, style = {}, linkId = null }) => {
+    UPDATE_LINK_flow: (state, { startDot, endDot, style = {}, linkId = null }) => {
         if (linkId) {} else {
             let newId = shortid();
             let newLink = {};
@@ -74,13 +75,13 @@ let mutations = {
         }
     },
 
-    DELETE_link: (state, { linkId }) => {
+    DELETE_LINK_flow: (state, { linkId }) => {
         state.flow.links = _.omit(state.flow.links, linkId);
     },
 
-    UPDATE_BLOCK: state => {},
+    UPDATE_BLOCK_flow: state => {},
 
-    DELETE_BLOCK: state => {}
+    DELETE_BLOCK_flow: state => {}
 };
 
 let actions = {};
@@ -129,7 +130,7 @@ let hooks = {
         store.commit("flow/_SET_dotsPositions", blankDotPositions);
     },
 
-    UPDATE_BLOCK_POSITION: ({ state, store }) => {
+    UPDATE_blocksPositions: ({ state, store }) => {
         store.commit("base/UPDATE_blocksPositions", state.blocksPositions);
     },
 
@@ -137,7 +138,7 @@ let hooks = {
         store.commit("base/UPDATE_flowPosition", state.flowPosition);
     },
 
-    "UPDATE_link, DELETE_link, UPDATE_BLOCK, DELETE_BLOCK": ({ state, store, stateGlobal }) => {
+    "UPDATE_LINK_flow, DELETE_LINK_flow, UPDATE_BLOCK_flow, DELETE_BLOCK_flow": ({ state, store, stateGlobal }) => {
         let saveOnEditToBase = stateGlobal.settings.settingsFlow.saveOnEditToBase;
         if (saveOnEditToBase) {
             store.commit("base/UPDATE_flows", state.flow);

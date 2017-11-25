@@ -73,7 +73,7 @@ export default {
                 dotType: evt.dot_data.type
             };
 
-            this.$store.commit("flow/UPDATE_link", {
+            this.$store.commit("flow/UPDATE_LINK_flow", {
                 startDot: this.startDot,
                 endDot: this.endDot
             });

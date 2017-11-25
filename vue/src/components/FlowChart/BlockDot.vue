@@ -59,7 +59,7 @@ export default {
             };
             this.dotPosition = position;
 
-            this.$store.commit("flow/UPDATE_DOT_POSITION", {
+            this.$store.commit("flow/UPDATE_dotsPositions", {
                 block_id: this.blockId,
                 dot_id: this.dotData.id,
                 x: position.x,
