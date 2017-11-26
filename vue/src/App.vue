@@ -1,8 +1,8 @@
 <template lang="pug">
     #app
         flow
-        left-panel(v-if="isShowLeftPanel")
-        info-panel(v-if="isShowInfoPanel")
+        left-panel(v-show="isShowLeftPanel")
+        info-panel(v-show="isShowInfoPanel") // v-show is for eventbus
         left-panel-switcher
 
 </template>

@@ -4,7 +4,7 @@ import _ from "lodash";
     commit("SET_someValInStore", value) - Simple data rewrite
     commit({
         type: "SET_someValInStore",
-        path: "some.path.in.object.without.root",
+        path: "some.path.in.object.without.root" || ["some, "path, ...],
         value: value
     })
 

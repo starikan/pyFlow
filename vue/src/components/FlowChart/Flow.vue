@@ -22,8 +22,8 @@
             :class="[{'select': blockSelected == block_id}]"
             :ref="block_id"
             
-            @mousedown.stop.native="blockSelected = block_id" 
-            @dblclick.stop.native="fb_dblclick($event)"
+            @mousedown.stop.native="fb_mousedown(block, block_id)" 
+            @dblclick.stop.native="fb_dblclick()"
             
             :block="block"
             :block_id="block_id")
@@ -105,7 +105,11 @@ export default {
             this.$store.commit("flow/UPDATE_flowZoom", { delta: deltaZ });
             this.$store.commit("flow/UPDATE_flowPosition", { deltaX: deltaX, deltaY: deltaY });
         },
-        fb_dblclick: function(evt) {
+        fb_mousedown: function(block, block_id) {
+            this.blockSelected = block_id;
+            this.$bus.$emit("blockToInfoPanel", block, block_id);
+        },
+        fb_dblclick: function(block, block_id) {
             this.$store.commit("panels/SET_isShowInfoPanel", true);
         },
         dblclick: function(evt) {

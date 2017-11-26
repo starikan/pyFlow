@@ -193,7 +193,7 @@ let hooks = {
         store.commit("base/UPDATE_flowPosition", state.flowPosition);
     },
 
-    "UPDATE_LINK_flow, DELETE_LINK_flow, CREATE_BLOCK_flow, UPDATE_BLOCK_flow, DELETE_BLOCK_flow": ({
+    "SET_flow, UPDATE_LINK_flow, DELETE_LINK_flow, CREATE_BLOCK_flow, UPDATE_BLOCK_flow, DELETE_BLOCK_flow": ({
         state,
         store,
         stateGlobal

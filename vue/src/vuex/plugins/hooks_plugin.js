@@ -23,8 +23,7 @@ const modulesHooks = store => {
             keys.forEach(key => {
                 let mutationName = baseName + "/" + key;
                 if (_.get(hooks, [mutationName])) {
-                    // hooks[mutationName].push(watcherFunc);
-                    hooks[mutationName] - _.concat(hooks[mutationName], watcherFunc);
+                    hooks[mutationName] = _.concat(hooks[mutationName], watcherFunc);
                 } else {
                     hooks[mutationName] = _.concat(watcherFunc);
                 }
