@@ -117,8 +117,7 @@ export const blocksCollection = {
         groups: ["OpenCV"],
         block: {
             title: "Загрузить файл",
-            inputs: [],
-            outputs: [{
+            dots: [{
                 type: "output",
                 figure: "circle",
                 color: "red",
@@ -135,16 +134,23 @@ export const blocksCollection = {
         groups: ["OpenCV"],
         block: {
             title: "RGB -> Grey",
-            inputs: {
-                in_file: {
-                    label: "RGB File"
+            dots: [{
+                    type: "input",
+                    figure: "circle",
+                    color: "red",
+                    name: "RGB File",
+                    checkFunction: () => {},
+                    id: "input_file"
+                },
+                {
+                    type: "output",
+                    figure: "circle",
+                    color: "red",
+                    name: "Grey",
+                    checkFunction: () => {},
+                    id: "output_file"
                 }
-            },
-            outputs: {
-                out_file: {
-                    label: "Grey"
-                }
-            }
+            ]
         }
     },
     gaussBlur: {
@@ -154,22 +160,39 @@ export const blocksCollection = {
         imgBase64: "",
         block: {
             title: "Размытие Гаусса",
-            inputs: {
-                file: {
-                    label: "Grey File"
+            dots: [{
+                    type: "input",
+                    figure: "circle",
+                    color: "red",
+                    name: "Grey File",
+                    checkFunction: () => {},
+                    id: "input_file"
                 },
-                sigma: {
-                    label: "Sigma"
+                {
+                    type: "input",
+                    figure: "circle",
+                    color: "red",
+                    name: "Sigma",
+                    checkFunction: () => {},
+                    id: "input_sigma"
                 },
-                mean: {
-                    label: "Mean"
+                {
+                    type: "input",
+                    figure: "circle",
+                    color: "red",
+                    name: "Mean",
+                    checkFunction: () => {},
+                    id: "mean_file"
+                },
+                {
+                    type: "output",
+                    figure: "circle",
+                    color: "red",
+                    name: "Grey",
+                    checkFunction: () => {},
+                    id: "output_file"
                 }
-            },
-            outputs: {
-                file: {
-                    label: "File"
-                }
-            }
+            ]
         },
         layout: "",
         params: {
