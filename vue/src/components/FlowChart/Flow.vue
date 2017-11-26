@@ -20,6 +20,7 @@
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
             :class="[{'select': blockSelect == block_id}]"
+            :ref="block_id"
             
             @mousedown.stop.native="blockSelect = block_id" 
             @dblclick.stop.native="fb_dblclick($event)"
@@ -46,6 +47,17 @@ export default {
             blockSelect: null,
             flowDragg: false
         };
+    },
+    mounted() {
+        this.$bus.$on("recalcBlocksSizes", () => {
+            let blocksSizes = _.mapValues(this.$refs, val => {
+                return {
+                    width: val[0].$el.offsetWidth,
+                    height: val[0].$el.offsetHeight
+                };
+            });
+            this.$store.commit("flow/SET_blocksSizes", blocksSizes);
+        });
     },
     computed: {
         ...mapState({

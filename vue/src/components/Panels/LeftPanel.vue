@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import merge from "deepmerge";
+
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -40,6 +42,7 @@ export default {
             flow: state => state.flow.flow,
             flowPosition: state => state.flow.flowPosition,
             blocksPositions: state => state.flow.blocksPositions,
+            blocksSizes: state => state.flow.blocksSizes,
             leftSubPanel: state => state.panels.leftSubPanel
         }),
         saveOnEditToBase: {
@@ -60,7 +63,20 @@ export default {
         saveFlow: function() {
             this.$store.commit("base/UPDATE_flows", this.flow);
         },
-        centerFlow: function() {}
+        // TODO
+        centerFlow: function() {
+            this.$bus.$emit("recalcBlocksSizes");
+            let params = merge(this.blocksSizes, this.blocksPositions);
+            params = _.mapValues(params, val => {
+                return {
+                    top: val.y,
+                    left: val.x,
+                    right: val.x + val.width,
+                    bottom: val.y + val.height
+                };
+            });
+            console.log(params);
+        }
     }
 };
 </script>
