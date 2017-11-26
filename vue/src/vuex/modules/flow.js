@@ -38,7 +38,7 @@ let mutations = {
         _.set(state.dotsPositions, [block_id, dot_id, "y"], y);
     },
 
-    UPDATE_flowZoom: (state, { delta = 0.1 }) => {
+    UPDATE_flowZoom: (state, { delta = 1.1 }) => {
         state.flowZoom *= delta;
     },
 
@@ -205,6 +205,10 @@ let hooks = {
         if (saveOnEditToBase) {
             store.commit("base/UPDATE_flows", state.flow);
         }
+    },
+
+    "SET_flowZoom, UPDATE_flowZoom": ({ state, store }) => {
+        store.commit("base/UPDATE_flowZooms", state.flowZoom);
     }
 };
 

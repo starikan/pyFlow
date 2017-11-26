@@ -9,11 +9,12 @@ import _mut from "../_mut";
 import { initFlows, blocksCollection, initFlowId } from "../init_data";
 
 let state = {
-    blocksPositions: {},
-    flowId: "",
     flows: {},
+    flowId: "",
+    flowPositions: {},
+    flowZooms: {},
     blocks: {},
-    flowPositions: {}
+    blocksPositions: {}
 };
 
 let mutations = {
@@ -21,8 +22,12 @@ let mutations = {
         state.blocksPositions = _.set(state.blocksPositions, [state.flowId], positions);
     },
 
-    UPDATE_flowPosition: (state, flowsPosition) => {
-        state.flowPositions = _.set(state.flowPositions, [state.flowId], flowsPosition);
+    UPDATE_flowPosition: (state, flowPosition) => {
+        state.flowPositions = _.set(state.flowPositions, [state.flowId], flowPosition);
+    },
+
+    UPDATE_flowZooms: (state, flowZoom) => {
+        state.flowZooms = _.set(state.flowZooms, [state.flowId], flowZoom);
     },
 
     UPDATE_flows: (state, flow) => {
@@ -49,6 +54,9 @@ let hooks = {
         let flowPositions = lstore.get("flowPositions") || {};
         store.commit(moduleName + "/SET_flowPositions", flowPositions);
 
+        let flowZooms = lstore.get("flowZooms") || {};
+        store.commit(moduleName + "/SET_flowZooms", flowZooms);
+
         store.commit(moduleName + "/SET_blocks", blocksCollection);
 
         // Set data into working flow base
@@ -58,6 +66,8 @@ let hooks = {
         store.commit("flow/SET_blocksPositions", currPositions);
         let currFlowPositions = _.get(flowPositions, [flowId], { x: 0, y: 0 });
         store.commit("flow/SET_flowPosition", currFlowPositions);
+        let currFlowZooms = _.get(flowZooms, [flowId], 1);
+        store.commit("flow/SET_flowZoom", currFlowZooms);
     },
 
     "SET_flows, UPDATE_flows": ({ state }) => {
@@ -74,6 +84,10 @@ let hooks = {
 
     UPDATE_flowPosition: ({ state }) => {
         lstore.set("flowPositions", state.flowPositions);
+    },
+
+    UPDATE_flowZooms: ({ state }) => {
+        lstore.set("flowZooms", state.flowZooms);
     }
 };
 

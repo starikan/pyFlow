@@ -69,7 +69,8 @@ export default {
             links: state => state.flow.flow.links,
             flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition,
-            flowSize: state => state.settings.settingsFlow.flowSize
+            flowSize: state => state.settings.settingsFlow.flowSize,
+            zoomFlowStep: state => state.settings.settingsFlow.zoomFlowStep
         }),
         blocks_transform: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
@@ -96,7 +97,8 @@ export default {
             // http://jsfiddle.net/fxpc5rao/32/
             const { clientX, clientY } = evt;
 
-            let deltaZ = evt.deltaY < 0 ? 1.1 : 1 / 1.1;
+            let zoomStep = this.zoomFlowStep || 1.1;
+            let deltaZ = evt.deltaY < 0 ? zoomStep : 1 / zoomStep;
             let deltaX = -(clientX - this.flowPosition.x) * (deltaZ - 1);
             let deltaY = -(clientY - this.flowPosition.y) * (deltaZ - 1);
 
