@@ -1,3 +1,11 @@
+/*
+    hooks = {
+        mutation: ({ state, moduleName, stateGlobal, payload, mutation, store }) => {}
+        "mutation1, mutation2": () => {},
+        mutation3: [function1, function2]
+    }
+*/
+
 const modulesHooks = store => {
     // Hooks from all modules
     // {... "module/__mutation": [function1, function2] }
@@ -15,13 +23,16 @@ const modulesHooks = store => {
             keys.forEach(key => {
                 let mutationName = baseName + "/" + key;
                 if (_.get(hooks, [mutationName])) {
-                    hooks[mutationName].push(watcherFunc);
+                    // hooks[mutationName].push(watcherFunc);
+                    hooks[mutationName] - _.concat(hooks[mutationName], watcherFunc);
                 } else {
-                    hooks[mutationName] = [watcherFunc];
+                    hooks[mutationName] = _.concat(watcherFunc);
                 }
             });
         });
     });
+
+    console.log(hooks);
 
     store.subscribe((mutation, state) => {
         // called after every mutation.
