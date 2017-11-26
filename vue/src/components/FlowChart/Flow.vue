@@ -44,8 +44,8 @@ export default {
     components: { linkConnector: Link, "link-temp": LinkTemp, "fb-block": Block },
     data: function() {
         return {
-            // blockSelected: null,
-            flowDragg: false
+            draggingBlock: null,
+            flowDragg: null
         };
     },
     mounted() {
@@ -58,13 +58,15 @@ export default {
             });
             this.$store.commit("flow/SET_blocksSizes", blocksSizes);
         });
+        this.$bus.$on("draggingBlock", evt => {
+            this.draggingBlock = evt;
+        });
     },
     computed: {
         ...mapState({
             flow: state => state.flow.flow,
             blocksPositions: state => state.flow.blocksPositions,
             links: state => state.flow.flow.links,
-            draggingBlock: state => state.flow.draggingBlock,
             flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition
         }),
@@ -133,8 +135,8 @@ export default {
 
         mouseup: function(evt) {
             // End of dragging
-            this.$store.commit("flow/SET_draggingBlock", null);
-            this.flowDragg = false;
+            this.draggingBlock = null;
+            this.flowDragg = null;
         },
         block_style: function(block_id) {
             return {

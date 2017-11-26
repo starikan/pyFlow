@@ -13,8 +13,7 @@ let state = {
     blocksPositions: {},
     blocksSizes: {},
     blockSelected: null,
-    dotsPositions: {},
-    draggingBlock: null
+    dotsPositions: {}
 };
 
 let mutations = {
@@ -87,7 +86,10 @@ let mutations = {
             [blockId]: blockData
         };
         let newBlockPosition = {
-            [blockId]: { x: 100, y: 100 }
+            [blockId]: {
+                x: window.innerWidth / 2 - state.flowPosition.x,
+                y: window.innerHeight / 2 - state.flowPosition.y
+            }
         };
         state.flow.blocks = {...state.flow.blocks, ...newBlock };
         state.blocksPositions = {...state.blocksPositions, ...newBlockPosition };
@@ -96,6 +98,7 @@ let mutations = {
     UPDATE_BLOCK_flow: state => {},
 
     DELETE_BLOCK_flow: (state, blockId) => {
+        // TODO: delete all links associated with block
         state.flow.blocks = _.omit(state.flow.blocks, blockId);
         state.blocksPositions = _.omit(state.blocksPositions, blockId);
     }
