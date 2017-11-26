@@ -18,7 +18,7 @@
                     :dot-data="input" 
                     :block-id="block_id")
 
-            td: table: tbody
+            td.outputs-td: table: tbody
                 block-dot.fb-outputs(
                     v-for="output in block.outputs" 
                     :key="output.id" 
@@ -62,4 +62,7 @@ export default {
 
 .fb-outputs
     text-align right
+
+.outputs-td
+    float right
 </style>
