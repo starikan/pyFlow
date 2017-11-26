@@ -18,6 +18,15 @@
 
             #lp_main_blocks
                 h3 Blocks
+                button.ui.button(
+                    @click="deleteSelectedBlock()"
+                    ) Delete Selected Block
+                br
+                button.ui.button.tiny(
+                    v-for="block in blocks"
+                    @click="addBlock(block)"
+                    ) {{block.id}}
+
 
         .subpanel(v-if="leftSubPanel == 'settings'")
             #lp_settings_flow
@@ -39,10 +48,12 @@ export default {
     computed: {
         ...mapState({
             flows: state => state.base.flows,
+            blocks: state => state.base.blocks,
             flow: state => state.flow.flow,
             flowPosition: state => state.flow.flowPosition,
             blocksPositions: state => state.flow.blocksPositions,
             blocksSizes: state => state.flow.blocksSizes,
+            blockSelected: state => state.flow.blockSelected,
             leftSubPanel: state => state.panels.leftSubPanel
         }),
         saveOnEditToBase: {
@@ -75,7 +86,13 @@ export default {
                     bottom: val.y + val.height
                 };
             });
-            console.log(params);
+        },
+        addBlock: function(block) {
+            this.$store.commit("flow/CREATE_BLOCK_flow", { block: block });
+        },
+        deleteSelectedBlock: function() {
+            // TODO: Confirm
+            this.$store.commit("flow/DELETE_BLOCK_flow", this.blockSelected);
         }
     }
 };

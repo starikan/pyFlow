@@ -19,10 +19,10 @@
             :style="block_style(block_id)"
             v-for="(block, block_id) in flow.blocks" 
             :key="block_id" 
-            :class="[{'select': blockSelect == block_id}]"
+            :class="[{'select': blockSelected == block_id}]"
             :ref="block_id"
             
-            @mousedown.stop.native="blockSelect = block_id" 
+            @mousedown.stop.native="blockSelected = block_id" 
             @dblclick.stop.native="fb_dblclick($event)"
             
             :block="block"
@@ -44,7 +44,7 @@ export default {
     components: { linkConnector: Link, "link-temp": LinkTemp, "fb-block": Block },
     data: function() {
         return {
-            blockSelect: null,
+            // blockSelected: null,
             flowDragg: false
         };
     },
@@ -76,6 +76,14 @@ export default {
                 transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, ${this.flowPosition.x}, ${this.flowPosition
                     .y})`
             };
+        },
+        blockSelected: {
+            get: function() {
+                return this.$store.state.flow.blockSelected;
+            },
+            set: function(newVal) {
+                this.$store.commit("flow/SET_blockSelected", newVal);
+            }
         }
     },
     methods: {
@@ -97,7 +105,7 @@ export default {
             console.log("flow_dblclick", evt, data, this.$modal);
         },
         mousedown: function(evt) {
-            this.blockSelect = null;
+            this.blockSelected = null;
             this.flowDragg = true;
         },
         mousemove: function(evt) {
@@ -131,7 +139,7 @@ export default {
         block_style: function(block_id) {
             return {
                 transform: _.get(this.blocks_transform, [block_id]),
-                "z-index": block_id == this.blockSelect ? 100 : 0
+                "z-index": block_id == this.blockSelected ? 100 : 0
             };
         }
     }

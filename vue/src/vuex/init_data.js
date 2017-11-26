@@ -115,64 +115,61 @@ export const initFlows = {
 
 export const blocksCollection = {
     uploadFile: {
-        name: "uploadFile",
+        id: "uploadFile",
         groups: ["OpenCV"],
         block: {
-            properties: {
-                title: "Загрузить файл",
-                inputs: {},
-                outputs: {
-                    file: {
-                        label: "BRG File"
-                    }
-                }
-            }
+            title: "Загрузить файл",
+            inputs: [],
+            outputs: [{
+                type: "output",
+                figure: "circle",
+                color: "red",
+                name: "BRG File",
+                checkFunction: () => {},
+                id: "file"
+            }]
         },
         layout: "",
         params: {}
     },
     RGB2Grey: {
-        name: "RGB2Grey",
+        id: "RGB2Grey",
         groups: ["OpenCV"],
         block: {
-            properties: {
-                title: "RGB -> Grey",
-                inputs: {
-                    in_file: {
-                        label: "RGB File"
-                    }
-                },
-                outputs: {
-                    out_file: {
-                        label: "Grey"
-                    }
+            title: "RGB -> Grey",
+            inputs: {
+                in_file: {
+                    label: "RGB File"
+                }
+            },
+            outputs: {
+                out_file: {
+                    label: "Grey"
                 }
             }
         }
     },
     gaussBlur: {
-        name: "gaussBlur",
+        id: "gaussBlur",
         groups: ["OpenCV"],
         imgUrl: "https://www.sunhome.ru/i/wallpapers/200/planeta-zemlya-kartinka.960x540.jpg",
         imgBase64: "",
         block: {
-            properties: {
-                title: "Размытие Гаусса",
-                inputs: {
-                    file: {
-                        label: "Grey File"
-                    },
-                    sigma: {
-                        label: "Sigma"
-                    },
-                    mean: {
-                        label: "Mean"
-                    }
+            title: "Размытие Гаусса",
+            inputs: {
+                file: {
+                    label: "Grey File"
                 },
-                outputs: {
-                    file: {
-                        label: "File"
-                    }
+                sigma: {
+                    label: "Sigma"
+                },
+                mean: {
+                    label: "Mean"
+                }
+            },
+            outputs: {
+                file: {
+                    label: "File"
                 }
             }
         },
