@@ -85,15 +85,10 @@ let mutations = {
 };
 
 let initBlankBlockPositions = function({ state, store }) {
-    let blankPositions = _(state.flow.blocks)
-        .map((val, key) => ({
-            [key]: { x: 0, y: 0 }
-        }))
-        .reduce((result, value) => {
-            return {...result, ...value };
-        });
-    blankPositions = {...blankPositions, ...state.blocksPositions };
-
+    let blankPositions = {
+        ..._.mapValues(state.flow.blocks, val => ({ x: 0, y: 0 })),
+        ...state.blocksPositions
+    };
     store.commit("flow/SET_blocksPositions", blankPositions);
 };
 
