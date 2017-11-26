@@ -1,40 +1,25 @@
-<template>
-    <div id="infopanel">
-        <div class="ui container">
-
-        </div>
-    </div>
+<template lang="pug">
+    #infopanel
 </template>
 
-
-
 <script>
-
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-    name: 'info-panel',
+    name: "info-panel",
     computed: {
-        // ...mapState(['selectedLink']),
-        // ...mapGetters(['countPlus10',])
-    },
-    methods: {
-        // ...mapMutations(['addBlock', 'deleteBlock', 'deleteLink', "saveFlow"]),
-        // ...mapActions({ incrementAsync: 'increment' })
+        // ...mapState()
     }
-}
+};
 </script>
 
-
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-#infopanel {
-    height: 100%;
-    width: 150px;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    background-color: #FFFF99
-}
+<style lang="stylus" scoped>
+#infopanel
+    position absolute
+    top 0px
+    right 0px
+    height 100%
+    width 250px
+    background-color rgba(127, 127, 127, 0.8)
+    padding-top 30px
 </style>

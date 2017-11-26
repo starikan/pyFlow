@@ -2,7 +2,7 @@
     #app
         flow
         left-panel(v-if="isShowLeftPanel")
-        info-panel(v-if="isShowRightPanel")
+        info-panel(v-if="isShowInfoPanel")
         left-panel-switcher
 
 </template>
@@ -21,7 +21,7 @@ export default {
     computed: {
         ...mapState({
             isShowLeftPanel: state => state.panels.isShowLeftPanel,
-            isShowRightPanel: state => state.panels.isShowRightPanel
+            isShowInfoPanel: state => state.panels.isShowInfoPanel
         })
     }
 };

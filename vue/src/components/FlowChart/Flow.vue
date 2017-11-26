@@ -106,7 +106,7 @@ export default {
             this.$store.commit("flow/UPDATE_flowPosition", { deltaX: deltaX, deltaY: deltaY });
         },
         fb_dblclick: function(evt) {
-            this.$store.commit("panels/SET_isShowRightPanel", true);
+            this.$store.commit("panels/SET_isShowInfoPanel", true);
         },
         dblclick: function(evt) {
             console.log("flow_dblclick", evt, data, this.$modal);
@@ -114,6 +114,8 @@ export default {
         mousedown: function(evt) {
             this.blockSelected = null;
             this.flowDragg = true;
+            this.$store.commit("panels/SET_isShowLeftPanel", false);
+            this.$store.commit("panels/SET_isShowInfoPanel", false);
         },
         mousemove: function(evt) {
             // Move Flow
