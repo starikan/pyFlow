@@ -3,6 +3,7 @@
 */
 
 import shortid from "shortid";
+import merge from "deepmerge";
 
 import _mut from "../_mut";
 
@@ -104,6 +105,51 @@ let mutations = {
     }
 };
 
+let actions = {
+    centerFlow: function({ state, commit, rootState }) {
+        let flowSize = rootState.settings.settingsFlow.flowSize;
+
+        let params = merge(state.blocksSizes, state.blocksPositions);
+        params = _.mapValues(params, val => {
+            return {
+                top: val.y,
+                left: val.x,
+                right: val.x + val.width,
+                bottom: val.y + val.height
+            };
+        });
+
+        // Find center of all blocks
+        let minTop = _.min(_.map(params, val => val.top));
+        let minLeft = _.min(_.map(params, val => val.left));
+        let maxRight = _.max(_.map(params, val => val.right));
+        let maxBottom = _.max(_.map(params, val => val.bottom));
+
+        let moveDelta = {
+            x: flowSize.width / 2 - (minLeft + maxRight) / 2,
+            y: flowSize.height / 2 - (minTop + maxBottom) / 2
+        };
+
+        let widthZoom = window.innerWidth / (maxRight - minLeft);
+        let heightZoom = window.innerHeight / (maxBottom - minTop);
+        let newZoom = Math.min(widthZoom, heightZoom) * 0.95;
+
+        commit("SET_flowZoom", newZoom);
+
+        commit("SET_flowPosition", {
+            x: (-flowSize.width * state.flowZoom + window.innerWidth) / 2,
+            y: (-flowSize.height * state.flowZoom + window.innerHeight) / 2
+        });
+
+        _.map(state.blocksPositions, (block, blockId) => {
+            commit("UPDATE_blocksPositions", {
+                block_id: blockId,
+                delta: moveDelta
+            });
+        });
+    }
+};
+
 let initBlankBlockPositions = function({ state, store }) {
     let blankPositions = {
         ..._.mapValues(state.flow.blocks, val => ({ x: 0, y: 0 })),
@@ -146,7 +192,7 @@ let hooks = {
         store.commit("base/UPDATE_blocksPositions", state.blocksPositions);
     },
 
-    UPDATE_flowPosition: ({ state, store }) => {
+    "SET_flowPosition, UPDATE_flowPosition": ({ state, store }) => {
         store.commit("base/UPDATE_flowPosition", state.flowPosition);
     },
 
@@ -169,5 +215,6 @@ export default {
         ..._mut(state),
         ...mutations
     },
+    actions: actions,
     hooks: hooks
 };

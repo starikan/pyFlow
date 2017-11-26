@@ -3,7 +3,8 @@ import _mut from "../_mut";
 let state = {
     settingsFlow: {
         saveOnEditToBase: true,
-        zoomFlowStep: 0.1
+        zoomFlowStep: 0.1,
+        flowSize: { width: 5000, height: 5000 }
     }
 };
 

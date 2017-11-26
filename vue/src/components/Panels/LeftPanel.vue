@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import merge from "deepmerge";
-
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -50,10 +48,12 @@ export default {
             flows: state => state.base.flows,
             blocks: state => state.base.blocks,
             flow: state => state.flow.flow,
+            flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition,
             blocksPositions: state => state.flow.blocksPositions,
             blocksSizes: state => state.flow.blocksSizes,
             blockSelected: state => state.flow.blockSelected,
+            flowSize: state => state.settings.settingsFlow.flowSize,
             leftSubPanel: state => state.panels.leftSubPanel
         }),
         saveOnEditToBase: {
@@ -77,15 +77,7 @@ export default {
         // TODO
         centerFlow: function() {
             this.$bus.$emit("recalcBlocksSizes");
-            let params = merge(this.blocksSizes, this.blocksPositions);
-            params = _.mapValues(params, val => {
-                return {
-                    top: val.y,
-                    left: val.x,
-                    right: val.x + val.width,
-                    bottom: val.y + val.height
-                };
-            });
+            this.$store.dispatch("flow/centerFlow");
         },
         addBlock: function(block) {
             this.$store.commit("flow/CREATE_BLOCK_flow", { block: block });

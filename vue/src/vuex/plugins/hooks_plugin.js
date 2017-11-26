@@ -32,8 +32,6 @@ const modulesHooks = store => {
         });
     });
 
-    console.log(hooks);
-
     store.subscribe((mutation, state) => {
         // called after every mutation.
         // hooks - array of functions associated with mutationName

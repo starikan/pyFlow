@@ -68,7 +68,8 @@ export default {
             blocksPositions: state => state.flow.blocksPositions,
             links: state => state.flow.flow.links,
             flowZoom: state => state.flow.flowZoom,
-            flowPosition: state => state.flow.flowPosition
+            flowPosition: state => state.flow.flowPosition,
+            flowSize: state => state.settings.settingsFlow.flowSize
         }),
         blocks_transform: function() {
             return _.mapValues(this.blocksPositions, val => `matrix(1, 0, 0, 1, ${val.x}, ${val.y})`);
@@ -76,7 +77,9 @@ export default {
         flow_style: function() {
             return {
                 transform: `matrix(${this.flowZoom}, 0, 0, ${this.flowZoom}, ${this.flowPosition.x}, ${this.flowPosition
-                    .y})`
+                    .y})`,
+                width: this.flowSize.width + "px",
+                height: this.flowSize.height + "px"
             };
         },
         blockSelected: {
@@ -149,12 +152,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
-size = 1000px
-
 #flow
     position absolute
-    width size
-    height size
     top 0px
     left 0px
     background-image url('/static/background.jpg')
