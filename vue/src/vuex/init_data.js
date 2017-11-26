@@ -3,9 +3,9 @@ export const initFlows = {
         name: "Тестовый",
         blocks: {
             first_block: {
-                title: "Заголовок",
+                title: "Title First",
                 buttons: [],
-                inputs: [{
+                dots: [{
                         type: "input",
                         figure: "circle",
                         color: "red",
@@ -28,9 +28,8 @@ export const initFlows = {
                         name: "Mean",
                         checkFunction: () => {},
                         id: "input_mean"
-                    }
-                ],
-                outputs: [{
+                    },
+                    {
                         type: "output",
                         figure: "circle",
                         color: "red",
@@ -50,9 +49,9 @@ export const initFlows = {
                 imgUrl: ""
             },
             second_block: {
-                title: "Заголовок 2",
+                title: "Title Second",
                 buttons: [],
-                inputs: [{
+                dots: [{
                         type: "input",
                         figure: "circle",
                         color: "red",
@@ -75,9 +74,8 @@ export const initFlows = {
                         name: "Mean",
                         checkFunction: () => {},
                         id: "input_mean"
-                    }
-                ],
-                outputs: [{
+                    },
+                    {
                         type: "output",
                         figure: "circle",
                         color: "red",

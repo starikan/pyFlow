@@ -160,12 +160,9 @@ let initBlankBlockPositions = function({ state, store }) {
 
 let initBlankDotPositions = function({ state, store }) {
     let blankDotPositions = _(state.flow.blocks)
-        .map((val, key) => {
-            let inputs = _.map(_.get(val, ["inputs"]), "id");
-            let outputs = _.map(_.get(val, ["outputs"]), "id");
-            let res = inputs.concat(outputs);
+        .map((block, blockId) => {
             return {
-                [key]: res
+                [blockId]: _.map(block.dots, val => val.id)
             };
         })
         .reduce((result, value) => {

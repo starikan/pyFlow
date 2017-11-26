@@ -13,14 +13,14 @@
 
             td: table: tbody
                 block-dot.fb-inputs(
-                    v-for="input in block.inputs" 
+                    v-for="input in inputs" 
                     :key="input.id" 
                     :dot-data="input" 
                     :block-id="block_id")
 
             td.outputs-td: table: tbody
                 block-dot.fb-outputs(
-                    v-for="output in block.outputs" 
+                    v-for="output in outputs" 
                     :key="output.id" 
                     :dot-data="output" 
                     :block-id="block_id")
@@ -40,6 +40,14 @@ export default {
     methods: {
         startDrag: function(block_id, evt) {
             this.$bus.$emit("draggingBlock", block_id);
+        }
+    },
+    computed: {
+        inputs: function() {
+            return this.block.dots.filter(val => val.type == "input");
+        },
+        outputs: function() {
+            return this.block.dots.filter(val => val.type == "output");
         }
     }
 };
