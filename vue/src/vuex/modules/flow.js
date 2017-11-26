@@ -84,51 +84,48 @@ let mutations = {
     DELETE_BLOCK_flow: state => {}
 };
 
-let actions = {};
+let initBlankBlockPositions = function({ state, store }) {
+    let blankPositions = _(state.flow.blocks)
+        .map((val, key) => ({
+            [key]: { x: 0, y: 0 }
+        }))
+        .reduce((result, value) => {
+            return {...result, ...value };
+        });
+    blankPositions = {...blankPositions, ...state.blocksPositions };
 
-let getters = {};
+    store.commit("flow/SET_blocksPositions", blankPositions);
+};
 
-let hooks = {
-    SET_flow: ({ state, store }) => {
-        // Init blank blocksPositions
-        let blankPositions = _(state.flow.blocks)
-            .map((val, key) => ({
-                [key]: { x: 0, y: 0 }
-            }))
-            .reduce((result, value) => {
-                return {...result, ...value };
-            });
-        blankPositions = {...blankPositions, ...state.blocksPositions };
-
-        store.commit("flow/SET_blocksPositions", blankPositions);
-
-        // Init blank dot position
-        let blankDotPositions = _(state.flow.blocks)
-            .map((val, key) => {
-                let inputs = _.map(_.get(val, ["inputs"]), "id");
-                let outputs = _.map(_.get(val, ["outputs"]), "id");
-                let res = inputs.concat(outputs);
-                return {
-                    [key]: res
-                };
-            })
-            .reduce((result, value) => {
-                return {...result, ...value };
-            });
-
-        blankDotPositions = _.mapValues(blankDotPositions, val => {
-            return _.map(val, (val_in, key_in) => {
-                return {
-                    [val_in]: { x: 0, y: 0 }
-                };
-            }).reduce((result, value) => {
-                return {...result, ...value };
-            });
+let initBlankDotPositions = function({ state, store }) {
+    let blankDotPositions = _(state.flow.blocks)
+        .map((val, key) => {
+            let inputs = _.map(_.get(val, ["inputs"]), "id");
+            let outputs = _.map(_.get(val, ["outputs"]), "id");
+            let res = inputs.concat(outputs);
+            return {
+                [key]: res
+            };
+        })
+        .reduce((result, value) => {
+            return {...result, ...value };
         });
 
-        blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
-        store.commit("flow/SET_dotsPositions", blankDotPositions);
-    },
+    blankDotPositions = _.mapValues(blankDotPositions, val => {
+        return _.map(val, (val_in, key_in) => {
+            return {
+                [val_in]: { x: 0, y: 0 }
+            };
+        }).reduce((result, value) => {
+            return {...result, ...value };
+        });
+    });
+    blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
+    store.commit("flow/SET_dotsPositions", blankDotPositions);
+};
+
+let hooks = {
+    SET_flow: [initBlankBlockPositions, initBlankDotPositions],
 
     UPDATE_blocksPositions: ({ state, store }) => {
         store.commit("base/UPDATE_blocksPositions", state.blocksPositions);
@@ -153,7 +150,5 @@ export default {
         ..._mut(state),
         ...mutations
     },
-    actions: actions,
-    getters: getters,
     hooks: hooks
 };
