@@ -1,26 +1,18 @@
 VIEW_NAME = "Init Values"
 
 block = {
-    "tags": ["Test"],
-    "groups": ["Test"],
     "title": "Инициалиатор переменной",
-    "description": "Инициализируются значения на сервере",
     "dots": [{
         "type": "output",
-        "name": "val",
-        "fields": [],
+        "name": "A",
+        "value_name": "a",
+        "fields": ["number"],
         "value": {
-            "type": "bool",
-            "default": True
-        },
-        "uniq": False
+            "type": "number",
+            "default": 0
+        }
     }]
 }
-
-
-def get_name():
-    return VIEW_NAME
-
 
 if __name__ == '__main__':
     pass

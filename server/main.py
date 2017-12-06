@@ -10,8 +10,11 @@ from modules import *
 possibles = globals().copy()
 possibles.update(locals())
 
+API_VERSION = "0.0.1"
+
 ERROR_JSON = [0, "Can`t parse string"]
 ERROR_NO_MODULE = [1, "Can`t find module"]
+ERROR_NO_BLOCK_IN_MODULE = [2, "Can`t find block module"]
 MESSAGE_ECHO = 0
 MESSAGE_GET_BLOCKS_ALL = 1
 MESSAGE_GET_BLOCK = 2
@@ -26,12 +29,12 @@ def new_client(client, server):
     server.send_message_to_all("Hey all, a new client has joined us")
 
 
-def message_echo(client, server, message, response):
+def echo(client, server, message, response):
     response.update(message)
     server.send_message(client, json.dumps(response))
 
 
-def message_get_blocks_all(client, server, message, response):
+def get_blocks_all(client, server, message, response):
     response["blocks"] = []
     for i in m_names:
         view_name = possibles.get(i).VIEW_NAME
@@ -44,15 +47,29 @@ def message_get_blocks_all(client, server, message, response):
     server.send_message(client, json.dumps(response))
 
 
-def message_get_block(client, server, message, response):
-    server.send_message(client, json.dumps(response))
-
-
-def message_run_module(client, server, message, response):
+def get_block(client, server, message, response):
     if message.get("module") not in m_names:
         response["error"] = ERROR_NO_MODULE
         response.update(message)
         server.send_message(client, json.dumps(response))
+        return
+
+    module = possibles.get(message.get("module"))
+
+    try:
+        response["block"] = module.block
+    except:
+        response["error"] = ERROR_NO_BLOCK_IN_MODULE
+
+    server.send_message(client, json.dumps(response))
+
+
+def run_module(client, server, message, response):
+    if message.get("module") not in m_names:
+        response["error"] = ERROR_NO_MODULE
+        response.update(message)
+        server.send_message(client, json.dumps(response))
+        return
 
     module = possibles.get(message.get("module"))
 
@@ -61,7 +78,9 @@ def message_run_module(client, server, message, response):
 
 def message(client, server, message):
 
-    response = {}
+    response = {
+        "api_version": API_VERSION
+    }
 
     try:
         message = json.loads(message)
@@ -73,13 +92,13 @@ def message(client, server, message):
     message_type = message.get("type", MESSAGE_ECHO)
 
     if message_type == MESSAGE_ECHO:
-        message_echo(client, server, message, response)
+        echo(client, server, message, response)
     elif message_type == MESSAGE_GET_BLOCKS_ALL:
-        message_get_blocks_all(client, server, message, response)
+        get_blocks_all(client, server, message, response)
     elif message_type == MESSAGE_GET_BLOCK:
-        message_get_block(client, server, message, response)
+        get_block(client, server, message, response)
     elif message_type == MESSAGE_RUN_MODULE:
-        message_run_module(client, server, message, response)
+        run_module(client, server, message, response)
 
 
 server = WebsocketServer(8765, host='127.0.0.1', loglevel=logging.INFO)
