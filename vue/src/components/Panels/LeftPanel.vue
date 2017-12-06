@@ -23,7 +23,7 @@
                     ) Delete Selected Block
                 br
                 button.ui.button.tiny(
-                    v-for="block in blocks"
+                    v-for="block in blocksBootstrap"
                     @click="addBlock(block)"
                     ) {{block.id}}
 
@@ -46,7 +46,7 @@ export default {
     computed: {
         ...mapState({
             flows: state => state.base.flows,
-            blocks: state => state.base.blocks,
+            blocksBootstrap: state => state.base.blocksBootstrap,
             flow: state => state.flow.flow,
             flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition,

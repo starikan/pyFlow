@@ -13,7 +13,7 @@ let state = {
     flowId: "",
     flowPositions: {},
     flowZooms: {},
-    blocks: {},
+    blocksBootstrap: {},
     blocksPositions: {}
 };
 
@@ -57,7 +57,7 @@ let hooks = {
         let flowZooms = lstore.get("flowZooms") || {};
         store.commit(moduleName + "/SET_flowZooms", flowZooms);
 
-        store.commit(moduleName + "/SET_blocks", blocksCollection);
+        store.commit(moduleName + "/SET_blocksBootstrap", blocksCollection);
 
         // Set data into working flow base
         let currFlow = _.get(flows, [flowId], {});

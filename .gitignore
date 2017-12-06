@@ -14,3 +14,4 @@ test/unit/coverage
 *.sln
 
 stack/**
+**/__pycache__/**
