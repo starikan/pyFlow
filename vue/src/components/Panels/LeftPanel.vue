@@ -22,10 +22,12 @@
                     @click="deleteSelectedBlock()"
                     ) Delete Selected Block
                 br
-                button.ui.button.tiny(
-                    v-for="block in blocksBootstrap"
-                    @click="addBlock(block)"
-                    ) {{block.id}}
+                .server-api-block(v-for="blocks, serverID in blocksBootstrap")
+                    h2 {{serverID}}
+                    button.ui.button.tiny(
+                        v-for="blocks in blocks"
+                        @click="addBlock(block)"
+                        ) {{block.id}}
 
 
         .subpanel(v-if="leftSubPanel == 'settings'")

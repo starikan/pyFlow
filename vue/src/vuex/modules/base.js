@@ -6,7 +6,7 @@ import lstore from "store";
 
 import _mut from "../_mut";
 
-import { initFlows, blocksCollection, initFlowId } from "../init_data";
+import { initFlows, blocksCollection, initFlowId, initServersAPI } from "../init_data";
 
 let state = {
     flows: {},
@@ -14,7 +14,9 @@ let state = {
     flowPositions: {},
     flowZooms: {},
     blocksBootstrap: {},
-    blocksPositions: {}
+    blocksPositions: {},
+    serversAPI: {},
+    websocketsAPI: {}
 };
 
 let mutations = {
@@ -32,32 +34,93 @@ let mutations = {
 
     UPDATE_flows: (state, flow) => {
         state.flows = _.set(state.flows, [state.flowId], flow);
+    },
+
+    UPDATE_serversAPI: (state, serverAPI) => {},
+
+    UPDATE_websocketsAPI: (state, { serverId, socket }) => {
+        state.websocketsAPI = _.set(state.websocketsAPI, [serverId], socket);
     }
 };
 
-let actions = {};
+const MESSAGE_ECHO = 0;
+const MESSAGE_GET_BLOCKS_ALL = 1;
+const MESSAGE_GET_BLOCK = 2;
+const MESSAGE_RUN_MODULE = 3;
+
+let ws_response_solver = function({ event, serverId, socket }) {
+    console.log(event);
+};
+
+let actions = {
+    WS_UPDATE_BLOCKS_FROM_APIS: ({ state }) => {
+        console.log(state.websocketsAPI);
+        _.forEach(state.websocketsAPI, server => {
+            console.log(server);
+            server.send({
+                type: MESSAGE_GET_BLOCKS_ALL
+            });
+        });
+    },
+    CREATE_WEBSOCKETS_APIS: ({ state, commit }) => {
+        _.forEach(state.serversAPI, server => {
+            if (!_.isObject(server) || !_.get(server, "id", false) || !_.get(server, "host", false)) {
+                return;
+            }
+
+            let socket = new WebSocket("ws://" + server.host);
+
+            socket.onopen = function() {
+                commit("UPDATE_websocketsAPI", {
+                    serverId: server.id,
+                    socket: socket
+                });
+            };
+
+            socket.onclose = function(event) {
+                delete state.websocketsAPI[server.id];
+            };
+
+            socket.onmessage = function(event) {
+                ws_response_solver({
+                    event: event,
+                    serverId: server.id,
+                    socket: socket
+                });
+            };
+
+            socket.onerror = function(error) {
+                console.log("Error " + error.message);
+            };
+        });
+    }
+};
 
 let getters = {};
 
 let hooks = {
     __init__: ({ state, store, moduleName }) => {
+        // TODO: remove initFlows
         let flows = lstore.get("flows") || initFlows;
-        store.commit(moduleName + "/SET_flows", flows);
+        store.commit("base/SET_flows", flows);
 
-        // TODO: remove "testFlow" when exist selector of flow
+        // TODO: remove initFlowId
         let flowId = lstore.get("flowId") || initFlowId;
-        store.commit(moduleName + "/SET_flowId", flowId);
+        store.commit("base/SET_flowId", flowId);
+
+        // TODO: remove serversAPI
+        let serversAPI = lstore.get("serversAPI") || initServersAPI;
+        store.commit("base/SET_serversAPI", serversAPI);
+        store.dispatch("base/WS_UPDATE_BLOCKS_FROM_APIS");
 
         let blocksPositions = lstore.get("blocksPositions") || {};
-        store.commit(moduleName + "/SET_blocksPositions", blocksPositions);
+        store.commit("base/SET_blocksPositions", blocksPositions);
 
         let flowPositions = lstore.get("flowPositions") || {};
-        store.commit(moduleName + "/SET_flowPositions", flowPositions);
+        store.commit("base/SET_flowPositions", flowPositions);
 
         let flowZooms = lstore.get("flowZooms") || {};
-        store.commit(moduleName + "/SET_flowZooms", flowZooms);
-
-        store.commit(moduleName + "/SET_blocksBootstrap", blocksCollection);
+        store.commit("base/SET_flowZooms", flowZooms);
 
         // Set data into working flow base
         let currFlow = _.get(flows, [flowId], {});
@@ -68,6 +131,15 @@ let hooks = {
         store.commit("flow/SET_flowPosition", currFlowPositions);
         let currFlowZooms = _.get(flowZooms, [flowId], 1);
         store.commit("flow/SET_flowZoom", currFlowZooms);
+    },
+
+    "SET_serversAPI, UPDATE_serversAPI": ({ state, store }) => {
+        lstore.set("serversAPI", state.serversAPI);
+        store.dispatch("base/CREATE_WEBSOCKETS_APIS");
+    },
+
+    "SET_websocketsAPI, UPDATE_websocketsAPI": ({ state, store }) => {
+        store.dispatch("base/WS_UPDATE_BLOCKS_FROM_APIS");
     },
 
     "SET_flows, UPDATE_flows": ({ state }) => {

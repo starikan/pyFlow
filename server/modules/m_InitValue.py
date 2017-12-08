@@ -1,16 +1,14 @@
-VIEW_NAME = "Init Values"
-
 block = {
-    "title": "Инициалиатор переменной",
+    # "title": "Инициалиатор переменной",
     "dots": [{
         "type": "output",
-        "name": "A",
+        # "name": "A",
         "value_name": "a",
-        "fields": ["number"],
-        "value": {
-            "type": "number",
-            "default": 0
-        }
+        # "fields": ["number"],
+        # "value": {
+        #     "type": "number",
+        #     "default": 0
+        # }
     }]
 }
 

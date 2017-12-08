@@ -2,8 +2,10 @@ block = {
     id: "%%%", // FRONT: autogenerate for every block
     tags: ["Test"], // NOT EXIST: tags for filtering
     groups: ["Test"], // NOT EXIST: tags for global grouping
-    title: "Тест", // EXIST: Titile of block
-    description: "Test description", // NOT EXIST: description
+    title: "Тест", // NOT EXIST: Titile of block
+    description: "Test description", // NOT EXIST: description,
+    buttons: [], // NOT EXIST: ??????????
+    layout: {}, // NOT EXIST: html layout, styles
     dots: [
         // EXIST: Array of dots
         {
@@ -12,6 +14,11 @@ block = {
             name: "Name test dot", // NOT EXIST: visible name
             value_name: "val_test", // EXIST
             unique: true, // NOT EXIST: is dot can in block only one default: true
+            // NOT EXIST
+            figure: {
+                type: "circle", // [circle, squere]
+                color: "red"
+            },
 
             // ONLY IF MANUAL DATA
             fields: [
@@ -24,7 +31,7 @@ block = {
             }
         }
     ],
-    // FRONT
+    // FRONT EXIST!!!
     server: {
         api_version: "0.0.1", // EXIST
         host: "127.0.0.1:7777", // EXIST

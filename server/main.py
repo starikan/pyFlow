@@ -35,14 +35,18 @@ def echo(client, server, message, response):
 
 
 def get_blocks_all(client, server, message, response):
+    response["type"] = "get_blocks_all"
     response["blocks"] = []
     for i in m_names:
-        view_name = possibles.get(i).VIEW_NAME
-        new_block = {
-            "module": i,
-            "module_view_name": view_name if view_name else i
-        }
-        response["blocks"].append(new_block)
+        try:
+            title = possibles.get(i).block.get("title")
+            new_block = {
+                "module": i,
+                "module_title": title if title else i
+            }
+            response["blocks"].append(new_block)
+        except:
+            pass
 
     server.send_message(client, json.dumps(response))
 
