@@ -39,14 +39,11 @@ let mutations = {
     },
 
     UPDATE_blocksBootstrap: (state, { newBlocks, serverId }) => {
-        console.log(newBlocks, serverId);
-
         let newValues = {
             [serverId]: newBlocks
         };
 
         state.blocksBootstrap = {...state.blocksBootstrap, ...newValues };
-        console.log(state.blocksBootstrap);
     }
 };
 

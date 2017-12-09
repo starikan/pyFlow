@@ -2,11 +2,11 @@
     It`s live data from flow itteractions.
 */
 
-import shortid from "shortid";
 import merge from "deepmerge";
 import axios from "axios";
 
 import _mut from "../_mut";
+import Block from "../block";
 
 let state = {
     flow: {},
@@ -85,20 +85,20 @@ let mutations = {
         if (!block || !_.isObject(block)) {
             return;
         }
-        let blockId = shortid();
-        let blockData = _.get(block, "block", {});
-        console.log(blockData, block);
-        blockData = {... { dots: [] }, ...blockData, ... { id: blockId } };
-        console.log(blockData);
+
+        let genBlock = new Block(block);
+
         let newBlock = {
-            [blockId]: blockData
+            [genBlock.block.id]: genBlock.block
         };
+
         let newBlockPosition = {
-            [blockId]: {
+            [genBlock.block.id]: {
                 x: window.innerWidth / 2 - state.flowPosition.x,
                 y: window.innerHeight / 2 - state.flowPosition.y
             }
         };
+
         state.flow.blocks = {...state.flow.blocks, ...newBlock };
         state.blocksPositions = {...state.blocksPositions, ...newBlockPosition };
     },
@@ -114,7 +114,6 @@ let mutations = {
 
 let actions = {
     createBlock: function({ state, commit, rootState }, { serverId, blockId }) {
-        console.log(serverId, blockId, rootState.base.serversAPI);
         let server = rootState.base.serversAPI[serverId];
         axios
             .get("http://" + server.host + "/block", {
@@ -124,7 +123,7 @@ let actions = {
             })
             .then(response => {
                 commit("CREATE_BLOCK_flow", {
-                    block: response.data,
+                    block: _.get(response.data, "block"),
                     server: server,
                     module: blockId
                 });

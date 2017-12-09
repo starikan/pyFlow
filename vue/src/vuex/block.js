@@ -1,4 +1,22 @@
-block = {
+"use strict";
+
+import shortid from "shortid";
+
+class Block {
+    constructor(block) {
+        this.block = {
+            ... { id: shortid(), dots: [] },
+            ...block
+        };
+        this.checkBlock();
+    }
+
+    checkBlock() {}
+}
+
+export default Block;
+
+let blockFormat = {
     // FRONT: autogenerate for every block
     id: {
         tags: ["Test"], // NOT EXIST: tags for filtering
