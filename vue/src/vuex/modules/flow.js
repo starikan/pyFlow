@@ -81,9 +81,15 @@ let mutations = {
         state.flow.links = _.omit(state.flow.links, linkId);
     },
 
-    CREATE_BLOCK_flow: (state, { blockId = null, block = null }) => {
-        blockId = blockId || shortid();
-        let blockData = _.get(block, ["block"], {});
+    CREATE_BLOCK_flow: (state, { block, server, module }) => {
+        if (!block || !_.isObject(block)) {
+            return;
+        }
+        let blockId = shortid();
+        let blockData = _.get(block, "block", {});
+        console.log(blockData, block);
+        blockData = {... { dots: [] }, ...blockData, ... { id: blockId } };
+        console.log(blockData);
         let newBlock = {
             [blockId]: blockData
         };
@@ -117,7 +123,11 @@ let actions = {
                 }
             })
             .then(response => {
-                console.log(response.data);
+                commit("CREATE_BLOCK_flow", {
+                    block: response.data,
+                    server: server,
+                    module: blockId
+                });
             })
             .catch();
     },
@@ -192,7 +202,7 @@ let initBlankDotPositions = function({ state, store }) {
             };
         }).reduce((result, value) => {
             return {...result, ...value };
-        });
+        }, {});
     });
     blankDotPositions = {...blankDotPositions, ...state.dotsPositions };
     store.commit("flow/SET_dotsPositions", blankDotPositions);
@@ -201,7 +211,7 @@ let initBlankDotPositions = function({ state, store }) {
 let hooks = {
     SET_flow: [initBlankBlockPositions, initBlankDotPositions],
 
-    UPDATE_blocksPositions: ({ state, store }) => {
+    "UPDATE_blocksPositions, DELETE_BLOCK_flow": ({ state, store }) => {
         store.commit("base/UPDATE_blocksPositions", state.blocksPositions);
     },
 
