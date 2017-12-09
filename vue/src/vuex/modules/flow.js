@@ -4,6 +4,7 @@
 
 import merge from "deepmerge";
 import axios from "axios";
+import shortid from "shortid";
 
 import _mut from "../_mut";
 import Block from "../block";

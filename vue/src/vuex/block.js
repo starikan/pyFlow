@@ -11,6 +11,7 @@ class Block {
         this.checkBlock();
     }
 
+    // TODO
     checkBlock() {}
 }
 
@@ -19,16 +20,17 @@ export default Block;
 let blockFormat = {
     // FRONT: autogenerate for every block
     id: {
+        id: "id",
         tags: ["Test"], // NOT EXIST: tags for filtering
         groups: ["Test"], // NOT EXIST: tags for global grouping
         title: "Тест", // NOT EXIST: Titile of block
         description: "Test description", // NOT EXIST: description,
         buttons: {}, // NOT EXIST: ??????????
         layout: {}, // NOT EXIST: html layout, styles
-        dots: [
-            // EXIST: Array of dots
-            {
-                id: "%%%", // FRONT: autogenerate for every dot
+        dots: {
+            // FRONT: autogenerate for every dot
+            id: {
+                id: "id",
                 type: "input", // EXIST: type of dot [input, output]
                 name: "Name test dot", // NOT EXIST: visible name
                 value_name: "val_test", // EXIST
@@ -49,7 +51,7 @@ let blockFormat = {
                     default: 0 //
                 }
             }
-        ],
+        },
         // FRONT EXIST!!!
         server: {
             api_version: "0.0.1", // EXIST

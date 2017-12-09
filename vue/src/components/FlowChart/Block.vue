@@ -32,6 +32,7 @@
 
 <script>
 import BlockDot from "./BlockDot";
+import _ from "lodash";
 
 export default {
     name: "fb-block",
@@ -44,10 +45,24 @@ export default {
     },
     computed: {
         inputs: function() {
-            return this.block.dots.filter(val => val.type == "input");
+            return _(this.block.dots)
+                .map(val => {
+                    if (val.type == "input") {
+                        return val;
+                    }
+                })
+                .without(undefined)
+                .value();
         },
         outputs: function() {
-            return this.block.dots.filter(val => val.type == "output");
+            return _(this.block.dots)
+                .map(val => {
+                    if (val.type == "output") {
+                        return val;
+                    }
+                })
+                .without(undefined)
+                .value();
         }
     }
 };

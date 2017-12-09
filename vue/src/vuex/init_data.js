@@ -4,61 +4,63 @@ export const initFlows = {
         blocks: {
             first_block: {
                 title: "Title First",
-                dots: [{
+                dots: {
+                    input_image: {
                         type: "input",
                         name: "Image",
                         id: "input_image"
                     },
-                    {
+                    input_sigma: {
                         type: "input",
                         name: "Sigma",
                         id: "input_sigma"
                     },
-                    {
+                    input_mean: {
                         type: "input",
                         name: "Mean",
                         id: "input_mean"
                     },
-                    {
+                    output_image: {
                         type: "output",
                         name: "Image Very long name",
                         id: "output_image"
                     },
-                    {
+                    output_sigma: {
                         type: "output",
                         name: "Sigma",
                         id: "output_sigma"
                     }
-                ]
+                }
             },
             second_block: {
                 title: "Title Second",
-                dots: [{
+                dots: {
+                    input_image: {
                         type: "input",
                         name: "Image",
                         id: "input_image"
                     },
-                    {
+                    input_sigma: {
                         type: "input",
                         name: "Sigma",
                         id: "input_sigma"
                     },
-                    {
+                    input_mean: {
                         type: "input",
                         name: "Mean",
                         id: "input_mean"
                     },
-                    {
+                    output_image: {
                         type: "output",
                         name: "Image Very long name",
                         id: "output_image"
                     },
-                    {
+                    output_sigma: {
                         type: "output",
                         name: "Sigma",
                         id: "output_sigma"
                     }
-                ]
+                }
             }
         },
         links: {
