@@ -79,7 +79,8 @@ export const initFlows = {
 
 export const initFlowId = "testFlow";
 
-export const initServersAPI = [{
-    id: "local_python",
-    host: "127.0.0.1:8765"
-}];
+export const initServersAPI = {
+    local_python: {
+        host: "127.0.0.1:8765"
+    }
+};

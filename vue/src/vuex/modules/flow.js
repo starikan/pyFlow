@@ -4,6 +4,7 @@
 
 import shortid from "shortid";
 import merge from "deepmerge";
+import axios from "axios";
 
 import _mut from "../_mut";
 
@@ -106,6 +107,21 @@ let mutations = {
 };
 
 let actions = {
+    createBlock: function({ state, commit, rootState }, { serverId, blockId }) {
+        console.log(serverId, blockId, rootState.base.serversAPI);
+        let server = rootState.base.serversAPI[serverId];
+        axios
+            .get("http://" + server.host + "/block", {
+                params: {
+                    blockId: blockId
+                }
+            })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch();
+    },
+
     centerFlow: function({ state, commit, rootState }) {
         let flowSize = rootState.settings.settingsFlow.flowSize;
 

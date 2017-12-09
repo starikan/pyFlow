@@ -1,8 +1,8 @@
 import logging
-from base64 import b64encode
 import json
-# https://github.com/Pithikos/python-websocket-server
-from websocket_server import WebsocketServer
+
+from aiohttp import web
+import socketio
 
 from modules import __all__ as m_names
 from modules import *
@@ -25,87 +25,52 @@ class State:
     pass
 
 
-def new_client(client, server):
-    server.send_message_to_all("Hey all, a new client has joined us")
+sio = socketio.AsyncServer()
+app = web.Application()
+sio.attach(app)
 
 
-def echo(client, server, message, response):
-    response.update(message)
-    server.send_message(client, json.dumps(response))
-
-
-def get_blocks_all(client, server, message, response):
-    response["type"] = "get_blocks_all"
-    response["blocks"] = []
+async def all_blocks(request):
+    response = {}
     for i in m_names:
-        try:
-            title = possibles.get(i).block.get("title")
-            new_block = {
-                "module": i,
-                "module_title": title if title else i
-            }
-            response["blocks"].append(new_block)
-        except:
-            pass
+        title = possibles.get(i).block.get("title")
+        response[i] = {
+            "title": title if title else i,
+            "id": i
+        }
 
-    server.send_message(client, json.dumps(response))
+    return web.json_response(response, headers={"Access-Control-Allow-Origin": "*"})
 
 
-def get_block(client, server, message, response):
-    if message.get("module") not in m_names:
-        response["error"] = ERROR_NO_MODULE
-        response.update(message)
-        server.send_message(client, json.dumps(response))
-        return
-
-    module = possibles.get(message.get("module"))
-
-    try:
-        response["block"] = module.block
-    except:
-        response["error"] = ERROR_NO_BLOCK_IN_MODULE
-
-    server.send_message(client, json.dumps(response))
-
-
-def run_module(client, server, message, response):
-    if message.get("module") not in m_names:
-        response["error"] = ERROR_NO_MODULE
-        response.update(message)
-        server.send_message(client, json.dumps(response))
-        return
-
-    module = possibles.get(message.get("module"))
-
-    server.send_message(client, json.dumps(response))
-
-
-def message(client, server, message):
-
+async def block(request):
+    blockId = request.rel_url.query["blockId"]
+    block = possibles.get(blockId).block
     response = {
-        "api_version": API_VERSION
+        "block": block
     }
 
-    try:
-        message = json.loads(message)
-    except:
-        response["error"] = ERROR_JSON
-        server.send_message(client, response)
-        return False
-
-    message_type = message.get("type", MESSAGE_ECHO)
-
-    if message_type == MESSAGE_ECHO:
-        echo(client, server, message, response)
-    elif message_type == MESSAGE_GET_BLOCKS_ALL:
-        get_blocks_all(client, server, message, response)
-    elif message_type == MESSAGE_GET_BLOCK:
-        get_block(client, server, message, response)
-    elif message_type == MESSAGE_RUN_MODULE:
-        run_module(client, server, message, response)
+    return web.json_response(response, headers={"Access-Control-Allow-Origin": "*"})
 
 
-server = WebsocketServer(8765, host='127.0.0.1', loglevel=logging.INFO)
-server.set_fn_new_client(new_client)
-server.set_fn_message_received(message)
-server.run_forever()
+@sio.on('connect', namespace='/chat')
+def connect(sid, environ):
+    print("connect ", sid)
+
+
+# @sio.on('chat message', namespace='/chat')
+# async def message(sid, data):
+#     print("message ", data)
+#     await sio.emit('reply', room=sid)
+
+
+@sio.on('disconnect', namespace='/chat')
+def disconnect(sid):
+    print('disconnect ', sid)
+
+
+# app.router.add_static('/static', 'static')
+app.router.add_get('/all_blocks', all_blocks)
+app.router.add_get('/block', block)
+
+if __name__ == '__main__':
+    web.run_app(app, host="localhost", port=8765)

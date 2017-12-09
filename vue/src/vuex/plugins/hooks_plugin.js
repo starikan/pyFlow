@@ -38,6 +38,7 @@ const modulesHooks = store => {
             if (mutationName == mutation.type) {
                 let moduleName = mutationName.split("/")[0];
                 hooks.forEach(hookFunc => {
+                    // console.log("=> Hook for", mutation.type);
                     hookFunc({
                         state: state[moduleName],
                         moduleName: moduleName,

@@ -22,12 +22,13 @@
                     @click="deleteSelectedBlock()"
                     ) Delete Selected Block
                 br
-                .server-api-block(v-for="blocks, serverID in blocksBootstrap")
-                    h2 {{serverID}}
+                .server-api-block(v-for="blocks, serverId in blocksBootstrap")
+                    h4 {{serverId}}
                     button.ui.button.tiny(
-                        v-for="blocks in blocks"
-                        @click="addBlock(block)"
-                        ) {{block.id}}
+                        v-if="blocks"
+                        v-for="block in blocks"
+                        @click="addBlock(serverId, block.id)"
+                        ) {{block.title}}
 
 
         .subpanel(v-if="leftSubPanel == 'settings'")
@@ -49,6 +50,7 @@ export default {
         ...mapState({
             flows: state => state.base.flows,
             blocksBootstrap: state => state.base.blocksBootstrap,
+            serversAPI: state => state.base.serversAPI,
             flow: state => state.flow.flow,
             flowZoom: state => state.flow.flowZoom,
             flowPosition: state => state.flow.flowPosition,
@@ -76,13 +78,15 @@ export default {
         saveFlow: function() {
             this.$store.commit("base/UPDATE_flows", this.flow);
         },
-        // TODO
         centerFlow: function() {
             this.$bus.$emit("recalcBlocksSizes");
             this.$store.dispatch("flow/centerFlow");
         },
-        addBlock: function(block) {
-            this.$store.commit("flow/CREATE_BLOCK_flow", { block: block });
+        addBlock: function(serverId, blockId) {
+            this.$store.dispatch("flow/createBlock", {
+                serverId: serverId,
+                blockId: blockId
+            });
         },
         deleteSelectedBlock: function() {
             // TODO: Confirm

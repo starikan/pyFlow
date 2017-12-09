@@ -3,10 +3,13 @@
 */
 
 import lstore from "store";
+import axios from "axios";
 
 import _mut from "../_mut";
 
 import { initFlows, blocksCollection, initFlowId, initServersAPI } from "../init_data";
+
+import Sockets from "../sockets";
 
 let state = {
     flows: {},
@@ -15,8 +18,7 @@ let state = {
     flowZooms: {},
     blocksBootstrap: {},
     blocksPositions: {},
-    serversAPI: {},
-    websocketsAPI: {}
+    serversAPI: {}
 };
 
 let mutations = {
@@ -36,10 +38,15 @@ let mutations = {
         state.flows = _.set(state.flows, [state.flowId], flow);
     },
 
-    UPDATE_serversAPI: (state, serverAPI) => {},
+    UPDATE_blocksBootstrap: (state, { newBlocks, serverId }) => {
+        console.log(newBlocks, serverId);
 
-    UPDATE_websocketsAPI: (state, { serverId, socket }) => {
-        state.websocketsAPI = _.set(state.websocketsAPI, [serverId], socket);
+        let newValues = {
+            [serverId]: newBlocks
+        };
+
+        state.blocksBootstrap = {...state.blocksBootstrap, ...newValues };
+        console.log(state.blocksBootstrap);
     }
 };
 
@@ -53,45 +60,25 @@ let ws_response_solver = function({ event, serverId, socket }) {
 };
 
 let actions = {
-    WS_UPDATE_BLOCKS_FROM_APIS: ({ state }) => {
-        console.log(state.websocketsAPI);
-        _.forEach(state.websocketsAPI, server => {
-            console.log(server);
-            server.send({
-                type: MESSAGE_GET_BLOCKS_ALL
-            });
+    UPDATE_BLOCKS_FROM_APIS: ({ state, commit }) => {
+        _.forEach(state.serversAPI, (server, serverId) => {
+            axios
+                .get("http://" + server.host + "/all_blocks")
+                .then(response => {
+                    commit("UPDATE_blocksBootstrap", {
+                        newBlocks: response.data,
+                        serverId: serverId
+                    });
+                })
+                .catch(error => console.log(error));
         });
     },
     CREATE_WEBSOCKETS_APIS: ({ state, commit }) => {
         _.forEach(state.serversAPI, server => {
-            if (!_.isObject(server) || !_.get(server, "id", false) || !_.get(server, "host", false)) {
-                return;
-            }
-
-            let socket = new WebSocket("ws://" + server.host);
-
-            socket.onopen = function() {
-                commit("UPDATE_websocketsAPI", {
-                    serverId: server.id,
-                    socket: socket
-                });
-            };
-
-            socket.onclose = function(event) {
-                delete state.websocketsAPI[server.id];
-            };
-
-            socket.onmessage = function(event) {
-                ws_response_solver({
-                    event: event,
-                    serverId: server.id,
-                    socket: socket
-                });
-            };
-
-            socket.onerror = function(error) {
-                console.log("Error " + error.message);
-            };
+            Sockets.addSocket({
+                id: server.id,
+                host: server.host
+            });
         });
     }
 };
@@ -111,7 +98,6 @@ let hooks = {
         // TODO: remove serversAPI
         let serversAPI = lstore.get("serversAPI") || initServersAPI;
         store.commit("base/SET_serversAPI", serversAPI);
-        store.dispatch("base/WS_UPDATE_BLOCKS_FROM_APIS");
 
         let blocksPositions = lstore.get("blocksPositions") || {};
         store.commit("base/SET_blocksPositions", blocksPositions);
@@ -136,10 +122,7 @@ let hooks = {
     "SET_serversAPI, UPDATE_serversAPI": ({ state, store }) => {
         lstore.set("serversAPI", state.serversAPI);
         store.dispatch("base/CREATE_WEBSOCKETS_APIS");
-    },
-
-    "SET_websocketsAPI, UPDATE_websocketsAPI": ({ state, store }) => {
-        store.dispatch("base/WS_UPDATE_BLOCKS_FROM_APIS");
+        store.dispatch("base/UPDATE_BLOCKS_FROM_APIS");
     },
 
     "SET_flows, UPDATE_flows": ({ state }) => {
@@ -172,5 +155,6 @@ export default {
     },
     actions: actions,
     getters: getters,
-    hooks: hooks
+    hooks: hooks,
+    debug: true
 };
